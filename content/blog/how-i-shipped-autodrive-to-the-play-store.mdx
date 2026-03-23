@@ -1,0 +1,93 @@
+---
+title: "How I shipped Autodrive to the Play Store"
+date: "2025-03-01"
+tags: ["flutter", "product", "case-study"]
+summary: "Two years, one team, zero prior experience with CI/CD. Here's what it actually took to get Autodrive from a Figma file to the Play Store."
+published: true
+---
+
+## The honest version
+
+Most "I shipped my first app" posts skip the part where everything breaks. This isn't one of those posts.
+
+Autodrive took two years. Not because it was complicated — it was, but that wasn't the main reason. It took two years because we had to learn how to build software while building software.
+
+Here's what actually happened.
+
+## What is Autodrive?
+
+Autodrive is a fleet and driver management app for operators in Nigeria. Before we built it, fleet managers were tracking drivers in Excel spreadsheets, WhatsApp groups, and their heads.
+
+The idea was simple: give fleet operators a mobile-first tool to assign vehicles, track trips, and manage driver performance — without needing a laptop.
+
+## Year one: Building the wrong thing
+
+We spent the first year building features nobody asked for.
+
+We had trip history views before we had trip creation. We had detailed analytics before we had working authentication. We were optimising for what looked impressive in demos, not what made the product usable.
+
+The turning point was watching a fleet manager try to use the app for 10 minutes. He couldn't figure out how to add a driver. That's the core action. We had buried it four screens deep.
+
+We cut 40% of what we'd built and started over on the user flows.
+
+## CI/CD: The thing nobody taught me
+
+I had heard of continuous integration. I had no idea how to set it up.
+
+GitHub Actions was the answer — and once I understood it, I couldn't imagine shipping without it.
+
+Here's the pipeline we ended up with:
+
+```yaml
+name: Deploy to Play Store
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.0'
+      - run: flutter pub get
+      - run: flutter build appbundle --release
+      - uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          packageName: com.autodrive.app
+          releaseFiles: build/app/outputs/bundle/release/*.aab
+          track: internal
+```
+
+Every push to `main` now goes to the Play Store internal track automatically. No more manual uploads. No more forgetting to increment the version code.
+
+## State management: we tried everything
+
+We started with `setState`. Then moved to Provider. Then Riverpod. Then finally Bloc.
+
+Bloc is verbose — there's no way around that. But for an app with complex business logic (trip state machines, driver assignment flows, real-time Firebase listeners), the explicit event → state flow is worth it.
+
+The day I added `flutter_bloc` properly and deleted 800 lines of spaghetti state code was a good day.
+
+## What actually shipped
+
+- Driver assignment and management
+- Real-time trip tracking
+- Vehicle inventory management
+- Daily/weekly summary reports
+- Play Store listing (internal → production)
+
+What didn't make it: the analytics dashboard, the messaging feature, and the web companion app. All cut. All were the right call.
+
+## The lesson
+
+**Shipping is a skill.** You learn it by cutting, not by adding. Every feature that didn't make it to v1 was a potential reason the app wouldn't launch.
+
+If you're building something and it feels like it'll never be done — it won't be, unless you decide what "done" actually means.
+
+---
+
+*Working on something and want a second pair of eyes? [Let's talk.](/hire)*

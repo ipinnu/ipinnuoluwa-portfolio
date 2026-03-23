@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx:*)",
+      "Bash(npm install:*)",
+      "Bash(pnpm --version)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm install:*)",
+      "Bash(CI=true pnpm install)",
+      "Bash(CI=true pnpm add framer-motion @supabase/supabase-js next-mdx-remote rehype-pretty-code shiki clsx tailwind-merge sharp)",
+      "Bash(CI=true pnpm add gray-matter)",
+      "Bash(CI=true pnpm build 2>&1)",
+      "Bash(CI=true pnpm run build)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(gh auth:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

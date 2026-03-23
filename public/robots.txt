@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://ipinnuoluwa.dev
+
+# Sitemaps
+Sitemap: https://ipinnuoluwa.dev/sitemap.xml
