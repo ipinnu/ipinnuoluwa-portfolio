@@ -75,7 +75,7 @@ const MOCK_NODES: BrainboxNode[] = [
 
 export async function getBrainboxNodes(): Promise<BrainboxNode[]> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('brainbox_nodes')
       .select('*')
       .eq('published', true)
