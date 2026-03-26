@@ -202,3 +202,43 @@
   .tags-row   { justify-content: center; }
   .cta-row    { justify-content: center; }
 }
+
+/* Brainbox orbit animations */
+@keyframes orbit-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes orbit-counter {
+  from { transform: translateX(var(--orbit-radius, 200px)) rotate(0deg); }
+  to   { transform: translateX(var(--orbit-radius, 200px)) rotate(-360deg); }
+}
+
+.orbit-arm {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+  animation: orbit-spin var(--orbit-duration, 20s) linear infinite;
+}
+
+.orbit-node-inner {
+  position: absolute;
+  transform: translateX(var(--orbit-radius, 200px));
+  animation: orbit-counter var(--orbit-duration, 20s) linear infinite;
+}
+
+.orbit-arm.paused,
+.orbit-arm.paused .orbit-node-inner {
+  animation-play-state: paused;
+}
+
+/* Background grid */
+.brainbox-grid {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+}

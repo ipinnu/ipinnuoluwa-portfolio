@@ -21,7 +21,7 @@ const nextSteps = [
     step: "02",
     title: "I reply within 48 hours",
     description:
-      "You'll hear from me within 2 business days — usually sooner.",
+      "You will hear from me within 2 business days. Usually sooner.",
   },
   {
     step: "03",

@@ -23,7 +23,7 @@ const experience = [
     company: "Autodrive",
     period: "2023 – 2025",
     description:
-      "Led the product through two years of development — roadmap, sprints, and direct code contributions — to Play Store launch.",
+      "Handled roadmap, sprint planning and direct code contributions for two years until we shipped to the Play Store.",
   },
   {
     role: "Frontend Engineer",
@@ -68,17 +68,17 @@ const values = [
   {
     statement: "I ship. Not just prototype.",
     detail:
-      "Ideas are cheap. The Play Store is crowded with almost-finished apps. I care about the last 20% — the part that gets it live.",
+      "Ideas are cheap. The Play Store is full of apps that never got finished. I care about that last 20% that actually gets things live.",
   },
   {
     statement: "I communicate clearly, even when it's hard.",
     detail:
-      "If something is going wrong or taking longer than expected, I tell you. You'll never be left guessing.",
+      "If something is off or taking longer than expected, I will tell you. You will not have to chase me for updates.",
   },
   {
     statement: "I build for users, not portfolios.",
     detail:
-      "Every design decision starts with the user who will actually touch this product. Not what looks good in a screenshot.",
+      "Every decision starts with whoever is actually going to use the product. Not what looks good in a screenshot.",
   },
 ];
 
@@ -101,21 +101,20 @@ export default function AboutPage() {
             <FadeUp delay={0.1}>
               <div className="space-y-4 text-text-secondary leading-relaxed">
                 <p>
-                  I studied Mechanical Engineering at Covenant University in
-                  Nigeria — which taught me to think in systems, not just
-                  features. When I discovered I could build the software I was
-                  designing on paper, I never looked back.
+                  I studied Mechanical Engineering at Covenant University.
+                  That taught me to think in systems rather than just
+                  features. At some point I figured out I could build the
+                  software I was drawing on paper. That was it for me.
                 </p>
                 <p>
-                  I&apos;m based in Lagos, building mobile apps and web
-                  products for Nigerian startups, SMEs, and international
-                  remote clients. Every project I take on gets shipped. That&apos;s
-                  the standard.
+                  Based in Lagos. I work with startups, SMEs, and remote
+                  clients across Nigeria and internationally. Every project
+                  gets shipped. That is the baseline.
                 </p>
                 <p>
-                  When I&apos;m not writing code, I&apos;m documenting what I
-                  learn — because the best way to understand something is to
-                  explain it clearly.
+                  When I am not coding I am writing about what I am
+                  learning. Explaining things properly helps me understand
+                  them better.
                 </p>
               </div>
               <Link

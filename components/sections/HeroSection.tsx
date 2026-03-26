@@ -156,9 +156,9 @@ export default function HeroSection() {
             variants={shouldReduce ? undefined : itemVariants}
             style={{ fontFamily: "var(--font-dm-sans)", fontSize: 17, fontWeight: 300, color: "#888884", lineHeight: 1.7, maxWidth: 480, margin: 0 }}
           >
-            I build clean, cross-platform mobile experiences and web products
-            that ship — blending engineering with product thinking to bring
-            ideas to life across devices.
+            I build mobile apps and web products that actually ship. Flutter,
+            React Native, Next.js. Based in Lagos, working with clients
+            across Nigeria and internationally.
           </motion.p>
 
           {/* Stack tags */}
@@ -252,7 +252,7 @@ export default function HeroSection() {
 
             {/* Stats */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, padding: "16px 24px 0" }}>
-              <StatBox target={4} duration={1200} label="Completed Projects" />
+              <StatBox target={6} duration={1200} label="Completed Projects" />
               <StatBox target={2} duration={1000} label="Years Experience" />
             </div>
 

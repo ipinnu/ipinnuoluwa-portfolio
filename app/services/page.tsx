@@ -7,17 +7,60 @@ import BottomCTA from "@/components/sections/BottomCTA";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Flutter mobile app development, Next.js web frontend, and product consulting for startups and SMEs.",
+    "Flutter mobile app development, full website development with Next.js, AWS & Firebase, and product consulting for startups and SMEs.",
 };
 
 const services = [
   {
-    id: "mobile",
+    id: "enterprise",
+    label: "00",
+    title: "Enterprise Business Systems",
+    audience: "Established businesses, SMEs, and organisations replacing legacy tools or building operational infrastructure",
+    description:
+      "A custom internal platform built around how your business actually runs. Multi-role dashboards, workflow tools, real-time data and the cloud infrastructure to support it. For businesses that have outgrown spreadsheets and off-the-shelf software.",
+    includes: [
+      "Custom multi-role platform (admin, staff, management views)",
+      "Real-time data dashboards & reporting",
+      "Role-based access control & authentication",
+      "AWS enterprise deployment (VPC, RDS, auto-scaling)",
+      "CRM / ERP integration (HubSpot, Salesforce, or custom)",
+      "Audit logs, compliance & data export features",
+      "Staff onboarding, documentation & training",
+      "6 months dedicated post-launch support",
+    ],
+    model: "Project-based · Fixed scope · Discovery call first",
+    pricing: "From £2,500",
+    anchor: true,
+    premium: true,
+  },
+  {
+    id: "anchor",
     label: "01",
+    title: "Internal Tools & Dashboards",
+    audience: "Startups and growing teams who need custom tooling without enterprise overhead",
+    description:
+      "Custom web apps for teams. Admin panels, operations dashboards, workflow tools, internal portals. The kind of thing that replaces five spreadsheets and a WhatsApp group.",
+    includes: [
+      "Custom Next.js web application",
+      "Admin panel & data dashboard",
+      "User authentication & role management",
+      "AWS or Firebase backend & hosting",
+      "REST API or database integration",
+      "Domain setup & SSL configuration",
+      "3 months post-launch support",
+    ],
+    model: "Project-based · Fixed scope · Discovery call first",
+    pricing: "From £900",
+    anchor: true,
+    premium: false,
+  },
+  {
+    id: "mobile",
+    label: "02",
     title: "Mobile App Development",
     audience: "Startups, founders, SMEs with a validated idea",
     description:
-      "I build cross-platform mobile apps with Flutter (Android + iOS) or React Native — from wireframe to store submission. You get one codebase, two platforms, and a developer who's done this end-to-end.",
+      "I build cross-platform mobile apps with Flutter or React Native. One codebase, Android and iOS, from wireframe to store submission. I have done this end to end.",
     includes: [
       "Flutter (Android + iOS) or React Native",
       "Firebase / Supabase backend integration",
@@ -26,32 +69,38 @@ const services = [
       "CI/CD pipeline setup with GitHub Actions",
     ],
     model: "Project-based · Discovery call first",
-    pricing: "From $2,000 · From ₦2,000,000",
+    pricing: "From £400",
+    anchor: false,
+    premium: false,
   },
   {
     id: "web",
-    label: "02",
-    title: "Web Frontend Development",
+    label: "03",
+    title: "Full Website Development",
     audience: "Businesses needing a web presence or internal tool",
     description:
-      "Next.js and React applications that are fast, accessible, and built to last. I care about performance scores, not just how it looks in Figma. Every component is typed, tested, and ready for production.",
+      "Full websites and web apps. Frontend in Next.js and React, backend on AWS or Firebase, deployed and production-ready. Not just the UI.",
     includes: [
       "Next.js / React application",
+      "AWS (S3, EC2, Lambda, Amplify) deployment",
+      "Firebase (Auth, Firestore, Hosting) integration",
+      "REST API / Supabase backend integration",
       "Responsive, mobile-first design",
-      "Framer Motion animations",
-      "REST API / Supabase integration",
       "Performance & accessibility audit",
+      "Domain setup & hosting configuration",
     ],
     model: "Project-based · Discovery call first",
-    pricing: "From $800 · From ₦800,000",
+    pricing: "From £300",
+    anchor: false,
+    premium: false,
   },
   {
     id: "consulting",
-    label: "03",
+    label: "04",
     title: "Product & Tech Consulting",
     audience: "SMEs, NGOs, early-stage companies without a technical co-founder",
     description:
-      "You have the idea and the business. I'll help you figure out the tech. From setting up Microsoft 365 for your whole team to scoping a product roadmap — I've done it for NGOs and startups, and I'll do it for you.",
+      "You have the business. I help with the tech side. Setting up tools, scoping products, reviewing codebases. I have done it for NGOs, startups and growing teams.",
     includes: [
       "Business tech setup (M365, internal tools, workflows)",
       "Product scoping & roadmap development",
@@ -60,16 +109,18 @@ const services = [
       "Vendor selection & integration planning",
     ],
     model: "Project-based or advisory retainer · Discovery call first",
-    pricing: "From $500 · From ₦500,000",
+    pricing: "From £150",
+    anchor: false,
+    premium: false,
   },
 ];
 
 const processSteps = [
-  { phase: "Discovery", duration: "Day 1", description: "We talk through your project on a free 30-min call." },
-  { phase: "Proposal", duration: "3 days", description: "I send a written scope, timeline, and price. No surprises." },
-  { phase: "Build", duration: "2–8 weeks", description: "Weekly updates. You're never left wondering what's happening." },
-  { phase: "Review", duration: "1 week", description: "You test everything. We fix, refine, and polish together." },
-  { phase: "Handoff", duration: "Final day", description: "Full code ownership, documentation, and walkthrough." },
+  { phase: "Discovery", duration: "Day 1", description: "We go through your project on a 30-minute call." },
+  { phase: "Proposal", duration: "3 days", description: "I send a written scope, timeline and price." },
+  { phase: "Build", duration: "2–8 weeks", description: "Weekly updates so you always know what is happening." },
+  { phase: "Review", duration: "1 week", description: "You test it. We fix what needs fixing." },
+  { phase: "Handoff", duration: "Final day", description: "Full code ownership, docs and a walkthrough." },
 ];
 
 export default function ServicesPage() {
@@ -84,9 +135,8 @@ export default function ServicesPage() {
               Services
             </h1>
             <p className="text-text-secondary text-lg max-w-xl leading-relaxed">
-              I take projects from idea to shipped. Whether you need a mobile
-              app, a web product, or someone to help you think through the
-              technology — I can help.
+              I take projects from idea to shipped. Mobile app, web product
+              or tech guidance. I can help with all of it.
             </p>
           </FadeUp>
         </div>
@@ -99,12 +149,26 @@ export default function ServicesPage() {
             <FadeUp key={service.id} delay={i * 0.1}>
               <div
                 id={service.id}
-                className="border-b border-border py-16 grid grid-cols-1 md:grid-cols-2 gap-12"
+                className={`border-b border-border py-16 grid grid-cols-1 md:grid-cols-2 gap-12 ${
+                  service.premium ? "pl-6 border-l-2 border-l-accent" : ""
+                }`}
               >
                 <div>
-                  <span className="font-mono text-xs text-accent block mb-4">
-                    {service.label}
-                  </span>
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="font-mono text-xs text-accent">
+                      {service.label}
+                    </span>
+                    {service.premium && (
+                      <span className="font-mono text-[10px] text-bg-primary bg-accent px-2 py-0.5 rounded-sm">
+                        Premium
+                      </span>
+                    )}
+                    {service.anchor && !service.premium && (
+                      <span className="font-mono text-[10px] text-accent border border-accent/40 px-2 py-0.5 rounded-sm">
+                        Popular
+                      </span>
+                    )}
+                  </div>
                   <h2 className="font-syne font-bold text-3xl md:text-4xl text-text-primary mb-4">
                     {service.title}
                   </h2>
@@ -118,7 +182,7 @@ export default function ServicesPage() {
                     <p className="font-mono text-xs text-text-tertiary">
                       {service.model}
                     </p>
-                    <p className="font-syne font-semibold text-lg text-text-primary">
+                    <p className={`font-syne font-semibold text-lg ${service.anchor ? "text-accent" : "text-text-primary"}`}>
                       {service.pricing}
                     </p>
                   </div>

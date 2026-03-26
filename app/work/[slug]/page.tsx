@@ -191,7 +191,36 @@ export default function CaseStudyPage({ params }: Props) {
                 </div>
               </FadeUp>
 
-              <FadeUp delay={0.2}>
+              {project.liveUrl && (
+                <FadeUp delay={0.2}>
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block bg-bg-secondary border border-accent text-accent text-center font-syne font-semibold text-sm px-6 py-4 rounded-sm hover:bg-accent hover:text-bg-primary transition-colors"
+                  >
+                    Visit live site →
+                  </a>
+                </FadeUp>
+              )}
+
+              {project.playStoreUrl && (
+                <FadeUp delay={0.22}>
+                  <a
+                    href={project.playStoreUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 bg-bg-secondary border border-border text-text-secondary text-center font-syne font-semibold text-sm px-6 py-4 rounded-sm hover:border-accent hover:text-accent transition-colors"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M3.18 23.76c.3.17.65.19.97.07l11.65-6.73-2.6-2.6-10.02 9.26zM.5 1.4C.19 1.74 0 2.24 0 2.9v18.2c0 .66.19 1.16.5 1.5l.08.08 10.2-10.2v-.24L.58 1.32.5 1.4zM19.37 9.04l-2.77-1.6-2.93 2.93 2.93 2.93 2.79-1.61c.8-.46.8-1.2-.02-1.65zM4.15.25L15.8 6.97l-2.6 2.6L3.18.31c.32-.13.68-.1.97.06v-.12z"/>
+                    </svg>
+                    View on Play Store ↗
+                  </a>
+                </FadeUp>
+              )}
+
+              <FadeUp delay={0.25}>
                 <Link
                   href="/hire"
                   className="block bg-accent text-bg-primary text-center font-syne font-semibold text-sm px-6 py-4 rounded-sm hover:bg-accent-dim transition-colors"

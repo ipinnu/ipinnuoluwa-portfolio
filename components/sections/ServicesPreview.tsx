@@ -7,23 +7,23 @@ const services = [
     number: "01",
     title: "Mobile App Development",
     description:
-      "Flutter & React Native, cross-platform, from wireframe to Play Store and App Store submission.",
+      "Flutter and React Native. Cross-platform, from wireframe to store submission.",
     tags: ["Flutter", "React Native", "Firebase"],
     href: "/services#mobile",
   },
   {
     number: "02",
-    title: "Web Frontend",
+    title: "Full Website Development",
     description:
-      "Next.js and React applications — fast, accessible, animated, and production-ready.",
-    tags: ["Next.js", "React", "TypeScript"],
+      "Next.js frontend, AWS or Firebase backend, deployed and production-ready.",
+    tags: ["Next.js", "React", "AWS", "Firebase", "Hosting"],
     href: "/services#web",
   },
   {
     number: "03",
     title: "Product Consulting",
     description:
-      "From zero to shipped: strategy, scoping, team setup, and delivery. For teams without a technical co-founder.",
+      "Strategy, scoping, team setup. For founders who need tech guidance without a technical co-founder.",
     tags: ["Strategy", "Roadmap", "M365"],
     href: "/services#consulting",
   },

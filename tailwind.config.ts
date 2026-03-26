@@ -29,6 +29,7 @@ const config: Config = {
         "fade-in": "fadeIn 0.5s ease-out",
         "fade-up": "fadeUp 0.5s ease-out",
         "pulse-dot": "pulseDot 2s ease-in-out infinite",
+        "orbit-spin": "orbit-spin 20s linear infinite",
       },
       keyframes: {
         marquee: {
@@ -46,6 +47,10 @@ const config: Config = {
         pulseDot: {
           "0%, 100%": { opacity: "1", transform: "scale(1)" },
           "50%": { opacity: "0.5", transform: "scale(0.8)" },
+        },
+        "orbit-spin": {
+          from: { transform: "rotate(0deg)" },
+          to: { transform: "rotate(360deg)" },
         },
       },
       maxWidth: {

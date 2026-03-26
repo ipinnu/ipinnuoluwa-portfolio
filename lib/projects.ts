@@ -15,13 +15,15 @@ export interface Project {
   timeline: string;
   status: "Live" | "Shipped" | "Ongoing";
   image?: string;
+  liveUrl?: string;
+  playStoreUrl?: string;
 }
 
 export const projects: Project[] = [
   {
     slug: "autodrive",
     title: "Autodrive",
-    summary: "A full-stack fleet & driver management mobile app, shipped to the Play Store after two years of development.",
+    summary: "Fleet and driver management mobile app. Two years of development, shipped to the Play Store.",
     role: "Product Manager + Flutter Contributor",
     stack: ["Flutter", "Firebase", "GitHub Actions", "Dart"],
     tags: ["Mobile", "Flutter", "Product Management"],
@@ -30,13 +32,14 @@ export const projects: Project[] = [
     order_index: 1,
     category: "mobile",
     problem:
-      "Fleet operators in Nigeria lacked an affordable, mobile-first tool to manage drivers, track trips, and handle vehicle assignments. Existing solutions were desktop-only and expensive.",
+      "Fleet operators in Nigeria had no affordable mobile tool to manage drivers, track trips and handle vehicle assignments. Everything out there was desktop-only and expensive.",
     build:
-      "Led product scope, roadmap, and sprint cycles while contributing directly to the Flutter codebase. Implemented CI/CD with GitHub Actions for automated builds and Play Store deployment. Firebase handled authentication, real-time updates, and cloud storage.",
+      "Handled product scope, roadmap and sprint cycles while contributing directly to the Flutter codebase. Set up CI/CD with GitHub Actions for automated builds and Play Store deployment. Firebase handled authentication, real-time updates and cloud storage.",
     lessons:
-      "Two years taught me that shipping matters more than perfection. The product evolved from scope creep into focused delivery once we cut features and prioritised the core loop.",
+      "Two years taught me that shipping matters more than perfection. We had scope creep for a long time. Once we cut features and focused on the core loop, we actually shipped.",
     timeline: "2023 – 2025",
     status: "Shipped",
+    playStoreUrl: "https://play.google.com/store/apps/details?id=com.ipinnu.AutodriveNew",
   },
   {
     slug: "my-health-padi",
@@ -50,18 +53,18 @@ export const projects: Project[] = [
     order_index: 2,
     category: "mobile",
     problem:
-      "Health information in Nigeria is fragmented and hard to access on mobile. Users needed a single app for symptom checking, appointment reminders, and health records.",
+      "Health information in Nigeria is scattered and hard to access on mobile. Users needed one app for symptom checking, appointment reminders and health records.",
     build:
-      "Built all 25 screens in Flutter with a clean Bloc state management architecture. Firebase Firestore handled user health data, Firebase Auth managed accounts, and push notifications kept users engaged with medication and appointment reminders.",
+      "Built all 25 screens in Flutter using Bloc for state management. Firebase Firestore handled health data, Firebase Auth managed accounts, and push notifications handled medication and appointment reminders.",
     lessons:
-      "Health apps demand extreme attention to UX at every screen. A confused user in a health context is a failed product. I learned to design for the least technical user first.",
-    timeline: "2024",
-    status: "Shipped",
+      "A confused user in a health context means a failed product. I started designing every screen for the least technical person in the room.",
+    timeline: "2025 – Present",
+    status: "Ongoing",
   },
   {
     slug: "insdec",
     title: "iNSDEC Website & Internal Tools",
-    summary: "End-to-end tech setup for an NGO — company website, Microsoft 365 deployment, and internal workflow tools.",
+    summary: "End-to-end tech setup for an NGO. Company website, Microsoft 365 deployment and internal workflow tools.",
     role: "Technical Officer",
     stack: ["Next.js", "Microsoft 365", "SharePoint", "Power Automate"],
     tags: ["Web", "Consulting", "Business Tech"],
@@ -70,13 +73,58 @@ export const projects: Project[] = [
     order_index: 3,
     category: "consulting",
     problem:
-      "iNSDEC operated with no centralised communication platform, no document management system, and no public web presence. Staff used personal emails and WhatsApp for everything.",
+      "iNSDEC had no centralised communication platform, no document management and no public web presence. Staff were running everything through personal emails and WhatsApp.",
     build:
-      "Scoped and deployed Microsoft 365 for the entire organisation, including Teams, SharePoint, and OneDrive. Built internal workflow tools using Power Automate. Designed and built the company website with Next.js.",
+      "Scoped and deployed Microsoft 365 for the whole organisation including Teams, SharePoint and OneDrive. Built internal workflow tools with Power Automate. Designed and built the company website with Next.js.",
     lessons:
-      "Non-technical organisations need hand-holding through adoption, not just deployment. The tech is the easy part — the change management is the real challenge.",
+      "Non-technical organisations need proper hand-holding through adoption, not just deployment. The tech is the easy part. Getting people to actually use it is the real work.",
     timeline: "2025",
     status: "Live",
+    liveUrl: "https://luxury-torte-55be7e.netlify.app/",
+  },
+  {
+    slug: "brainbox-studios",
+    title: "BrainBox Studios",
+    summary:
+      "Full company website for a technology execution firm, built to convert enterprise clients across founders, startups, businesses and government institutions.",
+    role: "Web Designer & Developer",
+    stack: ["Next.js", "React", "Tailwind CSS", "Netlify"],
+    tags: ["Web", "Next.js", "Product Design"],
+    outcome: "Live · Enterprise-grade positioning · Covers 5 client tiers from founders to government",
+    featured: true,
+    order_index: 5,
+    category: "web",
+    problem:
+      "BrainBox Studios needed a web presence that matched the seriousness of their work. Government deployments, AI system architecture, enterprise contracts. A generic agency template would have undersold them.",
+    build:
+      "Designed and built the full site from scratch. Structured the narrative around five client tiers from founders to institutions, wrote the copy, built out service sections, a business model breakdown and a government case study for the NYSC-SAED programme. That was a 10,000+ user national deployment with 99.8% uptime.",
+    lessons:
+      "On a B2B website, positioning is the product. Every design decision has to reflect how serious the client is. I learned to build sites that do sales work, not just look good.",
+    timeline: "2024",
+    status: "Live",
+    liveUrl: "https://brainboxportfolio.netlify.app/",
+  },
+  {
+    slug: "autodrive-website",
+    title: "AutoDrive Nigeria — Marketing Site",
+    summary:
+      "Next.js marketing website for the AutoDrive app. A problem-led landing page built to drive beta signups for Nigeria's vehicle document management platform.",
+    role: "Web Designer & Developer",
+    stack: ["Next.js", "React", "CSS", "Netlify"],
+    tags: ["Web", "Next.js", "Marketing"],
+    outcome: "Live · Beta signup funnel · Mobile-first · Paired with Android app launch",
+    featured: false,
+    order_index: 6,
+    category: "web",
+    problem:
+      "AutoDrive needed a landing page that could do the explaining the app store listing could not. Convert people who had never heard of the product into beta users.",
+    build:
+      "Built with Next.js, mobile-first throughout. Opened with a problem narrative (18–25% of Nigerian drivers on the road with expired documents) before introducing AutoDrive as the answer. Used a limited-availability CTA to create urgency around the beta launch, with clear feature sections covering doorstep renewal, smart reminders and multi-vehicle management.",
+    lessons:
+      "A landing page has one job. Make the user take one action. I cut everything that did not serve that. No features for their own sake, no copy that makes the builder feel good but confuses the user.",
+    timeline: "2025",
+    status: "Live",
+    liveUrl: "https://visionary-hotteok-f36a9b.netlify.app/",
   },
   {
     slug: "hermex-travels",
@@ -90,11 +138,11 @@ export const projects: Project[] = [
     order_index: 4,
     category: "mobile",
     problem:
-      "HermexTravels needed a clean, fast mobile interface for their travel booking backend. The existing web UI didn't translate well to mobile, causing high drop-off rates.",
+      "HermexTravels needed a clean, fast mobile interface for their travel booking backend. The web UI did not translate well to mobile and users were dropping off.",
     build:
-      "Built responsive Flutter UI components with smooth animations and REST API integration. Focused on performance — lazy loading, optimistic UI updates, and efficient list rendering for search results.",
+      "Built responsive Flutter UI components with REST API integration. Focused on performance throughout: lazy loading, optimistic UI updates and efficient list rendering for search results.",
     lessons:
-      "Travel UX lives and dies by speed. A one-second delay on a search result costs a booking. I learned to profile Flutter apps relentlessly and cut every unnecessary rebuild.",
+      "In travel apps, speed is the UX. A one-second delay on a search result costs a booking. I started profiling Flutter apps properly and cutting every unnecessary rebuild.",
     timeline: "2024",
     status: "Ongoing",
   },
