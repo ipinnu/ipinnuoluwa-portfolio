@@ -109,9 +109,9 @@ export default function CaseStudyPage({ params }: Props) {
             <Image
               src={project.image}
               alt={`${project.title} — overview`}
-              width={1100}
-              height={620}
-              className="w-full h-auto"
+              width={6672}
+              height={5896}
+              style={{ width: "100%", height: "auto" }}
               priority
             />
           </div>
@@ -137,18 +137,25 @@ export default function CaseStudyPage({ params }: Props) {
 
               {project.images && project.images.length >= 2 && (
                 <FadeUp delay={0.05}>
-                  <div className="grid grid-cols-2 gap-4">
-                    {project.images.slice(0, 2).map((src, i) => (
-                      <div key={i} className="rounded-xl overflow-hidden border border-border bg-bg-secondary">
-                        <Image
-                          src={src}
-                          alt={`${project.title} screen ${i + 1}`}
-                          width={480}
-                          height={860}
-                          className="w-full h-auto"
-                        />
-                      </div>
-                    ))}
+                  <div className="grid grid-cols-2 gap-4 items-start">
+                    <div className="rounded-xl overflow-hidden border border-border bg-bg-secondary">
+                      <Image
+                        src={project.images[0]}
+                        alt={`${project.title} screen 1`}
+                        width={540}
+                        height={960}
+                        style={{ width: "100%", height: "auto" }}
+                      />
+                    </div>
+                    <div className="rounded-xl overflow-hidden border border-border bg-bg-secondary">
+                      <Image
+                        src={project.images[1]}
+                        alt={`${project.title} screen 2`}
+                        width={1560}
+                        height={3388}
+                        style={{ width: "100%", height: "auto" }}
+                      />
+                    </div>
                   </div>
                 </FadeUp>
               )}
@@ -185,9 +192,9 @@ export default function CaseStudyPage({ params }: Props) {
                     <Image
                       src={project.images[2]}
                       alt={`${project.title} — detail screen`}
-                      width={480}
-                      height={860}
-                      className="w-full h-auto"
+                      width={1560}
+                      height={3376}
+                      style={{ width: "100%", height: "auto" }}
                     />
                   </div>
                 </FadeUp>
