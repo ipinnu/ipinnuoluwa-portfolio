@@ -41,7 +41,7 @@ const itemVariants: Variants = {
 };
 
 // ─── Stack tags ───────────────────────────────────────────────────────────────
-const stackTags = ["Flutter", "React Native", "Next.js", "Firebase", "Supabase", "AWS", "Bloc"];
+const stackTags = ["Systems Architecture", "Enterprise Platforms", "Mobile Development", "Product Strategy", "Cloud Infrastructure"];
 
 // ─── Inline SVG icons ─────────────────────────────────────────────────────────
 function LinkedInIcon() {
@@ -138,7 +138,7 @@ export default function HeroSection() {
         >
           {/* Eyebrow */}
           <motion.p variants={shouldReduce ? undefined : itemVariants} style={{ fontFamily: "var(--font-jetbrains-mono)", fontSize: 12, color: "#A3C4B4", letterSpacing: "0.12em", textTransform: "uppercase", margin: 0 }}>
-            Flutter · React Native · Product
+            Systems · Architecture · Product Engineering
           </motion.p>
 
           {/* Headline */}
@@ -146,9 +146,9 @@ export default function HeroSection() {
             variants={shouldReduce ? undefined : itemVariants}
             style={{ fontFamily: "var(--font-syne)", fontWeight: 800, fontSize: "clamp(40px, 5.5vw, 72px)", color: "#F5F5F0", letterSpacing: "-0.02em", lineHeight: 1.02, margin: 0 }}
           >
-            From idea
+            I architect systems
             <br />
-            <span style={{ color: "#A3C4B4" }}>to App Store.</span>
+            <span style={{ color: "#A3C4B4" }}>that run businesses.</span>
           </motion.h1>
 
           {/* Subtext */}
@@ -156,9 +156,10 @@ export default function HeroSection() {
             variants={shouldReduce ? undefined : itemVariants}
             style={{ fontFamily: "var(--font-dm-sans)", fontSize: 17, fontWeight: 300, color: "#888884", lineHeight: 1.7, maxWidth: 480, margin: 0 }}
           >
-            I build mobile apps and web products that actually ship. Flutter,
-            React Native, Next.js. Based in Lagos, working with clients
-            across Nigeria and internationally.
+            Most software fails not from bad code, but from missing structure.
+            I design and build the operational systems — mobile platforms,
+            enterprise tools, internal infrastructure — that organisations
+            depend on to function.
           </motion.p>
 
           {/* Stack tags */}
@@ -173,12 +174,17 @@ export default function HeroSection() {
           {/* CTAs */}
           <motion.div variants={shouldReduce ? undefined : itemVariants} style={{ display: "flex", gap: 12, flexWrap: "wrap" }} className="cta-row">
             <motion.div whileHover={shouldReduce ? {} : { y: -2 }} whileTap={shouldReduce ? {} : { scale: 0.97 }}>
-              <Link href="/hire" style={{ display: "inline-block", backgroundColor: "#A3C4B4", color: "#0A0A0A", fontFamily: "var(--font-dm-sans)", fontSize: 14, fontWeight: 500, padding: "12px 24px", borderRadius: 8, textDecoration: "none" }}>
-                Hire me →
-              </Link>
+              <a
+                href="https://wa.me/2348133754181?text=Hi%20Ipinnuoluwa%2C%20I%20came%20across%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project.%20Here%27s%20a%20brief%20overview%3A%20"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: "inline-block", backgroundColor: "#A3C4B4", color: "#0A0A0A", fontFamily: "var(--font-dm-sans)", fontSize: 14, fontWeight: 500, padding: "12px 24px", borderRadius: 8, textDecoration: "none" }}
+              >
+                Start a Project →
+              </a>
             </motion.div>
             <Link href="/work" className="ghost-cta" style={{ display: "inline-block", backgroundColor: "transparent", color: "#888884", fontFamily: "var(--font-dm-sans)", fontSize: 14, fontWeight: 400, padding: "12px 24px", borderRadius: 8, border: "0.5px solid #333330", textDecoration: "none", transition: "border-color 0.15s, color 0.15s" }}>
-              See my work
+              View Case Studies
             </Link>
           </motion.div>
         </motion.div>
@@ -215,7 +221,7 @@ export default function HeroSection() {
                 Ipinnuoluwa Oladipo
               </p>
               <p style={{ fontFamily: "var(--font-dm-sans)", fontSize: 13, fontWeight: 300, color: "#888884", margin: 0 }}>
-                Mobile & Product Engineer
+                Systems Architect · Product Engineer
               </p>
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <div style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: "#444440", flexShrink: 0 }} />
@@ -223,15 +229,12 @@ export default function HeroSection() {
               </div>
             </div>
 
-            {/* Available pill */}
+            {/* Availability signal */}
             <div style={{ borderTop: "0.5px solid #1A1A1A", borderBottom: "0.5px solid #1A1A1A", padding: "10px 0", display: "flex", justifyContent: "center", marginTop: 16 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, backgroundColor: "#0c1f0c", border: "0.5px solid #1c3a1c", borderRadius: 99, padding: "7px 16px" }}>
-                <div style={{ position: "relative", width: 8, height: 8 }}>
-                  <div className="avail-ring" style={{ position: "absolute", inset: -3, borderRadius: "50%", backgroundColor: "rgba(34,197,94,0.3)" }} />
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", backgroundColor: "#22c55e", position: "relative", zIndex: 1 }} />
-                </div>
-                <span style={{ fontFamily: "var(--font-dm-sans)", fontSize: 13, fontWeight: 500, color: "#4ade80" }}>
-                  Currently available
+              <div style={{ display: "flex", alignItems: "center", gap: 8, backgroundColor: "#111111", border: "0.5px solid #222220", borderRadius: 99, padding: "7px 16px" }}>
+                <div style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#A3C4B4", flexShrink: 0 }} />
+                <span style={{ fontFamily: "var(--font-jetbrains-mono)", fontSize: 11, color: "#888884", letterSpacing: "0.06em" }}>
+                  Selective intake · 2 spots open
                 </span>
               </div>
             </div>
@@ -252,8 +255,8 @@ export default function HeroSection() {
 
             {/* Stats */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, padding: "16px 24px 0" }}>
-              <StatBox target={6} duration={1200} label="Completed Projects" />
-              <StatBox target={2} duration={1000} label="Years Experience" />
+              <StatBox target={6} duration={1200} label="Systems Delivered" />
+              <StatBox target={2} duration={1000} label="Years Operating" />
             </div>
 
             {/* Divider */}
@@ -261,15 +264,18 @@ export default function HeroSection() {
 
             {/* Button stack */}
             <div style={{ display: "flex", flexDirection: "column", gap: 8, padding: "16px 24px 0" }}>
-              <a href="/cv.pdf" target="_blank" rel="noopener noreferrer"
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, backgroundColor: "#A3C4B4", color: "#0A0A0A", fontFamily: "var(--font-dm-sans)", fontSize: 13, fontWeight: 500, borderRadius: 8, padding: "11px 16px", textDecoration: "none" }}>
-                <DownloadIcon />
-                Download CV
+              <a
+                href="https://wa.me/2348133754181?text=Hi%20Ipinnuoluwa%2C%20I%20came%20across%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project.%20Here%27s%20a%20brief%20overview%3A%20"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, backgroundColor: "#A3C4B4", color: "#0A0A0A", fontFamily: "var(--font-dm-sans)", fontSize: 13, fontWeight: 500, borderRadius: 8, padding: "11px 16px", textDecoration: "none" }}
+              >
+                Start a Project →
               </a>
-              <a href="#contact" className="contact-btn"
+              <a href="/about" className="contact-btn"
                 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, backgroundColor: "transparent", color: "#888884", fontFamily: "var(--font-dm-sans)", fontSize: 13, fontWeight: 400, borderRadius: 8, padding: "11px 16px", border: "0.5px solid #222220", textDecoration: "none", transition: "border-color 0.15s, color 0.15s" }}>
                 <EnvelopeIcon />
-                Contact Me
+                Who I am
               </a>
             </div>
           </motion.div>

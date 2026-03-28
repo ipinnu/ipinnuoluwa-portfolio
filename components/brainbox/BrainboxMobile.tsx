@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { BrainboxNode } from '@/lib/types/brainbox'
 import { NODE_COLORS, NODE_SIZES } from '@/lib/types/brainbox'
@@ -85,6 +86,15 @@ export default function BrainboxMobile({ nodes }: BrainboxMobileProps) {
               </span>
             ))}
           </div>
+
+          {/* Private blog shortcut */}
+          <Link
+            href="/blog"
+            className="font-mono text-[10px] text-text-tertiary hover:text-accent transition-colors mt-4"
+            style={{ opacity: 0.35 }}
+          >
+            ✦ blog
+          </Link>
         </div>
       </div>
 

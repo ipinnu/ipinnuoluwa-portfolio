@@ -7,7 +7,7 @@ import BottomCTA from "@/components/sections/BottomCTA";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Mechanical Engineering graduate turned mobile and product engineer. Based in Lagos, building for the world.",
+    "Systems architect and product engineer. Mechanical Engineering background, operating at the intersection of structure and software. Based in Lagos.",
 };
 
 const experience = [
@@ -23,7 +23,7 @@ const experience = [
     company: "Autodrive",
     period: "2023 – 2025",
     description:
-      "Handled roadmap, sprint planning and direct code contributions for two years until we shipped to the Play Store.",
+      "Handled roadmap, sprint planning and direct code contributions. Shipped the product to the Play Store.",
   },
   {
     role: "Frontend Engineer",
@@ -66,19 +66,19 @@ const stack = [
 
 const values = [
   {
-    statement: "I ship. Not just prototype.",
+    statement: "Structure first. Code second.",
     detail:
-      "Ideas are cheap. The Play Store is full of apps that never got finished. I care about that last 20% that actually gets things live.",
+      "A system without architecture is just a collection of files waiting to fail. I design the structure before anything is built — data flows, boundaries, dependencies. That is what makes scale possible.",
   },
   {
-    statement: "I communicate clearly, even when it's hard.",
+    statement: "Delivery is a professional obligation.",
     detail:
-      "If something is off or taking longer than expected, I will tell you. You will not have to chase me for updates.",
+      "I do not build prototypes. I build systems that ship, run in production, and transfer cleanly. The last 20% that separates a demo from a product is where most of my attention goes.",
   },
   {
-    statement: "I build for users, not portfolios.",
+    statement: "No dependency. Full ownership.",
     detail:
-      "Every decision starts with whoever is actually going to use the product. Not what looks good in a screenshot.",
+      "Every engagement ends with the client owning everything: code, documentation, architecture decisions. I do not build systems that require me to maintain them unless that is the explicit arrangement.",
   },
 ];
 
@@ -92,9 +92,9 @@ export default function AboutPage() {
             <FadeUp>
               <SectionLabel label="About" className="mb-6" />
               <h1 className="font-syne font-black text-5xl md:text-7xl text-text-primary leading-tight mb-8">
-                The person
+                Built on
                 <br />
-                <span className="text-accent">behind the code</span>
+                <span className="text-accent">systems thinking</span>
               </h1>
             </FadeUp>
 
@@ -102,27 +102,32 @@ export default function AboutPage() {
               <div className="space-y-4 text-text-secondary leading-relaxed">
                 <p>
                   I studied Mechanical Engineering at Covenant University.
-                  That taught me to think in systems rather than just
-                  features. At some point I figured out I could build the
-                  software I was drawing on paper. That was it for me.
+                  Engineering trains you to think in systems — loads,
+                  constraints, failure points, tolerances. At some point I
+                  realised I could build the systems I was drawing on paper.
+                  That was the shift.
                 </p>
                 <p>
-                  Based in Lagos. I work with startups, SMEs, and remote
-                  clients across Nigeria and internationally. Every project
-                  gets shipped. That is the baseline.
+                  I operate at the intersection of architecture and
+                  execution. I do not just write code — I design the
+                  structure that makes it work under real conditions. Based
+                  in Lagos, working with clients across Nigeria and
+                  internationally.
                 </p>
                 <p>
-                  When I am not coding I am writing about what I am
-                  learning. Explaining things properly helps me understand
-                  them better.
+                  Every engagement I take is documented, structured, and
+                  delivered with full ownership transfer. I do not build
+                  dependencies.
                 </p>
               </div>
-              <Link
-                href="/hire"
+              <a
+                href="https://wa.me/2348133754181?text=Hi%20Ipinnuoluwa%2C%20I%20found%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project.%20Brief%20overview%3A%20"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 mt-8 bg-accent text-bg-primary font-syne font-semibold text-sm px-6 py-3 rounded-sm hover:bg-accent-dim transition-colors"
               >
-                Work with me →
-              </Link>
+                Start a Project →
+              </a>
             </FadeUp>
           </div>
         </div>
@@ -132,9 +137,9 @@ export default function AboutPage() {
       <section className="py-20 md:py-32 border-b border-border">
         <div className="max-w-content mx-auto px-6">
           <FadeUp>
-            <SectionLabel label="How I work" className="mb-4" />
+            <SectionLabel label="Operating principles" className="mb-4" />
             <h2 className="font-syne font-bold text-3xl md:text-4xl text-text-primary mb-16">
-              What I stand for
+              How I work
             </h2>
           </FadeUp>
 

@@ -10,7 +10,6 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/work", label: "Work" },
   { href: "/services", label: "Services" },
-  { href: "/blog", label: "Blog" },
   { href: "/brainbox", label: "My World" },
   { href: "/about", label: "About" },
 ];
@@ -86,12 +85,14 @@ export default function Nav() {
 
           {/* CTA + Mobile Toggle */}
           <div className="flex items-center gap-4">
-            <Link
-              href="/hire"
+            <a
+              href="https://wa.me/2348133754181?text=Hi%20Ipinnuoluwa%2C%20I%20found%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project.%20Brief%20overview%3A%20"
+              target="_blank"
+              rel="noopener noreferrer"
               className="hidden md:inline-flex items-center gap-1.5 bg-accent text-bg-primary text-sm font-semibold px-4 py-2 rounded-sm hover:bg-accent-dim transition-colors"
             >
-              Hire me →
-            </Link>
+              Start a Project →
+            </a>
 
             <button
               onClick={() => setMenuOpen(!menuOpen)}
@@ -157,12 +158,14 @@ export default function Nav() {
                 transition={{ delay: navLinks.length * 0.06, duration: 0.3 }}
                 className="mt-8"
               >
-                <Link
-                  href="/hire"
+                <a
+                  href="https://wa.me/2348133754181?text=Hi%20Ipinnuoluwa%2C%20I%20found%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project.%20Brief%20overview%3A%20"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-accent text-bg-primary font-semibold px-6 py-3 rounded-sm"
                 >
-                  Hire me →
-                </Link>
+                  Start a Project →
+                </a>
               </motion.div>
             </div>
           </motion.div>

@@ -1,16 +1,16 @@
 const items = [
+  "Systems Architecture",
   "Autodrive",
-  "My Health Padi",
+  "Enterprise Platforms",
   "iNSDEC",
+  "Mobile Development",
+  "My Health Padi",
+  "Product Engineering",
   "HermexTravels",
-  "Flutter",
-  "Firebase",
-  "AWS",
-  "React Native",
-  "Next.js",
-  "Supabase",
-  "TypeScript",
-  "Bloc",
+  "Cloud Infrastructure",
+  "Technical Advisory",
+  "Flutter · React Native · Next.js",
+  "AWS · Supabase · Firebase",
 ];
 
 export default function MarqueeStrip() {

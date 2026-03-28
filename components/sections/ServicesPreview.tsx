@@ -5,27 +5,27 @@ import SectionLabel from "@/components/ui/SectionLabel";
 const services = [
   {
     number: "01",
-    title: "Mobile App Development",
+    title: "Systems Architecture",
     description:
-      "Flutter and React Native. Cross-platform, from wireframe to store submission.",
-    tags: ["Flutter", "React Native", "Firebase"],
-    href: "/services#mobile",
+      "Before anything is built, the system must be designed. I map structure, data flows, and dependencies — so the build phase has no guesswork.",
+    tags: ["Strategy", "Architecture", "Systems Design"],
+    href: "/services#architecture",
   },
   {
     number: "02",
-    title: "Full Website Development",
+    title: "Product Engineering",
     description:
-      "Next.js frontend, AWS or Firebase backend, deployed and production-ready.",
-    tags: ["Next.js", "React", "AWS", "Firebase", "Hosting"],
-    href: "/services#web",
+      "Full-stack implementation of enterprise tools, internal platforms, and web applications. Built to production standard, not demo quality.",
+    tags: ["Next.js", "AWS", "Supabase", "Enterprise"],
+    href: "/services#enterprise",
   },
   {
     number: "03",
-    title: "Product Consulting",
+    title: "Mobile Platforms",
     description:
-      "Strategy, scoping, team setup. For founders who need tech guidance without a technical co-founder.",
-    tags: ["Strategy", "Roadmap", "M365"],
-    href: "/services#consulting",
+      "Cross-platform mobile systems built with Flutter or React Native. One codebase, both stores, production-ready.",
+    tags: ["Flutter", "React Native", "iOS", "Android"],
+    href: "/services#mobile",
   },
 ];
 
@@ -34,9 +34,9 @@ export default function ServicesPreview() {
     <section className="py-20 md:py-32">
       <div className="max-w-content mx-auto px-6">
         <FadeUp>
-          <SectionLabel label="What I do" className="mb-4" />
+          <SectionLabel label="Capabilities" className="mb-4" />
           <h2 className="font-syne font-bold text-3xl md:text-4xl text-text-primary mb-16">
-            Services
+            What I build
           </h2>
         </FadeUp>
 

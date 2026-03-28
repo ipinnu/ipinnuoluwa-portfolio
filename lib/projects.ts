@@ -15,6 +15,7 @@ export interface Project {
   timeline: string;
   status: "Live" | "Shipped" | "Ongoing";
   image?: string;
+  images?: string[];
   liveUrl?: string;
   playStoreUrl?: string;
 }
@@ -23,22 +24,29 @@ export const projects: Project[] = [
   {
     slug: "autodrive",
     title: "Autodrive",
-    summary: "Fleet and driver management mobile app. Two years of development, shipped to the Play Store.",
-    role: "Product Manager + Flutter Contributor",
-    stack: ["Flutter", "Firebase", "GitHub Actions", "Dart"],
-    tags: ["Mobile", "Flutter", "Product Management"],
-    outcome: "Shipped to Play Store · 2-year development · Full CI/CD pipeline",
+    summary:
+      "A renewal and document management platform built for Nigerian drivers. Covers license, insurance, and roadworthiness renewals — with structured booking flows, Flutterwave payment integration, automated reminders, and admin-side tooling for backend teams.",
+    role: "Product Designer & Flutter Engineer",
+    stack: ["Flutter", "Firebase", "Flutterwave", "GitHub Actions", "Dart", "Figma"],
+    tags: ["Mobile", "Flutter", "Fintech", "Product Design"],
+    outcome: "Shipped to Play Store · Flutterwave payments integrated · End-to-end renewal flows · CI/CD pipeline · Android & iOS",
     featured: true,
     order_index: 1,
     category: "mobile",
     problem:
-      "Fleet operators in Nigeria had no affordable mobile tool to manage drivers, track trips and handle vehicle assignments. Everything out there was desktop-only and expensive.",
+      "Millions of Nigerian drivers operate with expired licenses, insurance, and roadworthiness certificates — not from negligence, but because the renewal process is fragmented, opaque, and difficult to navigate on mobile. There was no single platform that handled the full cycle from document tracking to payment to confirmation, and backend teams had no structured tooling to support them.",
     build:
-      "Handled product scope, roadmap and sprint cycles while contributing directly to the Flutter codebase. Set up CI/CD with GitHub Actions for automated builds and Play Store deployment. Firebase handled authentication, real-time updates and cloud storage.",
+      "Translated Figma UI/UX flows into production-ready Flutter code, ensuring the final product matched design intent while staying optimised for real-world driver habits. Built structured booking logic that adapts to different renewal types, dynamically surfaces required documents per vehicle profile, and validates user input to reduce errors before submission.\n\nIntegrated secure Flutterwave payment hooks with edge-case handling across failed payments, timeouts, and duplicates — ensuring smooth progression regardless of network conditions. Introduced role-based access controls and admin-side interfaces that gave backend teams clear status visibility and streamlined their support workflows.\n\nUsed GitHub branching strategies and pull requests to maintain clean code practices throughout. Set up deployment pipelines that ensured quick, reliable updates — reducing downtime and giving both users and operational partners confidence in the platform's stability.",
     lessons:
-      "Two years taught me that shipping matters more than perfection. We had scope creep for a long time. Once we cut features and focused on the core loop, we actually shipped.",
+      "The hardest part of building for this market is not the technology — it is designing for trust. Nigerian users have been burned by apps that take payments and disappear. Every edge case in the payment flow, every status indicator, every confirmation screen was an opportunity to either build or destroy that trust. I learned to engineer for confidence, not just functionality.",
     timeline: "2023 – 2025",
     status: "Shipped",
+    image: "/images/projects/autodrive/Frame%20486.png",
+    images: [
+      "/images/projects/autodrive/Frame%20536.png",
+      "/images/projects/autodrive/Your%20Profile.png",
+      "/images/projects/autodrive/Your%20Profile%20-%20Personal%20Info%20-%20Address%20details.png",
+    ],
     playStoreUrl: "https://play.google.com/store/apps/details?id=com.ipinnu.AutodriveNew",
   },
   {

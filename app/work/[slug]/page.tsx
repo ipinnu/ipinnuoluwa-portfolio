@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { getProjectBySlug, projects } from "@/lib/projects";
 import Tag from "@/components/ui/Tag";
 import FadeUp from "@/components/ui/FadeUp";
@@ -101,6 +102,22 @@ export default function CaseStudyPage({ params }: Props) {
         </div>
       </section>
 
+      {/* Hero image */}
+      {project.image && (
+        <div className="border-b border-border bg-bg-secondary">
+          <div className="max-w-content mx-auto">
+            <Image
+              src={project.image}
+              alt={`${project.title} — overview`}
+              width={1100}
+              height={620}
+              className="w-full h-auto"
+              priority
+            />
+          </div>
+        </div>
+      )}
+
       {/* Case study body */}
       <section className="py-20 md:py-32">
         <div className="max-w-content mx-auto px-6">
@@ -118,6 +135,24 @@ export default function CaseStudyPage({ params }: Props) {
                 </div>
               </FadeUp>
 
+              {project.images && project.images.length >= 2 && (
+                <FadeUp delay={0.05}>
+                  <div className="grid grid-cols-2 gap-4">
+                    {project.images.slice(0, 2).map((src, i) => (
+                      <div key={i} className="rounded-xl overflow-hidden border border-border bg-bg-secondary">
+                        <Image
+                          src={src}
+                          alt={`${project.title} screen ${i + 1}`}
+                          width={480}
+                          height={860}
+                          className="w-full h-auto"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </FadeUp>
+              )}
+
               <FadeUp delay={0.05}>
                 <div>
                   <p className="font-mono text-xs text-accent uppercase tracking-widest mb-4">
@@ -134,11 +169,29 @@ export default function CaseStudyPage({ params }: Props) {
                   <p className="font-mono text-xs text-accent uppercase tracking-widest mb-4">
                     The Build
                   </p>
-                  <p className="text-text-secondary leading-relaxed">
-                    {project.build}
-                  </p>
+                  <div className="space-y-4">
+                    {project.build.split("\n\n").map((para, i) => (
+                      <p key={i} className="text-text-secondary leading-relaxed">
+                        {para}
+                      </p>
+                    ))}
+                  </div>
                 </div>
               </FadeUp>
+
+              {project.images && project.images.length >= 3 && (
+                <FadeUp delay={0.12}>
+                  <div className="rounded-xl overflow-hidden border border-border bg-bg-secondary max-w-xs">
+                    <Image
+                      src={project.images[2]}
+                      alt={`${project.title} — detail screen`}
+                      width={480}
+                      height={860}
+                      className="w-full h-auto"
+                    />
+                  </div>
+                </FadeUp>
+              )}
 
               <FadeUp delay={0.15}>
                 <div className="bg-bg-secondary border border-border p-8">
@@ -221,12 +274,14 @@ export default function CaseStudyPage({ params }: Props) {
               )}
 
               <FadeUp delay={0.25}>
-                <Link
-                  href="/hire"
+                <a
+                  href="https://wa.me/2348133754181?text=Hi%20Ipinnuoluwa%2C%20I%20saw%20your%20work%20and%20would%20like%20to%20discuss%20a%20similar%20project.%20Brief%20overview%3A%20"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="block bg-accent text-bg-primary text-center font-syne font-semibold text-sm px-6 py-4 rounded-sm hover:bg-accent-dim transition-colors"
                 >
-                  Want something like this? Hire me →
-                </Link>
+                  Build something like this →
+                </a>
               </FadeUp>
             </div>
           </div>

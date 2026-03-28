@@ -2,11 +2,11 @@ import FadeUp from "@/components/ui/FadeUp";
 import SectionLabel from "@/components/ui/SectionLabel";
 
 const steps = [
-  { number: "01", title: "Discovery call", description: "We talk through your idea, goals, and constraints." },
-  { number: "02", title: "Scope & proposal", description: "I send a clear proposal with scope, timeline, and price." },
-  { number: "03", title: "Build", description: "Regular updates, no surprises. You see progress every week." },
-  { number: "04", title: "Review & ship", description: "You test it. We refine. Then we launch." },
-  { number: "05", title: "Handoff", description: "Code, docs, and knowledge transfer. You own everything." },
+  { number: "01", title: "Diagnose", description: "Map the current state, constraints, and failure points before any solution is proposed." },
+  { number: "02", title: "Architect", description: "Design the system structure, data flows, and component relationships. Nothing built without a blueprint." },
+  { number: "03", title: "Build", description: "Precision implementation with weekly checkpoints. You always know where things stand." },
+  { number: "04", title: "Validate", description: "Stress-tested against real conditions before anything ships." },
+  { number: "05", title: "Transfer", description: "Full ownership: code, documentation, and a live walkthrough. No dependency on me." },
 ];
 
 export default function ProcessSection() {
@@ -14,9 +14,9 @@ export default function ProcessSection() {
     <section className="py-20 md:py-32 border-t border-border">
       <div className="max-w-content mx-auto px-6">
         <FadeUp>
-          <SectionLabel label="How it works" className="mb-4" />
+          <SectionLabel label="The method" className="mb-4" />
           <h2 className="font-syne font-bold text-3xl md:text-4xl text-text-primary mb-16">
-            The process
+            Operating framework
           </h2>
         </FadeUp>
 
