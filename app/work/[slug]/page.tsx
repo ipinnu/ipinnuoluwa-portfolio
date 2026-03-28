@@ -137,25 +137,21 @@ export default function CaseStudyPage({ params }: Props) {
 
               {project.images && project.images.length >= 2 && (
                 <FadeUp delay={0.05}>
-                  <div className="grid grid-cols-2 gap-4 items-start">
-                    <div className="rounded-xl overflow-hidden border border-border bg-bg-secondary">
-                      <Image
-                        src={project.images[0]}
-                        alt={`${project.title} screen 1`}
-                        width={540}
-                        height={960}
-                        style={{ width: "100%", height: "auto" }}
-                      />
-                    </div>
-                    <div className="rounded-xl overflow-hidden border border-border bg-bg-secondary">
-                      <Image
-                        src={project.images[1]}
-                        alt={`${project.title} screen 2`}
-                        width={1560}
-                        height={3388}
-                        style={{ width: "100%", height: "auto" }}
-                      />
-                    </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    {[project.images[0], project.images[1]].map((src, i) => (
+                      <div
+                        key={i}
+                        className="rounded-xl overflow-hidden border border-border bg-bg-secondary"
+                        style={{ position: "relative", aspectRatio: "9/16" }}
+                      >
+                        <Image
+                          src={src}
+                          alt={`${project.title} screen ${i + 1}`}
+                          fill
+                          style={{ objectFit: "cover", objectPosition: "top" }}
+                        />
+                      </div>
+                    ))}
                   </div>
                 </FadeUp>
               )}
