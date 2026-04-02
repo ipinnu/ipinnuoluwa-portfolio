@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { projects } from "@/lib/projects";
 import Tag from "@/components/ui/Tag";
@@ -59,8 +60,23 @@ export default function ProjectGrid() {
               >
                 <Link
                   href={`/work/${project.slug}`}
-                  className="group block bg-bg-secondary hover:bg-bg-tertiary transition-colors p-8 h-full"
+                  className="group block bg-bg-secondary hover:bg-bg-tertiary transition-colors h-full"
                 >
+                  {/* Cover image */}
+                  {project.image && (
+                    <div className="relative w-full aspect-[16/9] overflow-hidden bg-bg-tertiary">
+                      <Image
+                        src={project.image}
+                        alt={project.title}
+                        fill
+                        className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-bg-secondary/60 to-transparent" />
+                    </div>
+                  )}
+
+                  <div className="p-8">
                   {/* Status */}
                   <div className="flex items-center justify-between mb-6">
                     <span className="font-mono text-xs text-text-tertiary border border-border px-2 py-0.5">
@@ -101,6 +117,7 @@ export default function ProjectGrid() {
                   <span className="font-mono text-xs text-text-secondary group-hover:text-accent transition-colors">
                     View case study →
                   </span>
+                  </div>
                 </Link>
               </motion.div>
             ))}

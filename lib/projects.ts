@@ -16,6 +16,7 @@ export interface Project {
   status: "Live" | "Shipped" | "Ongoing";
   image?: string;
   images?: string[];
+  imageLayout?: "grid" | "stack";
   liveUrl?: string;
   playStoreUrl?: string;
 }
@@ -52,43 +53,58 @@ export const projects: Project[] = [
   {
     slug: "my-health-padi",
     title: "My Health Padi",
-    summary: "A 25-screen cross-platform health companion app built with Flutter and Firebase.",
+    summary:
+      "A telemedicine mobile application connecting patients with healthcare professionals. Streamlines consultations, appointment management, and patient communication — with an integrated AI layer for preliminary responses and symptom triage.",
     role: "Flutter Developer",
-    stack: ["Flutter", "Firebase", "Dart"],
-    tags: ["Mobile", "Flutter", "Health"],
-    outcome: "25-screen health app · Cross-platform · Android & iOS",
+    stack: ["Flutter", "Firebase", "Dart", "Bloc", "GitHub Actions"],
+    tags: ["Mobile", "Flutter", "Health", "AI", "Telemedicine"],
+    outcome: "Role-based telemedicine app · AI patient interaction · CI/CD to Play Store internal track · Cross-platform Android & iOS",
     featured: true,
     order_index: 2,
     category: "mobile",
     problem:
-      "Health information in Nigeria is scattered and hard to access on mobile. Users needed one app for symptom checking, appointment reminders and health records.",
+      "Access to healthcare professionals in Nigeria is limited by geography, cost, and availability. Patients needed a way to consult doctors remotely, manage appointments, and get reliable guidance — without the friction of in-person visits. Healthcare teams needed structured tooling to handle patient communication at scale.",
     build:
-      "Built all 25 screens in Flutter using Bloc for state management. Firebase Firestore handled health data, Firebase Auth managed accounts, and push notifications handled medication and appointment reminders.",
+      "Used Bloc to implement a clean, scalable architecture separating UI, business logic, and data layers. Built modular APIs and a responsive, role-based UI serving three distinct user types — patients, doctors, and admins — each with their own flows and permissions. Applied test-driven development on critical features to ensure reliability across user roles.\n\nSet up GitHub Actions CI/CD pipelines to automatically build, test, and upload the app to an internal Play Store testing track — maintaining a production-ready workflow end-to-end.\n\nIntegrated an AI layer to provide intelligent responses to patients: symptom triage, automated guidance, and frequently asked questions. This reduces the load on healthcare professionals while improving patient engagement and accessibility from first contact.",
     lessons:
-      "A confused user in a health context means a failed product. I started designing every screen for the least technical person in the room.",
+      "In healthcare, trust is the product. Every screen — from a symptom input to an AI response — had to communicate reliability, not just function. I learned to design for confidence first, features second.",
     timeline: "2025 – Present",
     status: "Ongoing",
+    image: "/images/projects/my-health-padi/cover.avif",
+    images: [
+      "/images/projects/my-health-padi/Home%20page.avif",
+      "/images/projects/my-health-padi/Screenshot%202026-03-31%20142740.png",
+      "/images/projects/my-health-padi/0dPnF0rGYoF2BwUEXfSewoGro.avif",
+      "/images/projects/my-health-padi/NoHdlaalRsJLbVuNatPF09cTZ4.avif",
+    ],
   },
   {
     slug: "insdec",
-    title: "iNSDEC Website & Internal Tools",
-    summary: "End-to-end tech setup for an NGO. Company website, Microsoft 365 deployment and internal workflow tools.",
-    role: "Technical Officer",
-    stack: ["Next.js", "Microsoft 365", "SharePoint", "Power Automate"],
-    tags: ["Web", "Consulting", "Business Tech"],
-    outcome: "M365 deployed for full org · Internal tools live · Company website shipped",
+    title: "YSoT Website",
+    summary:
+      "A dynamic company website for the Yaba School of Thought (YSoT) — featuring a full blogging system, event management, and gallery, backed by a custom CMS that gives the team complete content control without technical support.",
+    role: "Web Developer",
+    stack: ["Flutter", "Firebase", "Netlify", "Framer", "Android Studio"],
+    tags: ["Web", "Flutter", "CMS", "Full Stack"],
+    outcome: "Live · Custom CMS deployed · Full blog and event system · Mobile-ready shared codebase",
     featured: false,
     order_index: 3,
-    category: "consulting",
+    category: "web",
     problem:
-      "iNSDEC had no centralised communication platform, no document management and no public web presence. Staff were running everything through personal emails and WhatsApp.",
+      "YSoT needed more than a static brochure site. As an organisation publishing policy briefs, hosting events, and growing a community, they needed a platform their own team could update in real time — without raising a support ticket every time they wanted to post an article or add a gallery image.",
     build:
-      "Scoped and deployed Microsoft 365 for the whole organisation including Teams, SharePoint and OneDrive. Built internal workflow tools with Power Automate. Designed and built the company website with Next.js.",
+      "Designed and implemented a custom backend CMS giving the YSoT team complete ownership of their content. From publishing blog posts and updating event details to managing gallery media, the team can independently keep the site current without external intervention. The CMS was built to be intuitive for non-technical users while maintaining structure and consistency in how content is presented — so the site stays coherent as it grows.\n\nBuilt the website on Flutter for web, delivering a responsive, high-performance experience across devices. The shared codebase also lays the groundwork for a future mobile app — core features can be extended to native Android and iOS without rebuilding from scratch. Firebase handles the backend and data layer, with Netlify managing deployment and hosting.",
     lessons:
-      "Non-technical organisations need proper hand-holding through adoption, not just deployment. The tech is the easy part. Getting people to actually use it is the real work.",
+      "Handing over a website is not the end — it is the beginning. Building a CMS that a non-technical team will actually use taught me that the interface for managing content is as important as the content itself. If it is confusing, it will not be used.",
     timeline: "2025",
     status: "Live",
     liveUrl: "https://luxury-torte-55be7e.netlify.app/",
+    image: "/images/projects/insdec/Screenshot%202026-03-31%20162202.png",
+    imageLayout: "stack",
+    images: [
+      "/images/projects/insdec/Screenshot%202026-03-31%20162234.png",
+      "/images/projects/insdec/Screenshot%202026-03-31%20163519.png",
+    ],
   },
   {
     slug: "brainbox-studios",
@@ -111,6 +127,12 @@ export const projects: Project[] = [
     timeline: "2024",
     status: "Live",
     liveUrl: "https://brainboxportfolio.netlify.app/",
+    image: "/images/projects/brainbox-studios/Screenshot%202026-03-31%20155925.png",
+    imageLayout: "stack",
+    images: [
+      "/images/projects/brainbox-studios/Screenshot%202026-03-31%20160048.png",
+      "/images/projects/brainbox-studios/Screenshot%202026-03-31%20160123.png",
+    ],
   },
   {
     slug: "autodrive-website",
@@ -133,6 +155,12 @@ export const projects: Project[] = [
     timeline: "2025",
     status: "Live",
     liveUrl: "https://visionary-hotteok-f36a9b.netlify.app/",
+    image: "/images/projects/autodrive-website/Screenshot%202026-03-31%20153648.png",
+    images: [
+      "/images/projects/autodrive-website/Screenshot%202026-03-31%20213827.png",
+      "/images/projects/autodrive-website/Screenshot%202026-03-31%20153839.png",
+      "/images/projects/autodrive-website/phone%20list.png",
+    ],
   },
   {
     slug: "hermex-travels",
@@ -153,6 +181,12 @@ export const projects: Project[] = [
       "In travel apps, speed is the UX. A one-second delay on a search result costs a booking. I started profiling Flutter apps properly and cutting every unnecessary rebuild.",
     timeline: "2024",
     status: "Ongoing",
+    image: "/images/projects/hermex-travels/unnamed%20(1).webp",
+    images: [
+      "/images/projects/hermex-travels/unnamed%20(1).webp",
+      "/images/projects/hermex-travels/unnamed.webp",
+      "/images/projects/hermex-travels/unnamed%20(2).webp",
+    ],
   },
 ];
 

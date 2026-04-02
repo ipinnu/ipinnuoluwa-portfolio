@@ -14,8 +14,8 @@ const footerLinks = {
 
 const socialLinks = [
   { href: "https://twitter.com/ipinnuoluwa", label: "Twitter" },
-  { href: "https://linkedin.com/in/ipinnuoluwa-oladipo", label: "LinkedIn" },
-  { href: "https://github.com/ipinnuoluwa", label: "GitHub" },
+  { href: "https://www.linkedin.com/in/ipinnu-oladipo-876360235/", label: "LinkedIn" },
+  { href: "https://github.com/ipinnu", label: "GitHub" },
 ];
 
 export default function Footer() {

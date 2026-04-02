@@ -3,30 +3,10 @@ import FadeUp from "@/components/ui/FadeUp";
 import SectionLabel from "@/components/ui/SectionLabel";
 
 const services = [
-  {
-    number: "01",
-    title: "Systems Architecture",
-    description:
-      "Before anything is built, the system must be designed. I map structure, data flows, and dependencies — so the build phase has no guesswork.",
-    tags: ["Strategy", "Architecture", "Systems Design"],
-    href: "/services#architecture",
-  },
-  {
-    number: "02",
-    title: "Product Engineering",
-    description:
-      "Full-stack implementation of enterprise tools, internal platforms, and web applications. Built to production standard, not demo quality.",
-    tags: ["Next.js", "AWS", "Supabase", "Enterprise"],
-    href: "/services#enterprise",
-  },
-  {
-    number: "03",
-    title: "Mobile Platforms",
-    description:
-      "Cross-platform mobile systems built with Flutter or React Native. One codebase, both stores, production-ready.",
-    tags: ["Flutter", "React Native", "iOS", "Android"],
-    href: "/services#mobile",
-  },
+  { number: "01", title: "Websites & Web Presence", href: "/services#websites" },
+  { number: "02", title: "Mobile Apps", href: "/services#mobile" },
+  { number: "03", title: "Web Apps & Custom Tools", href: "/services#tools" },
+  { number: "04", title: "Strategy & Technical Advisory", href: "/services#strategy" },
 ];
 
 export default function ServicesPreview() {
@@ -40,39 +20,39 @@ export default function ServicesPreview() {
           </h2>
         </FadeUp>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border">
+        <div className="divide-y divide-border border-t border-b border-border">
           {services.map((service, i) => (
-            <FadeUp key={service.number} delay={i * 0.1}>
-              <div className="bg-bg-primary p-8 h-full group hover:bg-bg-secondary transition-colors flex flex-col">
-                <span className="font-mono text-xs text-accent mb-6">
-                  {service.number}
-                </span>
-                <h3 className="font-syne font-bold text-lg text-text-primary mb-3">
-                  {service.title}
-                </h3>
-                <p className="text-text-secondary text-sm leading-relaxed flex-1 mb-6">
-                  {service.description}
-                </p>
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {service.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="font-mono text-xs text-text-tertiary border border-border px-2 py-0.5"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+            <FadeUp key={service.number} delay={i * 0.07}>
+              <Link
+                href={service.href}
+                className="flex items-center justify-between py-5 group"
+              >
+                <div className="flex items-center gap-5">
+                  <span className="font-mono text-xs text-accent w-6 flex-shrink-0">
+                    {service.number}
+                  </span>
+                  <span className="font-syne font-semibold text-xl text-text-primary group-hover:text-accent transition-colors">
+                    {service.title}
+                  </span>
                 </div>
-                <Link
-                  href={service.href}
-                  className="font-mono text-xs text-text-secondary group-hover:text-accent transition-colors"
-                >
-                  Learn more →
-                </Link>
-              </div>
+                <span className="font-mono text-text-tertiary group-hover:text-accent transition-colors">
+                  →
+                </span>
+              </Link>
             </FadeUp>
           ))}
         </div>
+
+        <FadeUp delay={0.35}>
+          <div className="mt-10">
+            <Link
+              href="/services"
+              className="font-mono text-sm text-text-secondary hover:text-accent transition-colors"
+            >
+              View all capabilities →
+            </Link>
+          </div>
+        </FadeUp>
       </div>
     </section>
   );

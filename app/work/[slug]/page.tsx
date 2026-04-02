@@ -135,24 +135,38 @@ export default function CaseStudyPage({ params }: Props) {
                 </div>
               </FadeUp>
 
-              {project.images && project.images.length >= 2 && (
+              {project.images && project.images.length >= 1 && (
                 <FadeUp delay={0.05}>
-                  <div className="grid grid-cols-2 gap-4">
-                    {[project.images[0], project.images[1]].map((src, i) => (
-                      <div
-                        key={i}
-                        className="rounded-xl overflow-hidden border border-border bg-bg-secondary"
-                        style={{ position: "relative", aspectRatio: "9/16" }}
-                      >
-                        <Image
-                          src={src}
-                          alt={`${project.title} screen ${i + 1}`}
-                          fill
-                          style={{ objectFit: "cover", objectPosition: "top" }}
-                        />
-                      </div>
-                    ))}
-                  </div>
+                  {project.imageLayout === "stack" ? (
+                    <div className="rounded-xl overflow-hidden border border-border bg-bg-secondary">
+                      <Image
+                        src={project.images[0]}
+                        alt={`${project.title} screen 1`}
+                        width={0}
+                        height={0}
+                        sizes="(max-width: 768px) 100vw, 66vw"
+                        style={{ width: "100%", height: "auto" }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-4 items-start">
+                      {[project.images[0], project.images[1]].map((src, i) => (
+                        <div
+                          key={i}
+                          className="rounded-xl overflow-hidden border border-border bg-bg-secondary"
+                        >
+                          <Image
+                            src={src}
+                            alt={`${project.title} screen ${i + 1}`}
+                            width={0}
+                            height={0}
+                            sizes="(max-width: 768px) 50vw, 33vw"
+                            style={{ width: "100%", height: "auto" }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </FadeUp>
               )}
 
@@ -182,14 +196,36 @@ export default function CaseStudyPage({ params }: Props) {
                 </div>
               </FadeUp>
 
-              {project.images && project.images.length >= 3 && (
+              {project.imageLayout === "stack" && project.images && project.images.length >= 2 && (
                 <FadeUp delay={0.12}>
-                  <div className="rounded-xl overflow-hidden border border-border bg-bg-secondary max-w-xs">
+                  <div className="flex flex-col gap-4">
+                    {project.images.slice(1).map((src, i) => (
+                      <div key={i} className="max-w-xs mx-auto w-full">
+                        <div className="rounded-xl overflow-hidden border border-border bg-bg-secondary">
+                          <Image
+                            src={src}
+                            alt={`${project.title} screen ${i + 2}`}
+                            width={0}
+                            height={0}
+                            sizes="320px"
+                            style={{ width: "100%", height: "auto" }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </FadeUp>
+              )}
+
+              {project.images && project.images.length >= 3 && project.imageLayout !== "stack" && (
+                <FadeUp delay={0.12}>
+                  <div className="rounded-xl overflow-hidden border border-border bg-bg-secondary">
                     <Image
                       src={project.images[2]}
                       alt={`${project.title} — detail screen`}
-                      width={1560}
-                      height={3376}
+                      width={0}
+                      height={0}
+                      sizes="(max-width: 768px) 100vw, 66vw"
                       style={{ width: "100%", height: "auto" }}
                     />
                   </div>
