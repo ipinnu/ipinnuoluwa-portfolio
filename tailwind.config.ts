@@ -14,6 +14,7 @@ const config: Config = {
         "bg-tertiary": "#1A1A1A",
         accent: "#A3C4B4",
         "accent-dim": "#82A898",
+        neon: "#E8FF47",
         "text-primary": "#F5F5F0",
         "text-secondary": "#888884",
         "text-tertiary": "#444440",

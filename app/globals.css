@@ -29,6 +29,20 @@
     background-color: #0A0A0A;
     color: #F5F5F0;
     font-family: var(--font-dm-sans), system-ui, sans-serif;
+    position: relative;
+  }
+
+  /* Grain / noise texture overlay — material quality */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 200px 200px;
   }
 
   ::selection {
@@ -67,6 +81,23 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+}
+
+/* Ambient glow — radial light source, used on hero + CTA sections */
+.glow-top {
+  position: relative;
+}
+.glow-top::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 80% 50% at 50% -5%,
+    rgba(232, 255, 71, 0.07) 0%,
+    transparent 70%
+  );
+  z-index: 0;
 }
 
 .grid-bg {
@@ -187,8 +218,8 @@
 }
 .avail-ring { animation: availPulse 2s infinite; }
 
-.ghost-cta:hover   { border-color: #888884 !important; color: #F5F5F0 !important; }
-.social-btn:hover  { border-color: #A3C4B4 !important; color: #A3C4B4 !important; }
+.ghost-cta:hover   { border-color: #E8FF47 !important; color: #E8FF47 !important; }
+.social-btn:hover  { border-color: #E8FF47 !important; color: #E8FF47 !important; }
 .contact-btn:hover { border-color: #444440 !important; color: #F5F5F0 !important; }
 
 @media (max-width: 768px) {
@@ -201,6 +232,76 @@
   .hero-left  { align-items: center; text-align: center; }
   .tags-row   { justify-content: center; }
   .cta-row    { justify-content: center; }
+}
+
+/* ── My World — Space canvas ─────────────────────────────────────────────── */
+
+/* Moon orbit */
+@keyframes moon-orbit {
+  from { transform: rotate(0deg) translateX(var(--moon-radius, 80px)) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(var(--moon-radius, 80px)) rotate(-360deg); }
+}
+.moon-arm {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 0; height: 0;
+  transform-origin: 0 0;
+  animation: moon-orbit var(--moon-duration, 14s) linear infinite;
+}
+
+/* Comet motion path */
+@keyframes comet-trail {
+  0%   { offset-distance: 0%;   opacity: 0; }
+  5%   { opacity: 1; }
+  95%  { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+.comet {
+  position: absolute;
+  width: 120px; height: 2px;
+  offset-path: path('M -120 300 Q 400 80 900 500 T 1900 200');
+  animation: comet-trail 22s linear infinite;
+  pointer-events: none;
+}
+.comet::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #F5F5F0;
+  box-shadow: 0 0 8px 3px rgba(245,245,240,0.6);
+}
+
+/* Planet glow ring pulse */
+@keyframes planet-pulse {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50%       { opacity: 0.30; transform: scale(1.08); }
+}
+
+/* Earth cloud layer rotation */
+@keyframes cloud-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Earth slow self-rotation shimmer */
+@keyframes earth-shimmer {
+  0%,100% { filter: brightness(1); }
+  50%      { filter: brightness(1.04); }
+}
+
+/* Satellite pulse */
+@keyframes sat-pulse {
+  0%,100% { box-shadow: 0 0 4px 1px rgba(245,245,240,0.4); }
+  50%      { box-shadow: 0 0 8px 3px rgba(245,245,240,0.7); }
+}
+
+/* Scroll chevron bounce */
+@keyframes chevron-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50%       { transform: translateY(6px); opacity: 0.8; }
 }
 
 /* Brainbox orbit animations */
@@ -238,7 +339,7 @@
 /* Background grid */
 .brainbox-grid {
   background-image:
-    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
   background-size: 48px 48px;
 }

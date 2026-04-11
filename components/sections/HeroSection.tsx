@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useInView, useReducedMotion, type Variants } from "framer-motion";
@@ -108,8 +108,31 @@ export default function HeroSection() {
   const leftRef = useRef(null);
   const isInView = useInView(leftRef, { once: true, margin: "-80px" });
 
+  // 3D tilt for profile card
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
+  const handleCardMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (shouldReduce || !cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const dx = (e.clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
+    const dy = (e.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
+    setTilt({ x: dy * -5, y: dx * 5 });
+  }, [shouldReduce]);
+
+  const handleCardMouseLeave = useCallback(() => setTilt({ x: 0, y: 0 }), []);
+
   return (
-    <section style={{ backgroundColor: "#0A0A0A", minHeight: "100vh", position: "relative", display: "flex", alignItems: "center" }}>
+    <section style={{ backgroundColor: "#0A0A0A", minHeight: "100svh", position: "relative", display: "flex", alignItems: "center", paddingTop: 64, paddingBottom: 0 }}>
+
+      {/* Ambient radial glow — light source at top */}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0,
+          background: "radial-gradient(ellipse 80% 50% at 50% -5%, rgba(232,255,71,0.07) 0%, transparent 70%)",
+        }}
+      />
 
       {/* Dot grid overlay */}
       <div
@@ -117,15 +140,15 @@ export default function HeroSection() {
         style={{
           position: "absolute", inset: 0, pointerEvents: "none",
           backgroundImage: `
-            linear-gradient(rgba(163,196,180,0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(163,196,180,0.03) 1px, transparent 1px)
+            linear-gradient(rgba(163,196,180,0.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(163,196,180,0.06) 1px, transparent 1px)
           `,
           backgroundSize: "48px 48px",
         }}
       />
 
       {/* Grid */}
-      <div className="hero-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "60px 24px", width: "100%", position: "relative", zIndex: 1 }}>
+      <div className="hero-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 24px", width: "100%", position: "relative", zIndex: 1 }}>
 
         {/* ── Left column ── */}
         <motion.div
@@ -133,22 +156,25 @@ export default function HeroSection() {
           variants={shouldReduce ? undefined : containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          style={{ display: "flex", flexDirection: "column", gap: 28 }}
+          style={{ display: "flex", flexDirection: "column", gap: 20 }}
           className="hero-left"
         >
-          {/* Eyebrow */}
-          <motion.p variants={shouldReduce ? undefined : itemVariants} style={{ fontFamily: "var(--font-jetbrains-mono)", fontSize: 12, color: "#A3C4B4", letterSpacing: "0.12em", textTransform: "uppercase", margin: 0 }}>
-            Systems · Architecture · Product Engineering
-          </motion.p>
+          {/* Eyebrow rule + label */}
+          <motion.div variants={shouldReduce ? undefined : itemVariants} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div style={{ width: 32, height: "0.5px", backgroundColor: "#333330" }} />
+            <p style={{ fontFamily: "var(--font-jetbrains-mono)", fontSize: 11, color: "#555552", letterSpacing: "0.14em", textTransform: "uppercase", margin: 0 }}>
+              Systems · Architecture · Product Engineering
+            </p>
+          </motion.div>
 
           {/* Headline */}
           <motion.h1
             variants={shouldReduce ? undefined : itemVariants}
-            style={{ fontFamily: "var(--font-syne)", fontWeight: 800, fontSize: "clamp(40px, 5.5vw, 72px)", color: "#F5F5F0", letterSpacing: "-0.02em", lineHeight: 1.02, margin: 0 }}
+            style={{ fontFamily: "var(--font-syne)", fontWeight: 800, fontSize: "clamp(40px, 5vw, 72px)", color: "#FFFFFF", letterSpacing: "-0.04em", lineHeight: 1.05, margin: 0 }}
           >
             I architect systems
             <br />
-            <span style={{ color: "#A3C4B4" }}>that run businesses.</span>
+            <span style={{ color: "#E8FF47" }}>that run businesses.</span>
           </motion.h1>
 
           {/* Subtext */}
@@ -165,7 +191,7 @@ export default function HeroSection() {
           {/* Stack tags */}
           <motion.div variants={shouldReduce ? undefined : itemVariants} style={{ display: "flex", flexWrap: "wrap", gap: 8 }} className="tags-row">
             {stackTags.map((tag) => (
-              <span key={tag} style={{ fontFamily: "var(--font-jetbrains-mono)", fontSize: 11, color: "#444440", backgroundColor: "#111111", border: "0.5px solid #222220", padding: "5px 10px", borderRadius: 4 }}>
+              <span key={tag} style={{ fontFamily: "var(--font-jetbrains-mono)", fontSize: 11, color: "#3A3A38", backgroundColor: "#0D0D0D", border: "0.5px solid #1A1A1A", padding: "5px 10px", borderRadius: 2 }}>
                 {tag}
               </span>
             ))}
@@ -178,7 +204,7 @@ export default function HeroSection() {
                 href="https://wa.me/2348133754181?text=Hi%20Ipinnuoluwa%2C%20I%20came%20across%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project.%20Here%27s%20a%20brief%20overview%3A%20"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ display: "inline-block", backgroundColor: "#A3C4B4", color: "#0A0A0A", fontFamily: "var(--font-dm-sans)", fontSize: 14, fontWeight: 500, padding: "12px 24px", borderRadius: 8, textDecoration: "none" }}
+                style={{ display: "inline-block", backgroundColor: "#A3C4B4", color: "#0A0A0A", fontFamily: "var(--font-dm-sans)", fontSize: 14, fontWeight: 600, padding: "12px 24px", borderRadius: 4, textDecoration: "none" }}
               >
                 Start a Project →
               </a>
@@ -197,10 +223,25 @@ export default function HeroSection() {
           className="hero-right"
           style={{ display: "flex", justifyContent: "center" }}
         >
-          <motion.div
-            animate={shouldReduce ? {} : { y: [0, -8, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            style={{ backgroundColor: "#111111", border: "0.5px solid #222220", borderRadius: 20, padding: "0 0 24px 0", width: "100%", maxWidth: 340, overflow: "hidden" }}
+          <div
+            ref={cardRef}
+            onMouseMove={handleCardMouseMove}
+            onMouseLeave={handleCardMouseLeave}
+            style={{
+              backgroundColor: "#111111",
+              border: "0.5px solid #222220",
+              borderRadius: 12,
+              padding: "0 0 24px 0",
+              width: "100%",
+              maxWidth: 340,
+              overflow: "hidden",
+              transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+              transition: tilt.x === 0 && tilt.y === 0
+                ? "transform 0.7s cubic-bezier(0.23, 1, 0.32, 1)"
+                : "transform 0.1s ease",
+              willChange: "transform",
+              cursor: "default",
+            }}
           >
             {/* Accent bar */}
             <div style={{ height: 3, backgroundColor: "#A3C4B4" }} />
@@ -268,17 +309,17 @@ export default function HeroSection() {
                 href="https://wa.me/2348133754181?text=Hi%20Ipinnuoluwa%2C%20I%20came%20across%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project.%20Here%27s%20a%20brief%20overview%3A%20"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, backgroundColor: "#A3C4B4", color: "#0A0A0A", fontFamily: "var(--font-dm-sans)", fontSize: 13, fontWeight: 500, borderRadius: 8, padding: "11px 16px", textDecoration: "none" }}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, backgroundColor: "#A3C4B4", color: "#0A0A0A", fontFamily: "var(--font-dm-sans)", fontSize: 13, fontWeight: 600, borderRadius: 4, padding: "11px 16px", textDecoration: "none" }}
               >
                 Start a Project →
               </a>
               <a href="/about" className="contact-btn"
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, backgroundColor: "transparent", color: "#888884", fontFamily: "var(--font-dm-sans)", fontSize: 13, fontWeight: 400, borderRadius: 8, padding: "11px 16px", border: "0.5px solid #222220", textDecoration: "none", transition: "border-color 0.15s, color 0.15s" }}>
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, backgroundColor: "transparent", color: "#888884", fontFamily: "var(--font-dm-sans)", fontSize: 13, fontWeight: 400, borderRadius: 4, padding: "11px 16px", border: "0.5px solid #222220", textDecoration: "none", transition: "border-color 0.15s, color 0.15s" }}>
                 <EnvelopeIcon />
                 Who I am
               </a>
             </div>
-          </motion.div>
+          </div>
         </motion.div>
       </div>
 

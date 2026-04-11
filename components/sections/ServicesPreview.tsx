@@ -25,17 +25,17 @@ export default function ServicesPreview() {
             <FadeUp key={service.number} delay={i * 0.07}>
               <Link
                 href={service.href}
-                className="flex items-center justify-between py-5 group"
+                className="flex items-center justify-between py-5 group hover:pl-2 transition-all duration-200"
               >
                 <div className="flex items-center gap-5">
                   <span className="font-mono text-xs text-accent w-6 flex-shrink-0">
                     {service.number}
                   </span>
-                  <span className="font-syne font-semibold text-xl text-text-primary group-hover:text-accent transition-colors">
+                  <span className="font-syne font-semibold text-xl text-text-primary group-hover:text-neon transition-colors">
                     {service.title}
                   </span>
                 </div>
-                <span className="font-mono text-text-tertiary group-hover:text-accent transition-colors">
+                <span className="font-mono text-text-tertiary group-hover:text-neon transition-colors">
                   →
                 </span>
               </Link>
@@ -47,7 +47,7 @@ export default function ServicesPreview() {
           <div className="mt-10">
             <Link
               href="/services"
-              className="font-mono text-sm text-text-secondary hover:text-accent transition-colors"
+              className="font-mono text-xs text-text-tertiary hover:text-neon transition-colors"
             >
               View all capabilities →
             </Link>

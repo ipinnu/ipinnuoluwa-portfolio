@@ -10,7 +10,7 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/work", label: "Work" },
   { href: "/services", label: "Services" },
-  { href: "/brainbox", label: "My World" },
+  { href: "/my-world", label: "My World" },
   { href: "/about", label: "About" },
 ];
 
@@ -89,7 +89,7 @@ export default function Nav() {
               href="https://wa.me/2348133754181?text=Hi%20Ipinnuoluwa%2C%20I%20found%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project.%20Brief%20overview%3A%20"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden md:inline-flex items-center gap-1.5 bg-accent text-bg-primary text-sm font-semibold px-4 py-2 rounded-sm hover:bg-accent-dim transition-colors"
+              className="hidden md:inline-flex items-center gap-1.5 bg-accent text-bg-primary text-sm font-semibold px-4 py-2 rounded-[3px] hover:bg-accent-dim transition-colors"
             >
               Start a Project →
             </a>

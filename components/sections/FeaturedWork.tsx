@@ -20,7 +20,7 @@ export default function FeaturedWork() {
           <FadeUp delay={0.1}>
             <Link
               href="/work"
-              className="font-mono text-xs text-text-secondary hover:text-accent transition-colors hidden md:block"
+              className="font-mono text-xs text-text-tertiary hover:text-neon transition-colors hidden md:block"
             >
               View all work →
             </Link>
@@ -44,7 +44,7 @@ export default function FeaturedWork() {
                         {project.status}
                       </span>
                     </div>
-                    <h3 className="font-syne font-bold text-2xl md:text-3xl text-text-primary mb-3 group-hover:text-accent transition-colors">
+                    <h3 className="font-syne font-bold text-2xl md:text-3xl text-text-primary mb-3 group-hover:text-neon transition-colors">
                       {project.title}
                     </h3>
                     <p className="text-text-secondary text-sm leading-relaxed max-w-xl mb-4">
@@ -61,7 +61,7 @@ export default function FeaturedWork() {
                         <Tag key={tag} label={tag} />
                       ))}
                     </div>
-                    <span className="font-mono text-xs text-text-secondary group-hover:text-accent transition-colors">
+                    <span className="font-mono text-xs text-text-secondary group-hover:text-neon transition-colors">
                       View case study →
                     </span>
                   </div>
@@ -74,7 +74,7 @@ export default function FeaturedWork() {
         <div className="mt-8 md:hidden">
           <Link
             href="/work"
-            className="font-mono text-xs text-text-secondary hover:text-accent transition-colors"
+            className="font-mono text-xs text-text-tertiary hover:text-neon transition-colors"
           >
             View all work →
           </Link>
