@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import type { CelestialNode, CometData } from '@/lib/types/celestial'
 import { PLANET_CONFIG } from '@/lib/types/celestial'
+import { useIsMobile } from '@/hooks/useIsMobile'
 import StarField from './StarField'
 import TheSun from './TheSun'
 import Planet from './Planet'
@@ -23,6 +24,7 @@ interface SpaceCanvasProps {
 
 export default function SpaceCanvas({ nodes, comet }: SpaceCanvasProps) {
   const { scrollY } = useScroll()
+  const isMobile = useIsMobile()
   const [openNode, setOpenNode] = useState<CelestialNode | null>(null)
   const [openPlanet, setOpenPlanet] = useState<'forge' | 'chronicle' | 'archive' | 'dream' | null>(null)
   const [assetManagerState, setAssetManagerState] = useState<'closed' | 'password' | 'open'>('closed')
@@ -138,10 +140,10 @@ export default function SpaceCanvas({ nodes, comet }: SpaceCanvasProps) {
         {/* ── Layer 7: The Forge ── */}
         <motion.div
           className="absolute"
-          style={{ y: forgeY, bottom: '280vh', right: '12%', zIndex: 7 }}
+          style={{ y: forgeY, bottom: '280vh', ...(isMobile ? { left: '50%', x: '-50%' } : { right: '12%' }), zIndex: 7 }}
         >
           <motion.div style={{ opacity: forgeLabel }}>
-            <p className="font-mono text-[10px] text-text-tertiary uppercase tracking-widest mb-3 text-right">
+            <p className="font-mono text-[10px] text-text-tertiary uppercase tracking-widest mb-3 text-right" style={{ textAlign: isMobile ? 'center' : 'right' }}>
               {PLANET_CONFIG.forge.name} · {PLANET_CONFIG.forge.subtitle}
             </p>
           </motion.div>
@@ -157,7 +159,7 @@ export default function SpaceCanvas({ nodes, comet }: SpaceCanvasProps) {
         {/* ── Layer 6: The Chronicle ── */}
         <motion.div
           className="absolute"
-          style={{ y: chronicleY, bottom: '180vh', left: '10%', zIndex: 6 }}
+          style={{ y: chronicleY, bottom: '180vh', ...(isMobile ? { left: '50%', x: '-50%' } : { left: '10%' }), zIndex: 6 }}
         >
           <motion.div style={{ opacity: chronicleLabel }}>
             <p className="font-mono text-[10px] text-text-tertiary uppercase tracking-widest mb-3">
@@ -176,10 +178,10 @@ export default function SpaceCanvas({ nodes, comet }: SpaceCanvasProps) {
         {/* ── Layer 5: The Archive ── */}
         <motion.div
           className="absolute"
-          style={{ y: archiveY, bottom: '100vh', right: '18%', zIndex: 5 }}
+          style={{ y: archiveY, bottom: '100vh', ...(isMobile ? { left: '50%', x: '-50%' } : { right: '18%' }), zIndex: 5 }}
         >
           <motion.div style={{ opacity: archiveLabel }}>
-            <p className="font-mono text-[10px] text-text-tertiary uppercase tracking-widest mb-3 text-right">
+            <p className="font-mono text-[10px] text-text-tertiary uppercase tracking-widest mb-3" style={{ textAlign: isMobile ? 'center' : 'right' }}>
               {PLANET_CONFIG.archive.name} · {PLANET_CONFIG.archive.subtitle}
             </p>
           </motion.div>
@@ -189,7 +191,7 @@ export default function SpaceCanvas({ nodes, comet }: SpaceCanvasProps) {
         {/* ── Layer 4: The Dream ── */}
         <motion.div
           className="absolute"
-          style={{ y: dreamY, bottom: '20vh', left: '15%', zIndex: 4 }}
+          style={{ y: dreamY, bottom: '20vh', ...(isMobile ? { left: '50%', x: '-50%' } : { left: '15%' }), zIndex: 4 }}
         >
           <motion.div style={{ opacity: dreamLabel }}>
             <p className="font-mono text-[10px] text-text-tertiary uppercase tracking-widest mb-3">

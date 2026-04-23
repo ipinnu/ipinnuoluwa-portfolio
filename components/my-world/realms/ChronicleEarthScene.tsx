@@ -3,9 +3,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import type { CelestialNode } from '@/lib/types/celestial'
+import { useIsMobile } from '@/hooks/useIsMobile'
 
-// ─── Satellite orbit config ──────────────────────────────────────────────────
-const ORBIT_SLOTS = [
+const ORBIT_SLOTS_BASE = [
   { radius: 185, duration: 22, startAngle: 30 },
   { radius: 225, duration: 32, startAngle: 140 },
   { radius: 268, duration: 44, startAngle: 250 },
@@ -13,6 +13,8 @@ const ORBIT_SLOTS = [
   { radius: 225, duration: 38, startAngle: 60 },
   { radius: 268, duration: 50, startAngle: 310 },
 ]
+const MOBILE_SCALE = 0.54
+const ORBIT_RADII_UNIQUE = [185, 225, 268]
 
 // ─── Earth CSS layers ────────────────────────────────────────────────────────
 function EarthSphere({ size = 280, small = false }: { size?: number; small?: boolean }) {
@@ -20,7 +22,6 @@ function EarthSphere({ size = 280, small = false }: { size?: number; small?: boo
   return (
     <div style={{ position: 'relative', width: s, height: s, flexShrink: 0 }}>
 
-      {/* Atmosphere outer glow */}
       <div style={{
         position: 'absolute',
         top: -s * 0.08, left: -s * 0.08,
@@ -31,7 +32,6 @@ function EarthSphere({ size = 280, small = false }: { size?: number; small?: boo
         animation: 'earth-shimmer 8s ease-in-out infinite',
       }} />
 
-      {/* Ocean base — Layer 1 */}
       <div style={{
         position: 'absolute', inset: 0,
         borderRadius: '50%',
@@ -51,34 +51,24 @@ function EarthSphere({ size = 280, small = false }: { size?: number; small?: boo
         `,
         overflow: 'hidden',
       }}>
-        {/* Continent patches — Layer 2 (SVG blobs on sphere surface) */}
         <svg
           viewBox="0 0 280 280"
           width={s} height={s}
           style={{ position: 'absolute', inset: 0, opacity: small ? 0.7 : 0.85 }}
           aria-hidden
         >
-          {/* North America */}
           <ellipse cx="82" cy="95" rx="28" ry="22" fill="#2d6a2d" opacity="0.75" transform="rotate(-15 82 95)" />
           <ellipse cx="72" cy="118" rx="18" ry="14" fill="#3a7a2a" opacity="0.65" />
-          {/* South America */}
           <ellipse cx="95" cy="165" rx="16" ry="26" fill="#2d6a2d" opacity="0.70" transform="rotate(10 95 165)" />
-          {/* Europe */}
           <ellipse cx="142" cy="85" rx="16" ry="12" fill="#3a7a2a" opacity="0.72" transform="rotate(-8 142 85)" />
-          {/* Africa */}
           <ellipse cx="148" cy="138" rx="18" ry="28" fill="#2d6a2d" opacity="0.75" transform="rotate(5 148 138)" />
-          {/* Asia */}
           <ellipse cx="195" cy="88" rx="38" ry="22" fill="#2d6a2d" opacity="0.78" transform="rotate(-5 195 88)" />
           <ellipse cx="205" cy="108" rx="28" ry="16" fill="#3a7a2a" opacity="0.68" />
-          {/* Australia */}
           <ellipse cx="210" cy="175" rx="18" ry="12" fill="#3a7a2a" opacity="0.70" transform="rotate(-10 210 175)" />
-          {/* Antarctica hint */}
           <ellipse cx="140" cy="258" rx="50" ry="14" fill="#d4e8f0" opacity="0.35" />
-          {/* Ice cap north */}
           <ellipse cx="140" cy="18" rx="34" ry="10" fill="#d4e8f0" opacity="0.3" />
         </svg>
 
-        {/* Cloud layer — Layer 3, independent rotation */}
         <div style={{
           position: 'absolute', inset: 0,
           borderRadius: '50%',
@@ -87,7 +77,6 @@ function EarthSphere({ size = 280, small = false }: { size?: number; small?: boo
           opacity: small ? 0.45 : 0.55,
         }}>
           <svg viewBox="0 0 280 280" width={s} height={s} aria-hidden>
-            {/* Cloud masses */}
             <ellipse cx="60"  cy="70"  rx="38" ry="12" fill="white" opacity="0.6" transform="rotate(-20 60 70)" />
             <ellipse cx="180" cy="55"  rx="45" ry="10" fill="white" opacity="0.55" />
             <ellipse cx="120" cy="130" rx="30" ry="9"  fill="white" opacity="0.5" transform="rotate(15 120 130)" />
@@ -98,7 +87,6 @@ function EarthSphere({ size = 280, small = false }: { size?: number; small?: boo
           </svg>
         </div>
 
-        {/* Specular highlight */}
         <div style={{
           position: 'absolute',
           top: '14%', left: '22%',
@@ -112,33 +100,33 @@ function EarthSphere({ size = 280, small = false }: { size?: number; small?: boo
   )
 }
 
-// ─── Satellite (one chronicle entry) ─────────────────────────────────────────
+// ─── Satellite ─────────────────────────────────────────────────────────────
 interface SatelliteProps {
   node: CelestialNode
   index: number
   isReading: boolean
   onSelect: (node: CelestialNode) => void
+  isMobile: boolean
 }
 
-function Satellite({ node, index, isReading, onSelect }: SatelliteProps) {
+function Satellite({ node, index, isReading, onSelect, isMobile }: SatelliteProps) {
   const [hovered, setHovered] = useState(false)
-  const slot = ORBIT_SLOTS[index % ORBIT_SLOTS.length]
+  const slot = ORBIT_SLOTS_BASE[index % ORBIT_SLOTS_BASE.length]
+  const radius = isMobile ? Math.round(slot.radius * MOBILE_SCALE) : slot.radius
   const delay = -(slot.startAngle / 360) * slot.duration
 
   return (
     <div
       className="moon-arm"
       style={{
-        '--moon-radius': `${slot.radius}px`,
+        '--moon-radius': `${radius}px`,
         '--moon-duration': `${slot.duration}s`,
         animationDelay: `${delay}s`,
         animationPlayState: hovered || isReading ? 'paused' : 'running',
         zIndex: hovered ? 20 : 8,
       } as React.CSSProperties}
     >
-      <div style={{ position: 'absolute', transform: `translateX(${slot.radius}px)` }}>
-
-        {/* Satellite dot */}
+      <div style={{ position: 'absolute', transform: `translateX(${radius}px)` }}>
         <motion.button
           onHoverStart={() => setHovered(true)}
           onHoverEnd={() => setHovered(false)}
@@ -146,7 +134,8 @@ function Satellite({ node, index, isReading, onSelect }: SatelliteProps) {
           whileHover={{ scale: 1.6 }}
           whileTap={{ scale: 0.85 }}
           style={{
-            width: 8, height: 8,
+            width: isMobile ? 10 : 8,
+            height: isMobile ? 10 : 8,
             borderRadius: '50%',
             background: 'radial-gradient(circle at 35% 35%, #ffffff, #b0cce0)',
             border: 'none',
@@ -158,9 +147,8 @@ function Satellite({ node, index, isReading, onSelect }: SatelliteProps) {
           aria-label={node.title}
         />
 
-        {/* Hover preview card */}
         <AnimatePresence>
-          {hovered && (
+          {hovered && !isMobile && (
             <motion.div
               initial={{ opacity: 0, y: 6, scale: 0.92 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -208,7 +196,6 @@ function MiniEarth({ size = 22 }: { size?: number }) {
   const s = size
   return (
     <div style={{ position: 'relative', width: s, height: s, flexShrink: 0 }}>
-      {/* Atmosphere glow */}
       <div style={{
         position: 'absolute',
         top: -s * 0.08, left: -s * 0.08,
@@ -225,22 +212,14 @@ function MiniEarth({ size = 22 }: { size?: number }) {
         overflow: 'hidden',
       }}>
         <svg viewBox="0 0 100 100" width={s} height={s} style={{ position: 'absolute', inset: 0 }} aria-hidden>
-          {/* North America */}
           <ellipse cx="30" cy="38" rx="10" ry="8" fill="#2d6a2d" opacity="0.78" transform="rotate(-15 30 38)" />
-          {/* Europe */}
           <ellipse cx="50" cy="30" rx="7" ry="5" fill="#3a7a2a" opacity="0.72" transform="rotate(-8 50 30)" />
-          {/* Africa */}
           <ellipse cx="53" cy="56" rx="8" ry="12" fill="#2d6a2d" opacity="0.75" />
-          {/* Asia */}
           <ellipse cx="70" cy="34" rx="14" ry="8" fill="#2d6a2d" opacity="0.75" transform="rotate(-5 70 34)" />
-          {/* Australia */}
           <ellipse cx="75" cy="68" rx="6" ry="4" fill="#3a7a2a" opacity="0.68" />
-          {/* Antarctic ice */}
           <ellipse cx="50" cy="92" rx="18" ry="6" fill="#d4e8f0" opacity="0.3" />
         </svg>
-        {/* 3D lighting */}
         <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'radial-gradient(circle at 38% 32%, rgba(255,255,255,0.08) 0%, transparent 45%), radial-gradient(circle at 70% 72%, rgba(0,0,0,0.68) 0%, transparent 52%)' }} />
-        {/* Specular */}
         <div style={{ position: 'absolute', top: '14%', left: '22%', width: '28%', height: '20%', borderRadius: '50%', background: 'rgba(200,235,255,0.28)', filter: 'blur(2px)' }} />
       </div>
     </div>
@@ -248,7 +227,7 @@ function MiniEarth({ size = 22 }: { size?: number }) {
 }
 
 // ─── Post reading view ────────────────────────────────────────────────────────
-function PostReader({ node, onBack }: { node: CelestialNode; onBack: () => void }) {
+function PostReader({ node, onBack, isMobile }: { node: CelestialNode; onBack: () => void; isMobile?: boolean }) {
   const contentRef = useRef<HTMLDivElement>(null)
   const [progress, setProgress] = useState(0)
 
@@ -265,13 +244,12 @@ function PostReader({ node, onBack }: { node: CelestialNode; onBack: () => void 
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: 40 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 20 }}
+      initial={{ opacity: 0, x: isMobile ? 0 : 40, y: isMobile ? 20 : 0 }}
+      animate={{ opacity: 1, x: 0, y: 0 }}
+      exit={{ opacity: 0, x: isMobile ? 0 : 20, y: isMobile ? 10 : 0 }}
       transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
-      style={{ flex: 1, display: 'flex', flexDirection: 'column', maxWidth: 620, paddingLeft: 48 }}
+      style={{ flex: 1, display: 'flex', flexDirection: 'column', maxWidth: isMobile ? undefined : 620, paddingLeft: isMobile ? 0 : 48 }}
     >
-      {/* Reading progress bar */}
       <div style={{ height: 1, background: '#1A1A1A', marginBottom: 28, flexShrink: 0 }}>
         <motion.div
           animate={{ width: `${progress}%` }}
@@ -280,7 +258,6 @@ function PostReader({ node, onBack }: { node: CelestialNode; onBack: () => void 
         />
       </div>
 
-      {/* Back */}
       <button
         onClick={onBack}
         style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 24, padding: 0, alignSelf: 'flex-start' }}
@@ -289,9 +266,7 @@ function PostReader({ node, onBack }: { node: CelestialNode; onBack: () => void 
         <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: '#444440' }}>back to orbit</span>
       </button>
 
-      {/* Article */}
       <div ref={contentRef} style={{ overflowY: 'auto', flex: 1, paddingRight: 16 }}>
-        {/* Planet badge */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
           <MiniEarth size={22} />
           <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#534AB7', textTransform: 'uppercase', letterSpacing: '0.18em' }}>
@@ -299,7 +274,7 @@ function PostReader({ node, onBack }: { node: CelestialNode; onBack: () => void 
           </span>
         </div>
 
-        <h1 style={{ fontFamily: 'var(--font-syne)', fontSize: 28, fontWeight: 800, color: '#F5F5F0', margin: '0 0 16px', lineHeight: 1.15, letterSpacing: '-0.03em' }}>
+        <h1 style={{ fontFamily: 'var(--font-syne)', fontSize: isMobile ? 24 : 28, fontWeight: 800, color: '#F5F5F0', margin: '0 0 16px', lineHeight: 1.15, letterSpacing: '-0.03em' }}>
           {node.title}
         </h1>
 
@@ -313,14 +288,13 @@ function PostReader({ node, onBack }: { node: CelestialNode; onBack: () => void 
           </div>
         )}
 
-        {/* Divider */}
         <div style={{ height: '0.5px', background: 'linear-gradient(to right, #534AB755, transparent)', marginBottom: 28 }} />
 
         {node.content ? (
           <div className="prose" style={{ fontSize: 15 }}>{node.content}</div>
         ) : node.summary ? (
           <>
-            <p style={{ fontFamily: 'var(--font-dm-sans)', fontSize: 16, fontWeight: 300, color: '#888884', lineHeight: 1.8, marginBottom: 32 }}>
+            <p style={{ fontFamily: 'var(--font-dm-sans)', fontSize: isMobile ? 15 : 16, fontWeight: 300, color: '#888884', lineHeight: 1.8, marginBottom: 32 }}>
               {node.summary}
             </p>
             <p style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: '#333330', fontStyle: 'italic' }}>
@@ -347,6 +321,10 @@ interface ChronicleEarthSceneProps {
 export default function ChronicleEarthScene({ nodes, initialNode, onClose }: ChronicleEarthSceneProps) {
   const [selectedNode, setSelectedNode] = useState<CelestialNode | null>(initialNode ?? null)
   const shouldReduce = useReducedMotion()
+  const isMobile = useIsMobile()
+
+  const sphereSize = isMobile ? 155 : 280
+  const orbitRadii = ORBIT_RADII_UNIQUE.map(r => isMobile ? Math.round(r * MOBILE_SCALE) : r)
 
   const isReading = selectedNode !== null
 
@@ -370,7 +348,7 @@ export default function ChronicleEarthScene({ nodes, initialNode, onClose }: Chr
       className="fixed inset-0 z-50 overflow-hidden"
       style={{ backgroundColor: '#020810' }}
     >
-      {/* Deep space background stars */}
+      {/* Stars */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden>
         {Array.from({ length: 120 }).map((_, i) => (
           <div key={i} style={{
@@ -386,7 +364,6 @@ export default function ChronicleEarthScene({ nodes, initialNode, onClose }: Chr
         ))}
       </div>
 
-      {/* Ambient blue nebula glow */}
       <div className="absolute inset-0 pointer-events-none" style={{
         background: 'radial-gradient(ellipse 60% 50% at 30% 50%, rgba(21,101,192,0.12) 0%, transparent 70%)',
       }} />
@@ -408,14 +385,13 @@ export default function ChronicleEarthScene({ nodes, initialNode, onClose }: Chr
             <>
               <span style={{ color: '#222220', fontSize: 10 }}>→</span>
               <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: '#534AB7' }}>
-                {selectedNode.title.length > 24 ? selectedNode.title.slice(0, 24) + '…' : selectedNode.title}
+                {selectedNode.title.length > (isMobile ? 14 : 24) ? selectedNode.title.slice(0, isMobile ? 14 : 24) + '…' : selectedNode.title}
               </span>
             </>
           )}
         </div>
       </div>
 
-      {/* Close */}
       <button
         onClick={onClose}
         style={{ position: 'absolute', top: 24, right: 24, zIndex: 20, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: '#333330' }}
@@ -427,13 +403,13 @@ export default function ChronicleEarthScene({ nodes, initialNode, onClose }: Chr
       <div style={{
         position: 'absolute', inset: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: '80px 48px 40px',
+        padding: isMobile ? '80px 20px 60px' : '80px 48px 40px',
         gap: 0,
       }}>
 
         {/* Earth + orbits */}
         <motion.div
-          animate={isReading
+          animate={isReading && !isMobile
             ? { scale: shouldReduce ? 1 : 0.42, x: shouldReduce ? 0 : -280, opacity: 0.7 }
             : { scale: 1, x: 0, opacity: 1 }
           }
@@ -441,7 +417,7 @@ export default function ChronicleEarthScene({ nodes, initialNode, onClose }: Chr
           style={{ position: 'relative', flexShrink: 0 }}
         >
           {/* Orbit track rings */}
-          {[185, 225, 268].map(r => (
+          {orbitRadii.map(r => (
             <div key={r} style={{
               position: 'absolute',
               top: '50%', left: '50%',
@@ -453,9 +429,8 @@ export default function ChronicleEarthScene({ nodes, initialNode, onClose }: Chr
             }} />
           ))}
 
-          <EarthSphere size={280} small={isReading} />
+          <EarthSphere size={sphereSize} small={isReading && !isMobile} />
 
-          {/* Orbiting satellites */}
           {nodes.map((node, i) => (
             <Satellite
               key={node.id}
@@ -463,10 +438,10 @@ export default function ChronicleEarthScene({ nodes, initialNode, onClose }: Chr
               index={i}
               isReading={isReading}
               onSelect={setSelectedNode}
+              isMobile={isMobile}
             />
           ))}
 
-          {/* Center orbit label when not reading */}
           {!isReading && (
             <motion.p
               initial={{ opacity: 0 }}
@@ -491,19 +466,40 @@ export default function ChronicleEarthScene({ nodes, initialNode, onClose }: Chr
           )}
         </motion.div>
 
-        {/* Post reader — slides in from right */}
+        {/* Desktop: inline post reader */}
         <AnimatePresence>
-          {selectedNode && (
+          {selectedNode && !isMobile && (
             <PostReader
               key={selectedNode.id}
               node={selectedNode}
               onBack={() => setSelectedNode(null)}
+              isMobile={false}
             />
           )}
         </AnimatePresence>
       </div>
 
-      {/* Hint when no post selected */}
+      {/* Mobile: full-screen post reader overlay */}
+      <AnimatePresence>
+        {selectedNode && isMobile && (
+          <motion.div
+            key={`mobile-reader-${selectedNode.id}`}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
+            style={{
+              position: 'fixed', inset: 0, zIndex: 60,
+              backgroundColor: '#020810',
+              display: 'flex', flexDirection: 'column',
+              padding: '72px 24px 48px',
+            }}
+          >
+            <PostReader node={selectedNode} onBack={() => setSelectedNode(null)} isMobile />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>
         {!isReading && (
           <motion.p
@@ -523,7 +519,7 @@ export default function ChronicleEarthScene({ nodes, initialNode, onClose }: Chr
               letterSpacing: '0.12em',
             }}
           >
-            hover a satellite to preview · click to read
+            {isMobile ? 'tap a satellite to read' : 'hover a satellite to preview · click to read'}
           </motion.p>
         )}
       </AnimatePresence>

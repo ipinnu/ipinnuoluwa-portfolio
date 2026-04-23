@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SEED_ASSETS } from '@/lib/types/celestial'
 import type { Asset, AssetClass } from '@/lib/types/celestial'
+import { useIsMobile } from '@/hooks/useIsMobile'
 
 const STORAGE_KEY = 'ip_asset_ledger'
 const CLASS_COLOR: Record<AssetClass, string> = {
@@ -56,6 +57,7 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ onClose }: DashboardProps) {
+  const isMobile = useIsMobile()
   const [assets, setAssets] = useState<Asset[]>([])
   const [selected, setSelected] = useState<Asset | null>(null)
   const [classFilter, setClassFilter] = useState<AssetClass | 'ALL'>('ALL')
@@ -67,7 +69,6 @@ export default function Dashboard({ onClose }: DashboardProps) {
     setAssets(loaded)
     setSelected(loaded[0] ?? null)
 
-    // Typewriter entry
     const msg = 'Welcome back, Ipinnu.'
     let i = 0
     const iv = setInterval(() => {
@@ -98,19 +99,43 @@ export default function Dashboard({ onClose }: DashboardProps) {
     ? Object.values(selAsset.scores).reduce((s, v) => s + v, 0)
     : 0
 
+  // Mobile: show list when nothing selected, show detail when selected
+  const showList = !isMobile || (!selected && !showRebalance)
+  const showDetail = !isMobile || (!!selected || showRebalance)
+
+  const handleSelectAsset = (asset: Asset) => {
+    setSelected(asset)
+  }
+
+  const handleMobileBack = () => {
+    setSelected(null)
+    setShowRebalance(false)
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="fixed inset-0 z-50 flex"
-      style={{ background: 'rgba(10,10,10,0.97)', fontFamily: 'var(--font-jetbrains-mono)' }}
+      className="fixed inset-0 z-50"
+      style={{
+        background: 'rgba(10,10,10,0.97)',
+        fontFamily: 'var(--font-jetbrains-mono)',
+        display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
+      }}
     >
       {/* ── Left panel — Asset Ledger ── */}
       <div style={{
-        width: '40%', minWidth: 280, borderRight: '0.5px solid #1A1A1A',
-        display: 'flex', flexDirection: 'column', overflowY: 'auto',
+        width: isMobile ? '100%' : '40%',
+        minWidth: isMobile ? undefined : 280,
+        borderRight: isMobile ? 'none' : '0.5px solid #1A1A1A',
+        borderBottom: isMobile && showList ? '0.5px solid #1A1A1A' : 'none',
+        display: showList ? 'flex' : 'none',
+        flexDirection: 'column',
+        overflowY: 'auto',
+        flex: isMobile ? 1 : undefined,
         padding: '28px 0 20px',
       }}>
         {/* Header */}
@@ -120,12 +145,22 @@ export default function Dashboard({ onClose }: DashboardProps) {
               <p style={{ fontSize: 10, color: '#444440', textTransform: 'uppercase', letterSpacing: '0.18em', margin: 0 }}>Asset Ledger</p>
               <p style={{ fontSize: 10, color: '#333330', margin: '2px 0 0' }}>CIO: Ipinnuoluwa</p>
             </div>
-            <button
-              onClick={() => setShowRebalance(r => !r)}
-              style={{ fontSize: 10, color: '#444440', background: 'none', border: '0.5px solid #222220', borderRadius: 4, padding: '4px 10px', cursor: 'pointer' }}
-            >
-              Rebalance ↻
-            </button>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <button
+                onClick={() => setShowRebalance(r => !r)}
+                style={{ fontSize: 10, color: '#444440', background: 'none', border: '0.5px solid #222220', borderRadius: 4, padding: '4px 10px', cursor: 'pointer' }}
+              >
+                Rebalance ↻
+              </button>
+              {isMobile && (
+                <button
+                  onClick={onClose}
+                  style={{ fontSize: 10, color: '#333330', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px' }}
+                >
+                  ×
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Portfolio health */}
@@ -175,10 +210,11 @@ export default function Dashboard({ onClose }: DashboardProps) {
           {filteredAssets.map(asset => (
             <button
               key={asset.id}
-              onClick={() => setSelected(asset)}
+              onClick={() => handleSelectAsset(asset)}
               style={{
                 width: '100%', textAlign: 'left', background: 'none', cursor: 'pointer',
-                padding: '12px 24px', borderBottom: '0.5px solid #0D0D0D',
+                padding: isMobile ? '14px 24px' : '12px 24px',
+                borderBottom: '0.5px solid #0D0D0D',
                 borderLeft: selAsset?.id === asset.id ? `2px solid ${CLASS_COLOR[asset.assetClass]}` : '2px solid transparent',
                 backgroundColor: selAsset?.id === asset.id ? '#0D0D0D' : 'transparent',
                 transition: 'all 0.15s',
@@ -189,14 +225,17 @@ export default function Dashboard({ onClose }: DashboardProps) {
                   <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: STATUS_DOT[asset.status] ?? '#444440', flexShrink: 0 }} />
                   <span style={{ fontSize: 11, color: '#F5F5F0', fontFamily: 'var(--font-syne)', fontWeight: 700 }}>{asset.name}</span>
                 </div>
-                <span style={{
-                  fontSize: 9, padding: '2px 6px', borderRadius: 2,
-                  background: `${CLASS_COLOR[asset.assetClass]}22`,
-                  color: CLASS_COLOR[asset.assetClass],
-                  border: `0.5px solid ${CLASS_COLOR[asset.assetClass]}44`,
-                }}>
-                  {asset.assetClass}
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{
+                    fontSize: 9, padding: '2px 6px', borderRadius: 2,
+                    background: `${CLASS_COLOR[asset.assetClass]}22`,
+                    color: CLASS_COLOR[asset.assetClass],
+                    border: `0.5px solid ${CLASS_COLOR[asset.assetClass]}44`,
+                  }}>
+                    {asset.assetClass}
+                  </span>
+                  {isMobile && <span style={{ fontSize: 10, color: '#333330' }}>→</span>}
+                </div>
               </div>
 
               {/* Return type pills */}
@@ -223,12 +262,28 @@ export default function Dashboard({ onClose }: DashboardProps) {
       </div>
 
       {/* ── Right panel — Asset Detail ── */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '28px 32px' }}>
+      <div style={{
+        flex: isMobile ? undefined : 1,
+        width: isMobile ? '100%' : undefined,
+        height: isMobile ? '100%' : undefined,
+        display: showDetail ? 'flex' : 'none',
+        flexDirection: 'column',
+        overflowY: 'auto',
+        padding: isMobile ? '20px 20px 40px' : '28px 32px',
+      }}>
         {/* Top bar */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 28 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28, flexShrink: 0 }}>
+          {isMobile ? (
+            <button
+              onClick={handleMobileBack}
+              style={{ fontSize: 10, color: '#444440', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+            >
+              <span style={{ color: '#E8FF47' }}>←</span> back to ledger
+            </button>
+          ) : null}
           <button
             onClick={onClose}
-            style={{ fontSize: 10, color: '#333330', background: 'none', border: 'none', cursor: 'pointer', transition: 'color 0.15s' }}
+            style={{ fontSize: 10, color: '#333330', background: 'none', border: 'none', cursor: 'pointer', transition: 'color 0.15s', marginLeft: 'auto' }}
             onMouseEnter={e => (e.currentTarget.textContent = 'return to the universe')}
             onMouseLeave={e => (e.currentTarget.textContent = '× exit')}
           >
@@ -258,13 +313,12 @@ export default function Dashboard({ onClose }: DashboardProps) {
                     {selAsset.status}
                   </span>
                 </div>
-                <h2 style={{ fontFamily: 'var(--font-syne)', fontSize: 26, fontWeight: 700, color: '#F5F5F0', margin: '0 0 4px' }}>
+                <h2 style={{ fontFamily: 'var(--font-syne)', fontSize: isMobile ? 22 : 26, fontWeight: 700, color: '#F5F5F0', margin: '0 0 4px' }}>
                   {selAsset.name}
                 </h2>
                 <p style={{ fontSize: 9, color: '#333330', margin: 0 }}>Last reviewed: {selAsset.lastReviewed}</p>
 
-                {/* Ghost text for Class A */}
-                {selAsset.assetClass === 'A' && (
+                {selAsset.assetClass === 'A' && !isMobile && (
                   <div style={{ position: 'absolute', marginTop: -32, right: 32, fontSize: 60, fontFamily: 'var(--font-syne)', fontWeight: 800, color: CLASS_COLOR.A, opacity: 0.04, pointerEvents: 'none', letterSpacing: '-0.04em' }}>
                     DEPLOYED
                   </div>
@@ -335,7 +389,7 @@ export default function Dashboard({ onClose }: DashboardProps) {
                 <div style={{ background: '#0D0D0D', border: '0.5px solid #111111', borderRadius: 6, padding: '14px 16px', marginBottom: 20 }}>
                   <p style={{ fontSize: 9, color: '#333330', textTransform: 'uppercase', letterSpacing: '0.12em', margin: '0 0 10px' }}>Next Actions</p>
                   {selAsset.actions.map((action, i) => (
-                    <label key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 8, cursor: 'pointer' }}>
+                    <label key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: isMobile ? 12 : 8, cursor: 'pointer' }}>
                       <input
                         type="checkbox"
                         checked={action.done}
@@ -360,7 +414,7 @@ export default function Dashboard({ onClose }: DashboardProps) {
 
               {/* Quick links */}
               {selAsset.links && (
-                <div style={{ display: 'flex', gap: 8 }}>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                   {selAsset.links.caseStudy && (
                     <a href={selAsset.links.caseStudy} style={{ fontSize: 10, color: '#444440', border: '0.5px solid #222220', padding: '5px 12px', borderRadius: 4, textDecoration: 'none', transition: 'color 0.15s' }}
                       onMouseEnter={e => (e.currentTarget.style.color = '#E8FF47')}
@@ -385,7 +439,6 @@ export default function Dashboard({ onClose }: DashboardProps) {
   )
 }
 
-// Rebalance view
 function RebalanceView({ assets, onBack }: { assets: Asset[]; onBack: () => void }) {
   const totalAllocated = assets.reduce((s, a) => s + a.allocation, 0)
   const classA = assets.filter(a => a.assetClass === 'A').reduce((s, a) => s + a.allocation, 0)
@@ -400,7 +453,6 @@ function RebalanceView({ assets, onBack }: { assets: Asset[]; onBack: () => void
         Portfolio Allocation
       </h2>
 
-      {/* Allocation bars */}
       {assets.filter(a => a.allocation > 0).map(asset => (
         <div key={asset.id} style={{ marginBottom: 12 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>

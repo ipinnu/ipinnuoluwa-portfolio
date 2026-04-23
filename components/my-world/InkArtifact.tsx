@@ -37,13 +37,14 @@ export default function InkArtifact({ onTriggered }: InkArtifactProps) {
       style={{
         position: 'absolute',
         bottom: -14,
-        right: -18,
+        left: -18,
         width: 14,
         height: 14,
         background: 'none',
         border: 'none',
         cursor: 'default',
-        padding: 0,
+        padding: '12px',
+        margin: '-12px',
         zIndex: 12,
       }}
       aria-hidden

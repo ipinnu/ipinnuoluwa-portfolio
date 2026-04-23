@@ -51,7 +51,7 @@ export default function PasswordGate({ onSuccess, onClose }: PasswordGateProps) 
           border: '0.5px solid #222220',
           borderRadius: 8,
           padding: '36px 32px',
-          width: 320,
+          width: 'min(320px, calc(100vw - 48px))',
           textAlign: 'center',
         }}
       >
