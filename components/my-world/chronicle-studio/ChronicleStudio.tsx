@@ -402,7 +402,7 @@ export default function ChronicleStudio({ onClose }: { onClose: () => void }) {
 
   // Write UI
   const [preview, setPreview] = useState(false)
-  const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved'>('idle')
+  const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
   const [tagInput, setTagInput] = useState('')
   const [uploadingImage, setUploadingImage] = useState(false)
 
@@ -475,7 +475,13 @@ export default function ChronicleStudio({ onClose }: { onClose: () => void }) {
     const slug = selected.slug || title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-') || null
     const updates = { title, content, summary, tags, status, cover_image_url: coverUrl, slug, updated_at: new Date().toISOString(), published_at: status === 'published' && !selected.published_at ? new Date().toISOString() : selected.published_at }
     const { data, error } = await supabase.from('chronicle_articles').update(updates).eq('id', selected.id).select().single()
-    if (!error && data) setArticles(prev => prev.map(a => a.id === (data as Article).id ? data as Article : a))
+    if (error) {
+      console.error('chronicle save failed:', error.message, error.code)
+      setSaveState('error')
+      setTimeout(() => setSaveState('idle'), 4000)
+      return
+    }
+    if (data) setArticles(prev => prev.map(a => a.id === (data as Article).id ? data as Article : a))
     setSaveState('saved')
     setTimeout(() => setSaveState('idle'), 2500)
   }, [])
@@ -690,8 +696,8 @@ export default function ChronicleStudio({ onClose }: { onClose: () => void }) {
               {!isMobile && <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#282828' }}>{wordCount} words</span>}
               <AnimatePresence mode="wait">
                 {saveState !== 'idle' && (
-                  <motion.span key={saveState} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: saveState === 'saved' ? '#A3C4B4' : '#333330' }}>
-                    {saveState === 'saving' ? 'saving...' : '✓ saved'}
+                  <motion.span key={saveState} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: saveState === 'saved' ? '#A3C4B4' : saveState === 'error' ? '#ef4444' : '#333330' }}>
+                    {saveState === 'saving' ? 'saving...' : saveState === 'error' ? '✗ save failed' : '✓ saved'}
                   </motion.span>
                 )}
               </AnimatePresence>
