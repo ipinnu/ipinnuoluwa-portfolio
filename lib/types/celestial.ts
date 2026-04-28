@@ -86,6 +86,7 @@ export interface Asset {
   scores: { revenue: number; impact: number; strategic: number; momentum: number }
   actions: { text: string; done: boolean }[]
   lastReviewed: string
+  thesis?: string
   links?: { playStore?: string; github?: string; caseStudy?: string }
 }
 

@@ -2,478 +2,343 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SEED_ASSETS } from '@/lib/types/celestial'
-import type { Asset, AssetClass } from '@/lib/types/celestial'
+import { fetchAssets, updateAsset as persistAsset, createAsset as persistCreate, seedIfEmpty } from '@/lib/assets'
+import { fetchVisions } from '@/lib/visions'
+import { getFloorState, worstSignal } from '@/lib/floor'
 import { useIsMobile } from '@/hooks/useIsMobile'
+import type { Asset, Vision, FloorState, AssetClass } from '@/lib/types/forge'
+import { SEED_FORGE_ASSETS, SEED_VISIONS } from '@/lib/types/forge'
+import FloorBar from './FloorBar'
+import VisionLayer from './VisionLayer'
+import AssetLedger from './AssetLedger'
+import AssetDetail from './AssetDetail'
+import RebalanceView from './RebalanceView'
 
-const STORAGE_KEY = 'ip_asset_ledger'
-const CLASS_COLOR: Record<AssetClass, string> = {
-  A: '#E8FF47',
-  B: '#EF9F27',
-  C: '#444440',
-}
-const STATUS_DOT: Record<string, string> = {
-  active: '#22c55e',
-  forming: '#EF9F27',
-  monitor: '#444440',
-}
-const RETURN_COLORS: Record<string, string> = {
-  revenue: '#A3C4B4',
-  impact: '#534AB7',
-  brand: '#E8FF47',
-  strategic: '#993C1D',
-}
+type View = 'detail' | 'rebalance'
 
-function loadAssets(): Asset[] {
-  if (typeof window === 'undefined') return SEED_ASSETS
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY)
-    return saved ? JSON.parse(saved) : SEED_ASSETS
-  } catch {
-    return SEED_ASSETS
-  }
-}
+interface Props { onClose: () => void }
 
-function saveAssets(assets: Asset[]) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(assets)) } catch {}
-}
-
-function ScoreBar({ value, max = 5, color }: { value: number; max?: number; color: string }) {
-  return (
-    <div style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-      {Array.from({ length: max }).map((_, i) => (
-        <div key={i} style={{
-          width: 14, height: 4, borderRadius: 1,
-          backgroundColor: i < value ? color : '#1A1A1A',
-          transition: 'background-color 0.3s',
-        }} />
-      ))}
-    </div>
-  )
-}
-
-interface DashboardProps {
-  onClose: () => void
-}
-
-export default function Dashboard({ onClose }: DashboardProps) {
+export default function Dashboard({ onClose }: Props) {
   const isMobile = useIsMobile()
-  const [assets, setAssets] = useState<Asset[]>([])
+
+  const [assets,   setAssets]   = useState<Asset[]>(SEED_FORGE_ASSETS)
+  const [visions,  setVisions]  = useState<Vision[]>(SEED_VISIONS)
   const [selected, setSelected] = useState<Asset | null>(null)
-  const [classFilter, setClassFilter] = useState<AssetClass | 'ALL'>('ALL')
-  const [typed, setTyped] = useState('')
-  const [showRebalance, setShowRebalance] = useState(false)
+  const [view,     setView]     = useState<View>('detail')
+  const [floor,    setFloor]    = useState<FloorState>(getFloorState())
+  const [loading,  setLoading]  = useState(true)
+  const [typed,    setTyped]    = useState('')
+
+  // Mobile: which panel is visible ('list' | 'detail')
+  const [mobilePanel, setMobilePanel] = useState<'list' | 'detail'>('list')
+
+  // New asset modal
+  const [showCreate, setShowCreate] = useState(false)
+  const [newName, setNewName]       = useState('')
+  const [newClass, setNewClass]     = useState<AssetClass>('B')
+  const [creating, setCreating]     = useState(false)
 
   useEffect(() => {
-    const loaded = loadAssets()
-    setAssets(loaded)
-    setSelected(loaded[0] ?? null)
+    let cancelled = false
+    const load = async () => {
+      await seedIfEmpty()
+      const [a, v] = await Promise.all([fetchAssets(), fetchVisions()])
+      if (cancelled) return
+      setAssets(a)
+      setVisions(v)
+      setSelected(a[0] ?? null)
+      setLoading(false)
+    }
+    load()
+    return () => { cancelled = true }
+  }, [])
 
+  // Typewriter
+  useEffect(() => {
     const msg = 'Welcome back, Ipinnu.'
     let i = 0
     const iv = setInterval(() => {
       i++
       setTyped(msg.slice(0, i))
       if (i >= msg.length) clearInterval(iv)
-    }, 40)
+    }, 45)
     return () => clearInterval(iv)
   }, [])
 
-  const updateAsset = useCallback((id: string, patch: Partial<Asset>) => {
-    setAssets(prev => {
-      const next = prev.map(a => a.id === id ? { ...a, ...patch } : a)
-      saveAssets(next)
-      if (selected?.id === id) setSelected(s => s ? { ...s, ...patch } : s)
-      return next
-    })
-  }, [selected])
+  const updateAsset = useCallback(async (id: string, patch: Partial<Asset>) => {
+    // Optimistic update
+    setAssets(prev => prev.map(a => a.id === id ? { ...a, ...patch } : a))
+    setSelected(prev => prev?.id === id ? { ...prev, ...patch } : prev)
+    try {
+      await persistAsset(id, patch)
+    } catch (err) {
+      console.warn('updateAsset failed — changes may not persist:', err)
+    }
+  }, [])
 
-  const filteredAssets = assets.filter(a => classFilter === 'ALL' || a.assetClass === classFilter)
+  const handleCreate = useCallback(async () => {
+    const name = newName.trim()
+    if (!name) return
+    setCreating(true)
+    const now = new Date().toISOString().split('T')[0]
+    const asset: Asset = {
+      id:              `asset-${Date.now()}`,
+      name,
+      assetClass:      newClass,
+      allocation:      0,
+      returnTypes:     [],
+      status:          newClass === 'A' ? 'active' : newClass === 'B' ? 'forming' : 'monitor',
+      mandateText:     '',
+      mandateProgress: 0,
+      scores:          { revenue: 0, impact: 0, strategic: 0, momentum: 0 },
+      actions:         [],
+      lastReviewed:    now,
+      visionIds:       [],
+    }
+    setAssets(prev => [asset, ...prev])
+    setSelected(asset)
+    setView('detail')
+    if (isMobile) setMobilePanel('detail')
+    setShowCreate(false)
+    setNewName('')
+    setNewClass('B')
+    try { await persistCreate(asset) } catch (err) { console.warn('create failed:', err) }
+    setCreating(false)
+  }, [newName, newClass, isMobile])
 
-  const totalAllocated = assets.reduce((s, a) => s + a.allocation, 0)
-  const onTrack = assets.filter(a => a.mandateProgress >= 50).length
-  const healthPct = Math.round((onTrack / Math.max(assets.length, 1)) * 100)
+  const handleSelectAsset = useCallback((asset: Asset) => {
+    setSelected(asset)
+    setView('detail')
+    if (isMobile) setMobilePanel('detail')
+  }, [isMobile])
+
+  const handleRebalance = () => {
+    setView('rebalance')
+    if (isMobile) setMobilePanel('detail')
+  }
+
+  const handleBack = () => {
+    if (isMobile) {
+      setMobilePanel('list')
+    } else {
+      setView('detail')
+    }
+  }
+
+  const worst = worstSignal(floor)
+
+  // ── Loading ────────────────────────────────────────────────────────────────
+
+  if (loading) {
+    return (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-50"
+        style={{ background: 'rgba(6,6,14,0.97)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: '#333330', letterSpacing: '0.2em' }}>
+          Loading ledger...
+        </p>
+      </motion.div>
+    )
+  }
+
+  // ── Render ─────────────────────────────────────────────────────────────────
 
   const selAsset = selected ? assets.find(a => a.id === selected.id) ?? selected : null
-  const totalScore = selAsset
-    ? Object.values(selAsset.scores).reduce((s, v) => s + v, 0)
-    : 0
-
-  // Mobile: show list when nothing selected, show detail when selected
-  const showList = !isMobile || (!selected && !showRebalance)
-  const showDetail = !isMobile || (!!selected || showRebalance)
-
-  const handleSelectAsset = (asset: Asset) => {
-    setSelected(asset)
-  }
-
-  const handleMobileBack = () => {
-    setSelected(null)
-    setShowRebalance(false)
-  }
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
       className="fixed inset-0 z-50"
-      style={{
-        background: 'rgba(10,10,10,0.97)',
-        fontFamily: 'var(--font-jetbrains-mono)',
-        display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
-      }}
+      style={{ background: 'rgba(6,6,14,0.97)', display: 'flex', flexDirection: 'column', fontFamily: 'var(--font-jetbrains-mono)' }}
     >
-      {/* ── Left panel — Asset Ledger ── */}
-      <div style={{
-        width: isMobile ? '100%' : '40%',
-        minWidth: isMobile ? undefined : 280,
-        borderRight: isMobile ? 'none' : '0.5px solid #1A1A1A',
-        borderBottom: isMobile && showList ? '0.5px solid #1A1A1A' : 'none',
-        display: showList ? 'flex' : 'none',
-        flexDirection: 'column',
-        overflowY: 'auto',
-        flex: isMobile ? 1 : undefined,
-        padding: '28px 0 20px',
-      }}>
-        {/* Header */}
-        <div style={{ padding: '0 24px 16px', borderBottom: '0.5px solid #111111' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <div>
-              <p style={{ fontSize: 10, color: '#444440', textTransform: 'uppercase', letterSpacing: '0.18em', margin: 0 }}>Asset Ledger</p>
-              <p style={{ fontSize: 10, color: '#333330', margin: '2px 0 0' }}>CIO: Ipinnuoluwa</p>
-            </div>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-              <button
-                onClick={() => setShowRebalance(r => !r)}
-                style={{ fontSize: 10, color: '#444440', background: 'none', border: '0.5px solid #222220', borderRadius: 4, padding: '4px 10px', cursor: 'pointer' }}
-              >
-                Rebalance ↻
-              </button>
-              {isMobile && (
-                <button
-                  onClick={onClose}
-                  style={{ fontSize: 10, color: '#333330', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px' }}
-                >
-                  ×
-                </button>
-              )}
-            </div>
-          </div>
+      {/* ── Floor Bar (always top) ── */}
+      <FloorBar state={floor} onChange={setFloor} onClose={onClose} isMobile={isMobile} />
 
-          {/* Portfolio health */}
-          <div style={{ marginTop: 14, padding: '10px 12px', background: '#0D0D0D', borderRadius: 6, border: '0.5px solid #111111' }}>
-            <p style={{ fontSize: 9, color: '#333330', margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: '0.14em' }}>Portfolio Health</p>
-            <div style={{ height: 2, background: '#1A1A1A', borderRadius: 1, marginBottom: 4 }}>
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${healthPct}%` }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-                style={{ height: '100%', background: healthPct >= 60 ? '#22c55e' : '#EF9F27', borderRadius: 1 }}
-              />
-            </div>
-            <p style={{ fontSize: 9, color: '#333330', margin: 0 }}>
-              {onTrack}/{assets.length} on track · {totalAllocated}u deployed
-            </p>
-          </div>
-        </div>
-
-        {/* Class filter */}
-        <div style={{ display: 'flex', gap: 4, padding: '12px 24px', borderBottom: '0.5px solid #111111' }}>
-          {(['ALL', 'A', 'B', 'C'] as const).map(cls => (
-            <button
-              key={cls}
-              onClick={() => setClassFilter(cls)}
-              style={{
-                fontSize: 9, padding: '3px 10px', borderRadius: 3, cursor: 'pointer',
-                fontFamily: 'var(--font-jetbrains-mono)',
-                background: classFilter === cls ? (cls === 'ALL' ? '#E8FF47' : CLASS_COLOR[cls as AssetClass]) : 'transparent',
-                color: classFilter === cls ? '#0A0A0A' : '#444440',
-                border: `0.5px solid ${classFilter === cls ? 'transparent' : '#1A1A1A'}`,
-                transition: 'all 0.15s',
-              }}
-            >
-              {cls === 'ALL' ? 'ALL' : `CLASS ${cls}`}
-            </button>
-          ))}
-        </div>
-
-        {/* Typewriter */}
-        <p style={{ fontSize: 9, color: '#222220', padding: '8px 24px 0', margin: 0, minHeight: 16 }}>
-          {typed}<span style={{ opacity: typed.length > 0 ? 1 : 0 }}>_</span>
-        </p>
-
-        {/* Asset rows */}
-        <div style={{ flex: 1, overflowY: 'auto' }}>
-          {filteredAssets.map(asset => (
-            <button
-              key={asset.id}
-              onClick={() => handleSelectAsset(asset)}
-              style={{
-                width: '100%', textAlign: 'left', background: 'none', cursor: 'pointer',
-                padding: isMobile ? '14px 24px' : '12px 24px',
-                borderBottom: '0.5px solid #0D0D0D',
-                borderLeft: selAsset?.id === asset.id ? `2px solid ${CLASS_COLOR[asset.assetClass]}` : '2px solid transparent',
-                backgroundColor: selAsset?.id === asset.id ? '#0D0D0D' : 'transparent',
-                transition: 'all 0.15s',
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: STATUS_DOT[asset.status] ?? '#444440', flexShrink: 0 }} />
-                  <span style={{ fontSize: 11, color: '#F5F5F0', fontFamily: 'var(--font-syne)', fontWeight: 700 }}>{asset.name}</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <span style={{
-                    fontSize: 9, padding: '2px 6px', borderRadius: 2,
-                    background: `${CLASS_COLOR[asset.assetClass]}22`,
-                    color: CLASS_COLOR[asset.assetClass],
-                    border: `0.5px solid ${CLASS_COLOR[asset.assetClass]}44`,
-                  }}>
-                    {asset.assetClass}
-                  </span>
-                  {isMobile && <span style={{ fontSize: 10, color: '#333330' }}>→</span>}
-                </div>
-              </div>
-
-              {/* Return type pills */}
-              <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 6 }}>
-                {asset.returnTypes.map(rt => (
-                  <span key={rt} style={{ fontSize: 8, color: RETURN_COLORS[rt] + '99', border: `0.5px solid ${RETURN_COLORS[rt]}33`, padding: '1px 5px', borderRadius: 2 }}>
-                    {rt}
-                  </span>
-                ))}
-              </div>
-
-              {/* Mandate bar */}
-              {asset.assetClass !== 'C' && (
-                <div>
-                  <div style={{ height: 1.5, background: '#1A1A1A', borderRadius: 1 }}>
-                    <div style={{ height: '100%', width: `${asset.mandateProgress}%`, background: CLASS_COLOR[asset.assetClass], borderRadius: 1, opacity: 0.6 }} />
-                  </div>
-                  <p style={{ fontSize: 8, color: '#333330', margin: '2px 0 0' }}>Mandate: {asset.mandateProgress}%</p>
-                </div>
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Right panel — Asset Detail ── */}
-      <div style={{
-        flex: isMobile ? undefined : 1,
-        width: isMobile ? '100%' : undefined,
-        height: isMobile ? '100%' : undefined,
-        display: showDetail ? 'flex' : 'none',
-        flexDirection: 'column',
-        overflowY: 'auto',
-        padding: isMobile ? '20px 20px 40px' : '28px 32px',
-      }}>
-        {/* Top bar */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28, flexShrink: 0 }}>
-          {isMobile ? (
-            <button
-              onClick={handleMobileBack}
-              style={{ fontSize: 10, color: '#444440', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
-            >
-              <span style={{ color: '#E8FF47' }}>←</span> back to ledger
-            </button>
-          ) : null}
-          <button
-            onClick={onClose}
-            style={{ fontSize: 10, color: '#333330', background: 'none', border: 'none', cursor: 'pointer', transition: 'color 0.15s', marginLeft: 'auto' }}
-            onMouseEnter={e => (e.currentTarget.textContent = 'return to the universe')}
-            onMouseLeave={e => (e.currentTarget.textContent = '× exit')}
+      {/* ── Portfolio lock overlay when shaking ── */}
+      <AnimatePresence>
+        {worst === 'shaking' && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            style={{ position: 'absolute', inset: 0, zIndex: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(6,6,14,0.85)', backdropFilter: 'blur(4px)', top: isMobile ? 40 : 44 }}
           >
-            × exit
-          </button>
+            <div style={{ textAlign: 'center' }}>
+              <p style={{ fontFamily: 'var(--font-syne)', fontSize: isMobile ? 16 : 18, color: '#888884', marginBottom: 18, lineHeight: 1.5 }}>
+                Stabilize the floor.<br />The portfolio waits.
+              </p>
+              <button
+                onClick={() => {}}
+                style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: '#E8FF47', background: 'none', border: '0.5px solid rgba(232,255,71,0.3)', borderRadius: 4, padding: '8px 20px', cursor: 'pointer' }}
+              >
+                Update floor status
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Pressured banner ── */}
+      {worst === 'pressured' && (
+        <div style={{ padding: '6px 20px', background: '#1f1505', borderBottom: '0.5px solid #EF9F27', flexShrink: 0 }}>
+          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: isMobile ? 8 : 9, color: '#EF9F27' }}>
+            ⚠ Floor under pressure. Review before deploying more capital.
+          </span>
         </div>
+      )}
 
-        <AnimatePresence mode="wait">
-          {showRebalance ? (
-            <RebalanceView key="rebalance" assets={assets} onBack={() => setShowRebalance(false)} />
-          ) : selAsset ? (
-            <motion.div
-              key={selAsset.id}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-            >
-              {/* Asset header */}
-              <div style={{ marginBottom: 28 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                  <span style={{ fontSize: 9, color: CLASS_COLOR[selAsset.assetClass], textTransform: 'uppercase', letterSpacing: '0.14em' }}>
-                    Class {selAsset.assetClass} Asset
-                  </span>
-                  <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: STATUS_DOT[selAsset.status] }} />
-                  <span style={{ fontSize: 9, color: STATUS_DOT[selAsset.status], textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                    {selAsset.status}
-                  </span>
-                </div>
-                <h2 style={{ fontFamily: 'var(--font-syne)', fontSize: isMobile ? 22 : 26, fontWeight: 700, color: '#F5F5F0', margin: '0 0 4px' }}>
-                  {selAsset.name}
-                </h2>
-                <p style={{ fontSize: 9, color: '#333330', margin: 0 }}>Last reviewed: {selAsset.lastReviewed}</p>
+      {/* ── Vision Layer ── */}
+      <VisionLayer
+        visions={visions}
+        assets={assets}
+        onSelectAsset={handleSelectAsset}
+        isMobile={isMobile}
+      />
 
-                {selAsset.assetClass === 'A' && !isMobile && (
-                  <div style={{ position: 'absolute', marginTop: -32, right: 32, fontSize: 60, fontFamily: 'var(--font-syne)', fontWeight: 800, color: CLASS_COLOR.A, opacity: 0.04, pointerEvents: 'none', letterSpacing: '-0.04em' }}>
-                    DEPLOYED
-                  </div>
-                )}
-              </div>
+      {/* ── Typewriter ── */}
+      {!isMobile && (
+        <p style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#1C1C1A', padding: '6px 20px 4px', margin: 0, flexShrink: 0, minHeight: 22 }}>
+          {typed}<span style={{ opacity: typed.length > 0 ? 1 : 0, color: '#333330' }}>_</span>
+        </p>
+      )}
 
-              {/* Score card — 2×2 grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 24 }}>
-                {(Object.entries(selAsset.scores) as [string, number][]).map(([key, val]) => (
-                  <div key={key} style={{ background: '#0D0D0D', border: '0.5px solid #111111', borderRadius: 6, padding: '10px 12px' }}>
-                    <p style={{ fontSize: 9, color: '#333330', textTransform: 'uppercase', letterSpacing: '0.12em', margin: '0 0 6px' }}>{key}</p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontFamily: 'var(--font-syne)', fontSize: 20, fontWeight: 800, color: '#F5F5F0' }}>{val}</span>
-                      <span style={{ fontSize: 9, color: '#333330' }}>/5</span>
-                    </div>
-                    <ScoreBar value={val} color={CLASS_COLOR[selAsset.assetClass]} />
-                  </div>
-                ))}
-              </div>
-              <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 9, color: '#444440', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Total</span>
-                <span style={{
-                  fontFamily: 'var(--font-syne)', fontSize: 28, fontWeight: 800,
-                  color: totalScore >= 16 ? '#E8FF47' : totalScore >= 11 ? '#EF9F27' : '#E24B4A',
-                }}>
-                  {totalScore}
-                </span>
-                <span style={{ fontSize: 11, color: '#333330' }}>/20</span>
-              </div>
-
-              {/* Allocation */}
-              <div style={{ background: '#0D0D0D', border: '0.5px solid #111111', borderRadius: 6, padding: '14px 16px', marginBottom: 20 }}>
-                <p style={{ fontSize: 9, color: '#333330', textTransform: 'uppercase', letterSpacing: '0.12em', margin: '0 0 8px' }}>Allocation</p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <span style={{ fontFamily: 'var(--font-syne)', fontSize: 32, fontWeight: 800, color: '#F5F5F0' }}>{selAsset.allocation}</span>
-                  <span style={{ fontSize: 11, color: '#333330' }}>/ 100u</span>
-                  <div style={{ flex: 1, height: 3, background: '#1A1A1A', borderRadius: 1 }}>
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${selAsset.allocation}%` }}
-                      transition={{ duration: 0.7, ease: 'easeOut' }}
-                      style={{ height: '100%', background: CLASS_COLOR[selAsset.assetClass], borderRadius: 1 }}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Mandate */}
-              <div style={{ background: '#0D0D0D', border: '0.5px solid #111111', borderRadius: 6, padding: '14px 16px', marginBottom: 20 }}>
-                <p style={{ fontSize: 9, color: '#333330', textTransform: 'uppercase', letterSpacing: '0.12em', margin: '0 0 8px' }}>Mandate</p>
-                <p style={{ fontSize: 12, color: '#888884', lineHeight: 1.6, margin: '0 0 12px', fontFamily: 'var(--font-dm-sans)' }}>
-                  {selAsset.mandateText}
-                </p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-                  <input
-                    type="range" min={0} max={100} value={selAsset.mandateProgress}
-                    onChange={e => updateAsset(selAsset.id, { mandateProgress: Number(e.target.value) })}
-                    style={{ flex: 1, accentColor: CLASS_COLOR[selAsset.assetClass] }}
-                  />
-                  <span style={{ fontSize: 10, color: CLASS_COLOR[selAsset.assetClass], minWidth: 32, textAlign: 'right' }}>
-                    {selAsset.mandateProgress}%
-                  </span>
-                </div>
-              </div>
-
-              {/* Actions checklist */}
-              {selAsset.actions.length > 0 && (
-                <div style={{ background: '#0D0D0D', border: '0.5px solid #111111', borderRadius: 6, padding: '14px 16px', marginBottom: 20 }}>
-                  <p style={{ fontSize: 9, color: '#333330', textTransform: 'uppercase', letterSpacing: '0.12em', margin: '0 0 10px' }}>Next Actions</p>
-                  {selAsset.actions.map((action, i) => (
-                    <label key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: isMobile ? 12 : 8, cursor: 'pointer' }}>
-                      <input
-                        type="checkbox"
-                        checked={action.done}
-                        onChange={() => {
-                          const newActions = selAsset.actions.map((a, j) => j === i ? { ...a, done: !a.done } : a)
-                          updateAsset(selAsset.id, { actions: newActions })
-                        }}
-                        style={{ accentColor: CLASS_COLOR[selAsset.assetClass], marginTop: 2, flexShrink: 0 }}
-                      />
-                      <span style={{
-                        fontSize: 11, color: action.done ? '#333330' : '#888884',
-                        fontFamily: 'var(--font-dm-sans)',
-                        textDecoration: action.done ? 'line-through' : 'none',
-                        transition: 'all 0.2s',
-                      }}>
-                        {action.text}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              )}
-
-              {/* Quick links */}
-              {selAsset.links && (
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                  {selAsset.links.caseStudy && (
-                    <a href={selAsset.links.caseStudy} style={{ fontSize: 10, color: '#444440', border: '0.5px solid #222220', padding: '5px 12px', borderRadius: 4, textDecoration: 'none', transition: 'color 0.15s' }}
-                      onMouseEnter={e => (e.currentTarget.style.color = '#E8FF47')}
-                      onMouseLeave={e => (e.currentTarget.style.color = '#444440')}>
-                      ↗ Case Study
-                    </a>
-                  )}
-                  {selAsset.links.github && (
-                    <a href={selAsset.links.github} style={{ fontSize: 10, color: '#444440', border: '0.5px solid #222220', padding: '5px 12px', borderRadius: 4, textDecoration: 'none', transition: 'color 0.15s' }}
-                      onMouseEnter={e => (e.currentTarget.style.color = '#E8FF47')}
-                      onMouseLeave={e => (e.currentTarget.style.color = '#444440')}>
-                      ↗ GitHub
-                    </a>
-                  )}
-                </div>
-              )}
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
-      </div>
-    </motion.div>
-  )
-}
-
-function RebalanceView({ assets, onBack }: { assets: Asset[]; onBack: () => void }) {
-  const totalAllocated = assets.reduce((s, a) => s + a.allocation, 0)
-  const classA = assets.filter(a => a.assetClass === 'A').reduce((s, a) => s + a.allocation, 0)
-  const classB = assets.filter(a => a.assetClass === 'B').reduce((s, a) => s + a.allocation, 0)
-
-  return (
-    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-      <button onClick={onBack} style={{ fontSize: 10, color: '#444440', background: 'none', border: 'none', cursor: 'pointer', marginBottom: 24 }}>
-        ← back to ledger
-      </button>
-      <h2 style={{ fontFamily: 'var(--font-syne)', fontSize: 20, fontWeight: 700, color: '#F5F5F0', marginBottom: 24 }}>
-        Portfolio Allocation
-      </h2>
-
-      {assets.filter(a => a.allocation > 0).map(asset => (
-        <div key={asset.id} style={{ marginBottom: 12 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-            <span style={{ fontSize: 10, color: '#888884', fontFamily: 'var(--font-dm-sans)' }}>{asset.name}</span>
-            <span style={{ fontSize: 10, color: CLASS_COLOR[asset.assetClass] }}>{asset.allocation}u</span>
-          </div>
-          <div style={{ height: 3, background: '#1A1A1A', borderRadius: 1 }}>
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${asset.allocation}%` }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
-              style={{ height: '100%', background: CLASS_COLOR[asset.assetClass], borderRadius: 1, opacity: 0.7 }}
+      {/* ── Main workspace ── */}
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: isMobile ? 'column' : 'row',
+          overflow: 'hidden',
+          opacity: worst === 'shaking' ? 0.08 : 1,
+          transition: 'opacity 0.3s',
+          pointerEvents: worst === 'shaking' ? 'none' : 'auto',
+        }}
+      >
+        {/* Left: Asset Ledger */}
+        {(!isMobile || mobilePanel === 'list') && (
+          <div style={{
+            width: isMobile ? '100%' : '42%',
+            minWidth: isMobile ? undefined : 260,
+            borderRight: isMobile ? 'none' : '0.5px solid #111111',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            flex: isMobile ? 1 : undefined,
+          }}>
+            <AssetLedger
+              assets={assets}
+              visions={visions}
+              selected={selAsset}
+              onSelect={handleSelectAsset}
+              onCreate={() => { setNewName(''); setNewClass('B'); setShowCreate(true) }}
+              onRebalance={handleRebalance}
+              onUpdateAsset={updateAsset}
+              isMobile={isMobile}
             />
           </div>
-        </div>
-      ))}
+        )}
 
-      <div style={{ marginTop: 28, padding: '14px 16px', background: '#0D0D0D', border: '0.5px solid #111111', borderRadius: 6 }}>
-        <p style={{ fontSize: 9, color: '#333330', margin: '0 0 8px' }}>TOTAL: {totalAllocated}u / 100u</p>
-        <p style={{ fontSize: 9, color: '#444440', margin: '0 0 4px' }}>Class A: {classA}u &nbsp; Class B: {classB}u</p>
+        {/* Right: Detail or Rebalance */}
+        {(!isMobile || mobilePanel === 'detail') && (
+          <div style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            width: isMobile ? '100%' : undefined,
+          }}>
+            <AnimatePresence mode="wait">
+              {view === 'rebalance' ? (
+                <RebalanceView
+                  key="rebalance"
+                  assets={assets}
+                  visions={visions}
+                  onBack={handleBack}
+                  isMobile={isMobile}
+                />
+              ) : selAsset ? (
+                <AssetDetail
+                  key={selAsset.id}
+                  asset={selAsset}
+                  visions={visions}
+                  onUpdate={updateAsset}
+                  onBack={isMobile ? () => setMobilePanel('list') : undefined}
+                  isMobile={isMobile}
+                />
+              ) : (
+                <motion.div
+                  key="empty"
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                  style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  {isMobile ? null : (
+                    <p style={{ fontFamily: 'var(--font-dm-sans)', fontSize: 13, color: '#1E1E1C' }}>
+                      Select an asset
+                    </p>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
       </div>
+      {/* ── New Asset Modal ── */}
+      <AnimatePresence>
+        {showCreate && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={() => setShowCreate(false)}
+            style={{ position: 'fixed', inset: 0, zIndex: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(4px)' }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              onClick={e => e.stopPropagation()}
+              style={{ backgroundColor: '#080810', border: '0.5px solid #1A1A24', borderRadius: 10, padding: isMobile ? '28px 22px' : '32px 36px', width: isMobile ? 'calc(100vw - 48px)' : 360 }}
+            >
+              <p style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#444440', textTransform: 'uppercase', letterSpacing: '0.18em', margin: '0 0 20px' }}>New Asset</p>
+
+              <input
+                autoFocus
+                type="text"
+                value={newName}
+                onChange={e => setNewName(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') handleCreate() }}
+                placeholder="Asset name..."
+                style={{ width: '100%', background: '#0D0D0D', border: '0.5px solid #1A1A24', borderRadius: 5, padding: '10px 12px', fontFamily: 'var(--font-syne)', fontSize: 15, fontWeight: 600, color: '#F5F5F0', outline: 'none', marginBottom: 14, boxSizing: 'border-box' }}
+              />
+
+              <div style={{ display: 'flex', gap: 6, marginBottom: 20 }}>
+                {(['A', 'B', 'C'] as AssetClass[]).map(cls => {
+                  const clsColor: Record<AssetClass, string> = { A: '#E8FF47', B: '#EF9F27', C: '#444440' }
+                  const selected = newClass === cls
+                  return (
+                    <button
+                      key={cls}
+                      onClick={() => setNewClass(cls)}
+                      style={{ flex: 1, padding: '8px', background: selected ? `${clsColor[cls]}18` : 'transparent', border: `0.5px solid ${selected ? clsColor[cls] : '#1A1A24'}`, borderRadius: 5, cursor: 'pointer', fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: selected ? clsColor[cls] : '#333330' }}
+                    >
+                      Class {cls}
+                    </button>
+                  )
+                })}
+              </div>
+
+              <p style={{ fontFamily: 'var(--font-dm-sans)', fontSize: 11, color: '#333330', margin: '0 0 18px', lineHeight: 1.5 }}>
+                {newClass === 'A' ? 'Core position — active, high conviction, deployed capital.' : newClass === 'B' ? 'Forming position — emerging, building conviction.' : 'Monitor only — thesis, no capital deployed.'}
+              </p>
+
+              <button
+                onClick={handleCreate}
+                disabled={!newName.trim() || creating}
+                style={{ width: '100%', padding: '11px', background: newName.trim() ? 'rgba(232,255,71,0.1)' : '#0A0A0A', border: `0.5px solid ${newName.trim() ? 'rgba(232,255,71,0.35)' : '#111118'}`, borderRadius: 5, cursor: newName.trim() ? 'pointer' : 'default', fontFamily: 'var(--font-dm-sans)', fontSize: 13, fontWeight: 500, color: newName.trim() ? '#E8FF47' : '#222220' }}
+              >
+                {creating ? 'Creating...' : '+ Add to Ledger'}
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   )
 }

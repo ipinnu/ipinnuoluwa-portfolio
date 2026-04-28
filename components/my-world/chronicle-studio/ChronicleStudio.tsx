@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@supabase/supabase-js'
+import { useIsMobile } from '@/hooks/useIsMobile'
 
 // ─── Supabase ─────────────────────────────────────────────────────────────────
 
@@ -408,12 +409,17 @@ export default function ChronicleStudio({ onClose }: { onClose: () => void }) {
   // Distribute
   const [adapted, setAdapted] = useState<{ twitter: string; linkedin: string; instagram: string } | null>(null)
   const [adapting, setAdapting] = useState(false)
+  const [adaptError, setAdaptError] = useState<string | null>(null)
   const [regenPlatform, setRegenPlatform] = useState<string | null>(null)
   const [note, setNote] = useState('')
   const [savingPlatform, setSavingPlatform] = useState<string | null>(null)
 
   // Vault
   const [vaultItems, setVaultItems] = useState<VaultItem[]>([])
+
+  // Mobile
+  const isMobile = useIsMobile()
+  const [sidebarOpen, setSidebarOpen] = useState(true)
 
   // Refs
   const saveTimerRef = useRef<ReturnType<typeof setTimeout>>()
@@ -422,6 +428,11 @@ export default function ChronicleStudio({ onClose }: { onClose: () => void }) {
   const imageInputRef = useRef<HTMLInputElement>(null)
   const editorRef = useRef({ title, content, summary, tags, status, coverUrl, selected })
   useEffect(() => { editorRef.current = { title, content, summary, tags, status, coverUrl, selected } }, [title, content, summary, tags, status, coverUrl, selected])
+
+  // Collapse sidebar on mobile when article selected; reopen when nothing selected
+  useEffect(() => {
+    if (isMobile) setSidebarOpen(!selected)
+  }, [selected?.id, isMobile])
 
   // Load on auth
   useEffect(() => {
@@ -553,6 +564,7 @@ export default function ChronicleStudio({ onClose }: { onClose: () => void }) {
   const adaptContent = async () => {
     if (!selected) return
     setAdapting(true)
+    setAdaptError(null)
     try {
       const res = await fetch('/api/adapt-content', {
         method: 'POST',
@@ -560,10 +572,10 @@ export default function ChronicleStudio({ onClose }: { onClose: () => void }) {
         body: JSON.stringify({ title, content, summary, note }),
       })
       const data = await res.json()
-      if (data.error) { alert(`Adapt failed: ${data.error}`); return }
+      if (data.error) { setAdaptError(data.error); return }
       setAdapted({ twitter: data.twitter ?? '', linkedin: data.linkedin ?? '', instagram: data.instagram ?? '' })
     } catch {
-      alert('Network error — check console')
+      setAdaptError('Network error — check connection')
     } finally {
       setAdapting(false)
     }
@@ -572,6 +584,7 @@ export default function ChronicleStudio({ onClose }: { onClose: () => void }) {
   const regenOne = async (platform: 'twitter' | 'linkedin' | 'instagram') => {
     if (!selected) return
     setRegenPlatform(platform)
+    setAdaptError(null)
     try {
       const res = await fetch('/api/adapt-content', {
         method: 'POST',
@@ -579,10 +592,10 @@ export default function ChronicleStudio({ onClose }: { onClose: () => void }) {
         body: JSON.stringify({ title, content, summary, note, platform }),
       })
       const data = await res.json()
-      if (data.error) { alert(`Regen failed: ${data.error}`); return }
+      if (data.error) { setAdaptError(data.error); return }
       setAdapted(prev => prev ? { ...prev, [platform]: data[platform] ?? '' } : { twitter: '', linkedin: '', instagram: '', [platform]: data[platform] ?? '' })
     } catch {
-      alert('Network error — check console')
+      setAdaptError('Network error — check connection')
     } finally {
       setRegenPlatform(null)
     }
@@ -674,7 +687,7 @@ export default function ChronicleStudio({ onClose }: { onClose: () => void }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           {mode === 'write' && selected && (
             <>
-              <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#282828' }}>{wordCount} words</span>
+              {!isMobile && <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#282828' }}>{wordCount} words</span>}
               <AnimatePresence mode="wait">
                 {saveState !== 'idle' && (
                   <motion.span key={saveState} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: saveState === 'saved' ? '#A3C4B4' : '#333330' }}>
@@ -687,16 +700,46 @@ export default function ChronicleStudio({ onClose }: { onClose: () => void }) {
               </button>
             </>
           )}
+          {isMobile && mode !== 'vault' && (
+            <button
+              onClick={() => setSidebarOpen(o => !o)}
+              style={{ background: sidebarOpen ? 'rgba(163,196,180,0.08)' : 'none', border: `0.5px solid ${sidebarOpen ? 'rgba(163,196,180,0.2)' : '#1A1A24'}`, borderRadius: 4, padding: '4px 9px', cursor: 'pointer', fontFamily: 'var(--font-jetbrains-mono)', fontSize: 12, color: sidebarOpen ? '#A3C4B4' : '#444440', lineHeight: 1 }}
+            >
+              ≡
+            </button>
+          )}
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: '#2A2A28' }}>esc ×</button>
         </div>
       </div>
 
       {/* ── Body ── */}
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+      <div style={{ flex: 1, display: 'flex', overflow: 'hidden', position: 'relative' }}>
 
         {/* ── Sidebar (Write + Distribute modes) ── */}
-        {mode !== 'vault' && (
-          <div style={{ width: 216, flexShrink: 0, borderRight: '0.5px solid #0E0E18', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        {/* Mobile backdrop */}
+        {isMobile && sidebarOpen && mode !== 'vault' && (
+          <div
+            onClick={() => setSidebarOpen(false)}
+            style={{ position: 'absolute', inset: 0, zIndex: 19, background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(2px)' }}
+          />
+        )}
+        {mode !== 'vault' && (!isMobile || sidebarOpen) && (
+          <div style={{
+            width: isMobile ? '82vw' : 216,
+            flexShrink: 0,
+            borderRight: '0.5px solid #0E0E18',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            ...(isMobile ? {
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              zIndex: 20,
+              backgroundColor: '#06060E',
+            } : {}),
+          }}>
             <div style={{ padding: '10px 10px 6px' }}>
               <button onClick={createArticle} style={{ width: '100%', padding: '7px 10px', background: 'rgba(163,196,180,0.06)', border: '0.5px solid rgba(163,196,180,0.18)', borderRadius: 5, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'var(--font-dm-sans)', fontSize: 12, color: '#A3C4B4' }}>
                 <span style={{ fontSize: 15, lineHeight: 1, marginTop: -1 }}>+</span> New Article
@@ -812,6 +855,13 @@ export default function ChronicleStudio({ onClose }: { onClose: () => void }) {
                     ) : '✦ Adapt with AI'}
                   </button>
                 </div>
+                {adaptError && (
+                  <div style={{ padding: '6px 20px', borderBottom: '0.5px solid #0E0E18' }}>
+                    <p style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#ef4444', margin: 0 }}>
+                      ✕ {adaptError}
+                    </p>
+                  </div>
+                )}
 
                 {/* Three platform columns */}
                 <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
