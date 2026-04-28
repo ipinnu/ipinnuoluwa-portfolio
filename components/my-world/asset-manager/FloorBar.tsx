@@ -93,17 +93,17 @@ export default function FloorBar({ state, onChange, onClose, isMobile }: Props) 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
           <button
             onClick={openModal}
-            style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#444440', background: 'none', border: '0.5px solid #222220', borderRadius: 3, padding: '3px 9px', cursor: 'pointer' }}
+            style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#444440', background: 'none', border: '0.5px solid #222220', borderRadius: 3, padding: isMobile ? '6px 12px' : '3px 9px', cursor: 'pointer' }}
           >
             Update
           </button>
           <button
             onClick={onClose}
-            style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: '#2A2A28', background: 'none', border: 'none', cursor: 'pointer' }}
+            style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: '#2A2A28', background: 'none', border: 'none', cursor: 'pointer', padding: isMobile ? '8px 4px' : '4px' }}
             onMouseEnter={e => (e.currentTarget.style.color = '#888884')}
             onMouseLeave={e => (e.currentTarget.style.color = '#2A2A28')}
           >
-            × exit
+            {isMobile ? '×' : '× exit'}
           </button>
         </div>
       </div>
@@ -135,7 +135,7 @@ export default function FloorBar({ state, onChange, onClose, isMobile }: Props) 
                   <select
                     value={draft[key]}
                     onChange={e => setDraft(d => ({ ...d, [key]: e.target.value as FloorSignal }))}
-                    style={{ backgroundColor: '#0D0D0D', border: '0.5px solid #1A1A24', borderRadius: 4, padding: '6px 10px', fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: SIGNAL_COLOR[draft[key]], outline: 'none', cursor: 'pointer' }}
+                    style={{ backgroundColor: '#0D0D0D', border: '0.5px solid #1A1A24', borderRadius: 4, padding: '8px 10px', fontFamily: 'var(--font-jetbrains-mono)', fontSize: 16, color: SIGNAL_COLOR[draft[key]], outline: 'none', cursor: 'pointer' }}
                   >
                     <option value="stable">Stable</option>
                     <option value="pressured">Under pressure</option>

@@ -305,7 +305,7 @@ export default function Dashboard({ onClose }: Props) {
                 onChange={e => setNewName(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') handleCreate() }}
                 placeholder="Asset name..."
-                style={{ width: '100%', background: '#0D0D0D', border: '0.5px solid #1A1A24', borderRadius: 5, padding: '10px 12px', fontFamily: 'var(--font-syne)', fontSize: 15, fontWeight: 600, color: '#F5F5F0', outline: 'none', marginBottom: 14, boxSizing: 'border-box' }}
+                style={{ width: '100%', background: '#0D0D0D', border: '0.5px solid #1A1A24', borderRadius: 5, padding: '10px 12px', fontFamily: 'var(--font-syne)', fontSize: 16, fontWeight: 600, color: '#F5F5F0', outline: 'none', marginBottom: 14, boxSizing: 'border-box' }}
               />
 
               <div style={{ display: 'flex', gap: 6, marginBottom: 20 }}>

@@ -53,7 +53,7 @@ export default function AssetLedger({ assets, visions, selected, onSelect, onCre
           </div>
           <button
             onClick={onRebalance}
-            style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#444440', background: 'none', border: '0.5px solid #222220', borderRadius: 4, padding: '4px 10px', cursor: 'pointer' }}
+            style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#444440', background: 'none', border: '0.5px solid #222220', borderRadius: 4, padding: isMobile ? '8px 12px' : '4px 10px', cursor: 'pointer' }}
           >
             Rebalance ↻
           </button>

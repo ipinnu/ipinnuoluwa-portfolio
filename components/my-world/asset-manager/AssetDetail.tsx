@@ -168,9 +168,9 @@ export default function AssetDetail({ asset, visions, onUpdate, onBack, isMobile
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <span style={{ fontFamily: 'var(--font-syne)', fontSize: 20, fontWeight: 800, color: '#F5F5F0', lineHeight: 1 }}>{val}</span>
               <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#333330' }}>/5</span>
-              <div style={{ marginLeft: 'auto', display: 'flex', gap: 3 }}>
-                <button onClick={() => adjustScore(key, -1)} style={{ width: 18, height: 18, background: '#1A1A1A', border: '0.5px solid #222220', borderRadius: 2, cursor: 'pointer', color: '#555550', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}>−</button>
-                <button onClick={() => adjustScore(key, +1)} style={{ width: 18, height: 18, background: '#1A1A1A', border: '0.5px solid #222220', borderRadius: 2, cursor: 'pointer', color: '#555550', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}>+</button>
+              <div style={{ marginLeft: 'auto', display: 'flex', gap: 4 }}>
+                <button onClick={() => adjustScore(key, -1)} style={{ width: isMobile ? 28 : 20, height: isMobile ? 28 : 20, background: '#1A1A1A', border: '0.5px solid #222220', borderRadius: 3, cursor: 'pointer', color: '#555550', fontSize: isMobile ? 15 : 12, display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}>−</button>
+                <button onClick={() => adjustScore(key, +1)} style={{ width: isMobile ? 28 : 20, height: isMobile ? 28 : 20, background: '#1A1A1A', border: '0.5px solid #222220', borderRadius: 3, cursor: 'pointer', color: '#555550', fontSize: isMobile ? 15 : 12, display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}>+</button>
               </div>
             </div>
             <ScoreBar value={val} color={color} />
@@ -293,7 +293,7 @@ export default function AssetDetail({ asset, visions, onUpdate, onBack, isMobile
                 <span style={{ flex: 1, fontFamily: 'var(--font-dm-sans)', fontSize: 12, color: action.done ? '#2A2A28' : '#888884', textDecoration: action.done ? 'line-through' : 'none', transition: 'all 0.2s', lineHeight: 1.5 }}>
                   {action.text}
                 </span>
-                <button onClick={() => deleteAction(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#2A2A28', fontSize: 12, padding: '0 2px', flexShrink: 0, lineHeight: 1 }}>×</button>
+                <button onClick={() => deleteAction(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#2A2A28', fontSize: 14, padding: isMobile ? '4px 8px' : '0 4px', flexShrink: 0, lineHeight: 1 }}>×</button>
               </motion.label>
             ))}
           </AnimatePresence>
@@ -303,7 +303,7 @@ export default function AssetDetail({ asset, visions, onUpdate, onBack, isMobile
               onChange={e => setNewActionText(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') addAction() }}
               placeholder="Add action..."
-              style={{ flex: 1, fontFamily: 'var(--font-dm-sans)', fontSize: 11, background: '#111111', border: '0.5px solid #1A1A1A', borderRadius: 3, padding: '5px 8px', color: '#888884', outline: 'none' }}
+              style={{ flex: 1, fontFamily: 'var(--font-dm-sans)', fontSize: 16, background: '#111111', border: '0.5px solid #1A1A1A', borderRadius: 3, padding: '8px 10px', color: '#888884', outline: 'none' }}
             />
             <button onClick={addAction} style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, background: '#1A1A1A', border: '0.5px solid #222220', borderRadius: 3, padding: '5px 10px', cursor: 'pointer', color: '#444440' }}>
               + Add
@@ -393,12 +393,14 @@ function Section({ label, children }: { label: string; children: React.ReactNode
 
 const pencilBtn: React.CSSProperties = {
   background: 'none', border: 'none', cursor: 'pointer',
-  fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#444440', padding: 0,
+  fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#444440',
+  padding: '6px 8px', margin: '-6px -8px',
 }
 
 const textareaStyle: React.CSSProperties = {
-  width: '100%', fontSize: 12, color: '#888884', lineHeight: 1.65,
+  width: '100%', fontSize: 16, color: '#888884', lineHeight: 1.65,
   fontFamily: 'var(--font-dm-sans)', background: '#111111',
   border: '0.5px solid #333330', borderRadius: 4, padding: '8px',
-  resize: 'vertical', minHeight: 70, outline: 'none', marginBottom: 4,
+  resize: 'none', minHeight: 70, outline: 'none', marginBottom: 4,
+  boxSizing: 'border-box',
 }
