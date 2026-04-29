@@ -6,9 +6,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 interface PasswordGateProps {
   onSuccess: () => void
   onClose: () => void
+  envKey?: string
 }
 
-export default function PasswordGate({ onSuccess, onClose }: PasswordGateProps) {
+export default function PasswordGate({ onSuccess, onClose, envKey }: PasswordGateProps) {
   const [value, setValue] = useState('')
   const [shake, setShake] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -19,7 +20,7 @@ export default function PasswordGate({ onSuccess, onClose }: PasswordGateProps) 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const key = process.env.NEXT_PUBLIC_ASSET_MANAGER_KEY ?? ''
+    const key = envKey ?? process.env.NEXT_PUBLIC_ASSET_MANAGER_KEY ?? ''
     const correct = key ? btoa(value) === key : value === 'ipinnu'
 
     if (correct) {

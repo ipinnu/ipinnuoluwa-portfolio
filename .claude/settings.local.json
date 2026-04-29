@@ -67,7 +67,10 @@
       "Bash(pnpm next:*)",
       "mcp__ide__getDiagnostics",
       "Bash(pnpm tsc:*)",
-      "Bash(pnpm run:*)"
+      "Bash(pnpm run:*)",
+      "Bash(git rm *)",
+      "Bash(xargs grep *)",
+      "Bash(npm run *)"
     ]
   }
 }
