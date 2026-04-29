@@ -303,7 +303,7 @@ export default function Planet({ type, nodes, onOpenNode, onLockClick, onInkClic
           opacity: isDream ? 0.8 : 1,
           filter: isDream ? 'blur(0.3px)' : 'none',
           zIndex: 10,
-          overflow: isSaturn ? 'visible' : 'hidden',
+          overflow: (isSaturn || (isDream && !!onArchiveClick)) ? 'visible' : 'hidden',
         }}
         animate={isDream
           ? { scale: [1, 1.02, 1], opacity: [0.75, 0.85, 0.75] }
@@ -316,8 +316,8 @@ export default function Planet({ type, nodes, onOpenNode, onLockClick, onInkClic
         {type === 'dream'     && <JupiterBody size={size} />}
         {type === 'archive'   && <SaturnBody  size={size} />}
 
-        {/* Archive artifact — inside sphere wrapper (overflow:visible) so it sits on the ring */}
-        {type === 'archive' && onArchiveClick && (
+        {/* Archive artifact — inside sphere wrapper (overflow:visible) so it sits on the planet */}
+        {type === 'dream' && onArchiveClick && (
           <div style={{ position: 'absolute', bottom: -18, right: -18 }} onClick={e => e.stopPropagation()}>
             <ArchiveArtifact onTriggered={onArchiveClick} />
           </div>

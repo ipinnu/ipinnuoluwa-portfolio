@@ -188,7 +188,7 @@ export default function SpaceCanvas({ nodes, comet }: SpaceCanvasProps) {
               {PLANET_CONFIG.archive.name} · {PLANET_CONFIG.archive.subtitle}
             </p>
           </motion.div>
-          <Planet type="archive" nodes={archiveNodes} onOpenNode={handleOpenNode} onArchiveClick={() => setArchiveState('password')} onPlanetClick={() => setOpenPlanet('archive')} />
+          <Planet type="archive" nodes={archiveNodes} onOpenNode={handleOpenNode} onPlanetClick={() => setOpenPlanet('archive')} />
         </motion.div>
 
         {/* ── Layer 4: The Dream ── */}
@@ -201,7 +201,7 @@ export default function SpaceCanvas({ nodes, comet }: SpaceCanvasProps) {
               {PLANET_CONFIG.dream.name} · {PLANET_CONFIG.dream.subtitle}
             </p>
           </motion.div>
-          <Planet type="dream" nodes={dreamNodes} onOpenNode={handleOpenNode} onPlanetClick={() => setOpenPlanet('dream')} />
+          <Planet type="dream" nodes={dreamNodes} onOpenNode={handleOpenNode} onArchiveClick={() => setArchiveState('password')} onPlanetClick={() => setOpenPlanet('dream')} />
           <p className="font-syne text-[11px] text-text-tertiary mt-4 italic opacity-50">
             Not yet. But soon.
           </p>
