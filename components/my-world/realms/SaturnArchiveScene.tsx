@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { CelestialNode } from '@/lib/types/celestial'
 import { useIsMobile } from '@/hooks/useIsMobile'
-import ArchiveStudio from '@/components/my-world/archive/ArchiveStudio'
-import PasswordGate  from '@/components/my-world/asset-manager/PasswordGate'
 
 const MOBILE_SCALE = 0.55
 
@@ -482,23 +480,17 @@ interface SaturnArchiveSceneProps {
 }
 
 export default function SaturnArchiveScene({ nodes, initialNode, onClose }: SaturnArchiveSceneProps) {
-  const [selected,        setSelected]        = useState<CelestialNode | null>(initialNode ?? null)
-  const [showPasswordGate,setShowPasswordGate] = useState(false)
-  const [archiveOpen,     setArchiveOpen]      = useState(false)
+  const [selected, setSelected] = useState<CelestialNode | null>(initialNode ?? null)
   const isMobile = useIsMobile()
   const sphereSize = isMobile ? 155 : 280
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        if (archiveOpen) return // ArchiveStudio handles its own Escape
-        if (showPasswordGate) { setShowPasswordGate(false); return }
-        selected ? setSelected(null) : onClose()
-      }
+      if (e.key === 'Escape') selected ? setSelected(null) : onClose()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [selected, onClose, archiveOpen, showPasswordGate])
+  }, [selected, onClose])
 
   return (
     <motion.div
@@ -632,58 +624,6 @@ export default function SaturnArchiveScene({ nodes, initialNode, onClose }: Satu
         </motion.p>
       )}
 
-      {/* InkArtifact — The Archive entry point */}
-      <motion.button
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        onClick={() => setShowPasswordGate(true)}
-        style={{
-          position: 'absolute', bottom: isMobile ? 56 : 64, right: isMobile ? 16 : 28, zIndex: 20,
-          background: 'rgba(29,158,117,0.06)', backdropFilter: 'blur(12px)',
-          border: '0.5px solid rgba(29,158,117,0.2)',
-          borderRadius: 6, padding: isMobile ? '8px 14px' : '7px 14px',
-          cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8,
-          boxShadow: '0 0 16px rgba(29,158,117,0.06)',
-        }}
-        whileHover={{ scale: 1.04, boxShadow: '0 0 24px rgba(29,158,117,0.15)' }}
-        whileTap={{ scale: 0.97 }}
-      >
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" strokeWidth="2">
-          <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-        </svg>
-        <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#1D9E75', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-          The Archive
-        </span>
-      </motion.button>
-
-      {/* Password gate */}
-      <AnimatePresence>
-        {showPasswordGate && (
-          <PasswordGate
-            key="archive-gate"
-            envKey={process.env.NEXT_PUBLIC_ARCHIVE_KEY ?? process.env.NEXT_PUBLIC_ASSET_MANAGER_KEY}
-            onSuccess={() => { setShowPasswordGate(false); setArchiveOpen(true) }}
-            onClose={() => setShowPasswordGate(false)}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Archive Studio */}
-      <AnimatePresence>
-        {archiveOpen && (
-          <motion.div
-            key="archive-studio"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            style={{ position: 'fixed', inset: 0, zIndex: 70 }}
-          >
-            <ArchiveStudio onClose={() => setArchiveOpen(false)} />
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.div>
   )
 }

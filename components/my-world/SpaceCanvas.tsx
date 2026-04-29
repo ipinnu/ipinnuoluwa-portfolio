@@ -13,9 +13,10 @@ import MercuryForgeScene from './realms/MercuryForgeScene'
 import ChronicleEarthScene from './realms/ChronicleEarthScene'
 import SaturnArchiveScene from './realms/SaturnArchiveScene'
 import JupiterDreamScene from './realms/JupiterDreamScene'
-import PasswordGate from './asset-manager/PasswordGate'
-import Dashboard from './asset-manager/Dashboard'
+import PasswordGate   from './asset-manager/PasswordGate'
+import Dashboard       from './asset-manager/Dashboard'
 import ChronicleStudio from './chronicle-studio/ChronicleStudio'
+import ArchiveStudio   from './archive/ArchiveStudio'
 
 interface SpaceCanvasProps {
   nodes: CelestialNode[]
@@ -27,8 +28,9 @@ export default function SpaceCanvas({ nodes, comet }: SpaceCanvasProps) {
   const isMobile = useIsMobile()
   const [openNode, setOpenNode] = useState<CelestialNode | null>(null)
   const [openPlanet, setOpenPlanet] = useState<'forge' | 'chronicle' | 'archive' | 'dream' | null>(null)
-  const [assetManagerState, setAssetManagerState] = useState<'closed' | 'password' | 'open'>('closed')
+  const [assetManagerState,   setAssetManagerState]   = useState<'closed' | 'password' | 'open'>('closed')
   const [chronicleStudioOpen, setChronicleStudioOpen] = useState(false)
+  const [archiveState,        setArchiveState]         = useState<'closed' | 'password' | 'open'>('closed')
 
   // Parallax transforms per layer
   const sunY        = useTransform(scrollY, [0, 4000], [0, -4000 * 0.3])
@@ -67,6 +69,7 @@ export default function SpaceCanvas({ nodes, comet }: SpaceCanvasProps) {
         setOpenPlanet(null)
         setAssetManagerState('closed')
         setChronicleStudioOpen(false)
+        setArchiveState('closed')
       }
     }
     window.addEventListener('keydown', onKey)
@@ -185,7 +188,7 @@ export default function SpaceCanvas({ nodes, comet }: SpaceCanvasProps) {
               {PLANET_CONFIG.archive.name} · {PLANET_CONFIG.archive.subtitle}
             </p>
           </motion.div>
-          <Planet type="archive" nodes={archiveNodes} onOpenNode={handleOpenNode} onPlanetClick={() => setOpenPlanet('archive')} />
+          <Planet type="archive" nodes={archiveNodes} onOpenNode={handleOpenNode} onArchiveClick={() => setArchiveState('password')} onPlanetClick={() => setOpenPlanet('archive')} />
         </motion.div>
 
         {/* ── Layer 4: The Dream ── */}
@@ -282,6 +285,20 @@ export default function SpaceCanvas({ nodes, comet }: SpaceCanvasProps) {
         )}
         {assetManagerState === 'open' && (
           <Dashboard onClose={() => setAssetManagerState('closed')} />
+        )}
+      </AnimatePresence>
+
+      {/* ─── Archive ─── */}
+      <AnimatePresence>
+        {archiveState === 'password' && (
+          <PasswordGate
+            envKey={process.env.NEXT_PUBLIC_ARCHIVE_KEY ?? process.env.NEXT_PUBLIC_ASSET_MANAGER_KEY}
+            onSuccess={() => setArchiveState('open')}
+            onClose={() => setArchiveState('closed')}
+          />
+        )}
+        {archiveState === 'open' && (
+          <ArchiveStudio onClose={() => setArchiveState('closed')} />
         )}
       </AnimatePresence>
     </>

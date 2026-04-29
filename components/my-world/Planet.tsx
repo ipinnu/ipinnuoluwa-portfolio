@@ -5,16 +5,18 @@ import { motion } from 'framer-motion'
 import type { CelestialNode, Planet as PlanetType } from '@/lib/types/celestial'
 import { PLANET_CONFIG } from '@/lib/types/celestial'
 import Moon from './Moon'
-import LockArtifact from './LockArtifact'
-import InkArtifact from './InkArtifact'
+import LockArtifact    from './LockArtifact'
+import InkArtifact     from './InkArtifact'
+import ArchiveArtifact from './ArchiveArtifact'
 
 interface PlanetProps {
   type: PlanetType
   nodes: CelestialNode[]
   onOpenNode: (node: CelestialNode) => void
-  onLockClick?: () => void
-  onInkClick?: () => void
-  onPlanetClick?: () => void
+  onLockClick?:    () => void
+  onInkClick?:     () => void
+  onArchiveClick?: () => void
+  onPlanetClick?:  () => void
 }
 
 const MOON_RADII = [65, 85, 105, 125]
@@ -247,7 +249,7 @@ function SaturnBody({ size }: { size: number }) {
 }
 
 // ─── Planet shell ─────────────────────────────────────────────────────────────
-export default function Planet({ type, nodes, onOpenNode, onLockClick, onInkClick, onPlanetClick }: PlanetProps) {
+export default function Planet({ type, nodes, onOpenNode, onLockClick, onInkClick, onArchiveClick, onPlanetClick }: PlanetProps) {
   const config = PLANET_CONFIG[type]
   const size = config.size
   const rgb = hexToRgb(config.color)
@@ -347,6 +349,11 @@ export default function Planet({ type, nodes, onOpenNode, onLockClick, onInkClic
       {/* Ink artifact (Chronicle only) */}
       {type === 'chronicle' && onInkClick && (
         <InkArtifact onTriggered={onInkClick} />
+      )}
+
+      {/* Archive artifact (Saturn only) */}
+      {type === 'archive' && onArchiveClick && (
+        <ArchiveArtifact onTriggered={onArchiveClick} />
       )}
     </div>
   )
