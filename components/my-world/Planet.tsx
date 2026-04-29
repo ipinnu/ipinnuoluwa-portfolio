@@ -315,6 +315,13 @@ export default function Planet({ type, nodes, onOpenNode, onLockClick, onInkClic
         {type === 'chronicle' && <EarthBody   size={size} />}
         {type === 'dream'     && <JupiterBody size={size} />}
         {type === 'archive'   && <SaturnBody  size={size} />}
+
+        {/* Archive artifact — inside sphere wrapper (overflow:visible) so it sits on the ring */}
+        {type === 'archive' && onArchiveClick && (
+          <div style={{ position: 'absolute', bottom: -18, right: -18 }} onClick={e => e.stopPropagation()}>
+            <ArchiveArtifact onTriggered={onArchiveClick} />
+          </div>
+        )}
       </motion.div>
 
       {/* Glow pulse ring */}
@@ -351,10 +358,6 @@ export default function Planet({ type, nodes, onOpenNode, onLockClick, onInkClic
         <InkArtifact onTriggered={onInkClick} />
       )}
 
-      {/* Archive artifact (Saturn only) */}
-      {type === 'archive' && onArchiveClick && (
-        <ArchiveArtifact onTriggered={onArchiveClick} />
-      )}
     </div>
   )
 }
