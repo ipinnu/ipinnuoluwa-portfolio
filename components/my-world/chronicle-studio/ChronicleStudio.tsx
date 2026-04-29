@@ -4,6 +4,9 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@supabase/supabase-js'
 import { useIsMobile } from '@/hooks/useIsMobile'
+import { ThemeProvider } from '@/components/theme/ThemeProvider'
+import { GlassFilter } from '@/components/theme/GlassFilter'
+import { AmbientLayer } from '@/components/theme/AmbientLayer'
 
 // ─── Supabase ─────────────────────────────────────────────────────────────────
 
@@ -654,6 +657,9 @@ export default function ChronicleStudio({ onClose }: { onClose: () => void }) {
   }
 
   return (
+    <ThemeProvider section="chronicle">
+    <GlassFilter />
+    <AmbientLayer />
     <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}
       className="fixed inset-0 z-50"
@@ -907,5 +913,6 @@ export default function ChronicleStudio({ onClose }: { onClose: () => void }) {
         .chronicle-preview br { display: block; margin: 4px 0; }
       `}</style>
     </motion.div>
+    </ThemeProvider>
   )
 }

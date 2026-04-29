@@ -13,6 +13,9 @@ import VisionLayer from './VisionLayer'
 import AssetLedger from './AssetLedger'
 import AssetDetail from './AssetDetail'
 import RebalanceView from './RebalanceView'
+import { ThemeProvider } from '@/components/theme/ThemeProvider'
+import { GlassFilter } from '@/components/theme/GlassFilter'
+import { AmbientLayer } from '@/components/theme/AmbientLayer'
 
 type View = 'detail' | 'rebalance'
 
@@ -145,6 +148,9 @@ export default function Dashboard({ onClose }: Props) {
   const selAsset = selected ? assets.find(a => a.id === selected.id) ?? selected : null
 
   return (
+    <ThemeProvider section="forge">
+    <GlassFilter />
+    <AmbientLayer />
     <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
@@ -340,5 +346,6 @@ export default function Dashboard({ onClose }: Props) {
         )}
       </AnimatePresence>
     </motion.div>
+    </ThemeProvider>
   )
 }
