@@ -318,7 +318,7 @@ export default function Planet({ type, nodes, onOpenNode, onLockClick, onInkClic
 
         {/* Archive artifact — inside sphere wrapper (overflow:visible) so it sits on the planet */}
         {type === 'dream' && onArchiveClick && (
-          <div style={{ position: 'absolute', bottom: -18, right: -18 }} onClick={e => e.stopPropagation()}>
+          <div style={{ position: 'absolute', bottom: -18, left: -18 }} onClick={e => e.stopPropagation()}>
             <ArchiveArtifact onTriggered={onArchiveClick} />
           </div>
         )}

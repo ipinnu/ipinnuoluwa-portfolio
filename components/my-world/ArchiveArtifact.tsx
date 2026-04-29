@@ -37,7 +37,7 @@ export default function ArchiveArtifact({ onTriggered }: ArchiveArtifactProps) {
       style={{
         position: 'absolute',
         bottom: -16,
-        right: -14,
+        left: -14,
         width: 14,
         height: 14,
         background: 'none',
