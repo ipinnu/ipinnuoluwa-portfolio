@@ -13,6 +13,7 @@ export interface Asset {
   status: AssetStatus
   mandateText: string
   mandateProgress: number
+  mandateDue?: string
   scores: { revenue: number; impact: number; strategic: number; momentum: number }
   actions: { text: string; done: boolean }[]
   lastReviewed: string
@@ -59,6 +60,7 @@ export function assetFromDb(row: Record<string, unknown>): Asset {
     status:          row.status as AssetStatus,
     mandateText:     row.mandate_text as string,
     mandateProgress: row.mandate_progress as number,
+    mandateDue:      row.mandate_due as string | undefined,
     scores:          row.scores as Asset['scores'],
     actions:         row.actions as Asset['actions'],
     lastReviewed:    row.last_reviewed as string,
@@ -79,6 +81,7 @@ export function assetToDb(a: Asset): Record<string, unknown> {
     status:           a.status,
     mandate_text:     a.mandateText,
     mandate_progress: a.mandateProgress,
+    mandate_due:      a.mandateDue ?? null,
     scores:           a.scores,
     actions:          a.actions,
     last_reviewed:    a.lastReviewed,

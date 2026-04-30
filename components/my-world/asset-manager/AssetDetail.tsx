@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import type { Asset, Vision } from '@/lib/types/forge'
 
 const CLASS_COLOR: Record<string, string>  = { A: '#E8FF47', B: '#EF9F27', C: '#444440' }
+const CLASS_LABEL: Record<string, string>  = { A: 'Core / Deployed', B: 'Forming', C: 'Monitor Only' }
+const CLASS_STATUS: Record<string, Asset['status']> = { A: 'active', B: 'forming', C: 'monitor' }
 const STATUS_DOT: Record<string, string>   = { active: '#22c55e', forming: '#EF9F27', monitor: '#444440' }
 const RETURN_COLORS: Record<string, string> = { revenue: '#A3C4B4', impact: '#534AB7', brand: '#E8FF47', strategic: '#993C1D' }
 const RANK_COLOR = ['#E8FF47', '#A3C4B4', '#534AB7']
@@ -26,13 +28,18 @@ function daysOverdue(lastReviewed: string): number {
 
 interface Props {
   asset: Asset
+  assets: Asset[]
   visions: Vision[]
   onUpdate: (id: string, patch: Partial<Asset>) => void
   onBack?: () => void
   isMobile: boolean
 }
 
-export default function AssetDetail({ asset, visions, onUpdate, onBack, isMobile }: Props) {
+export default function AssetDetail({ asset, assets, visions, onUpdate, onBack, isMobile }: Props) {
+  const [classPickerOpen, setClassPickerOpen] = useState(false)
+  const [transferOpen,   setTransferOpen]   = useState(false)
+  const [transferFromId, setTransferFromId] = useState('')
+  const [transferUnits,  setTransferUnits]  = useState(0)
   const [editingMandate, setEditingMandate] = useState(false)
   const [mandateDraft, setMandateDraft]     = useState(asset.mandateText)
   const [editingThesis, setEditingThesis]   = useState(false)
@@ -51,6 +58,9 @@ export default function AssetDetail({ asset, visions, onUpdate, onBack, isMobile
     setEditingThesis(false)
     setEditingExit(false)
     setNewActionText('')
+    setTransferOpen(false)
+    setTransferFromId('')
+    setTransferUnits(0)
   }, [asset.id])
 
   const color = CLASS_COLOR[asset.assetClass]
@@ -59,6 +69,38 @@ export default function AssetDetail({ asset, visions, onUpdate, onBack, isMobile
   const overdue = days > 30
 
   const sortedVisions = [...visions].sort((a, b) => b.gameWeight - a.gameWeight)
+
+  const otherAssets = assets.filter(a => a.id !== asset.id)
+  const transferSource = otherAssets.find(a => a.id === transferFromId) ?? otherAssets[0] ?? null
+  const totalDeployed  = assets.reduce((s, a) => s + a.allocation, 0)
+  const POOL = 100
+
+  function openTransfer() {
+    const defaultSrc = otherAssets.find(a => a.allocation > 0) ?? otherAssets[0] ?? null
+    setTransferFromId(defaultSrc?.id ?? '')
+    setTransferUnits(0)
+    setTransferOpen(true)
+  }
+
+  function confirmTransfer() {
+    if (!transferSource || transferUnits <= 0) return
+    const units = Math.min(transferUnits, transferSource.allocation)
+    onUpdate(transferSource.id, { allocation: transferSource.allocation - units })
+    onUpdate(asset.id, { allocation: asset.allocation + units })
+    setTransferOpen(false)
+    setTransferUnits(0)
+  }
+
+  const mandateDueDate  = asset.mandateDue ? new Date(asset.mandateDue) : null
+  const mandateDueOver  = mandateDueDate ? mandateDueDate < new Date() : false
+  const mandateDueFmt   = mandateDueDate
+    ? mandateDueDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: undefined })
+    : null
+
+  function reclassify(cls: 'A' | 'B' | 'C') {
+    onUpdate(asset.id, { assetClass: cls, status: CLASS_STATUS[cls] })
+    setClassPickerOpen(false)
+  }
 
   function cycleStatus() {
     const order: Asset['status'][] = ['active', 'forming', 'monitor']
@@ -126,9 +168,50 @@ export default function AssetDetail({ asset, visions, onUpdate, onBack, isMobile
       {/* Header */}
       <div style={{ marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: color, textTransform: 'uppercase', letterSpacing: '0.12em' }}>
-            Class {asset.assetClass} Asset
-          </span>
+          {/* Class selector */}
+          <div style={{ position: 'relative' }}>
+            <button
+              onClick={() => setClassPickerOpen(o => !o)}
+              title="Click to reclassify"
+              style={{ background: 'none', border: `0.5px solid ${color}40`, borderRadius: 3, cursor: 'pointer', padding: '2px 7px', display: 'flex', alignItems: 'center', gap: 5 }}
+            >
+              <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color, textTransform: 'uppercase', letterSpacing: '0.12em' }}>
+                Class {asset.assetClass}
+              </span>
+              <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 7, color: `${color}80` }}>▾</span>
+            </button>
+            {classPickerOpen && (
+              <div onClick={() => setClassPickerOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 19 }} />
+            )}
+            <AnimatePresence>
+              {classPickerOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -4, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -4, scale: 0.96 }}
+                  transition={{ duration: 0.12 }}
+                  style={{ position: 'absolute', top: '100%', left: 0, marginTop: 4, background: '#0D0D0D', border: '0.5px solid #222220', borderRadius: 5, overflow: 'hidden', zIndex: 20, minWidth: 160 }}
+                >
+                  {(['A', 'B', 'C'] as const).map(cls => (
+                    <button
+                      key={cls}
+                      onClick={() => reclassify(cls)}
+                      style={{
+                        width: '100%', display: 'flex', alignItems: 'center', gap: 8,
+                        background: asset.assetClass === cls ? `${CLASS_COLOR[cls]}10` : 'none',
+                        border: 'none', borderBottom: '0.5px solid #161616',
+                        padding: '8px 12px', cursor: 'pointer', textAlign: 'left',
+                      }}
+                    >
+                      <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: CLASS_COLOR[cls], fontWeight: 700, minWidth: 14 }}>{cls}</span>
+                      <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: asset.assetClass === cls ? CLASS_COLOR[cls] : '#444440' }}>{CLASS_LABEL[cls]}</span>
+                      {asset.assetClass === cls && <span style={{ marginLeft: 'auto', fontFamily: 'var(--font-jetbrains-mono)', fontSize: 7, color: CLASS_COLOR[cls] }}>✓</span>}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
           <button onClick={cycleStatus} title="Click to cycle status" style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, padding: 0 }}>
             <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: STATUS_DOT[asset.status] }} />
             <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: STATUS_DOT[asset.status], textTransform: 'uppercase', letterSpacing: '0.1em' }}>{asset.status}</span>
@@ -141,6 +224,11 @@ export default function AssetDetail({ asset, visions, onUpdate, onBack, isMobile
           <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: overdue ? '#EF9F27' : '#333330' }}>
             Reviewed {days === 0 ? 'today' : `${days}d ago`}{overdue ? ' — overdue' : ''}
           </span>
+          {asset.assetClass === 'A' && mandateDueFmt && (
+            <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: mandateDueOver ? '#EF9F27' : '#2A4030' }}>
+              · mandate due {mandateDueFmt}{mandateDueOver ? ' — overdue' : ''}
+            </span>
+          )}
           {markReviewedFeedback ? (
             <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#22c55e' }}>✓ Marked</span>
           ) : (
@@ -190,38 +278,140 @@ export default function AssetDetail({ asset, visions, onUpdate, onBack, isMobile
 
       {/* Allocation */}
       <div style={{ background: '#0D0D0D', border: '0.5px solid #111111', borderRadius: 6, padding: '12px 14px', marginBottom: 14 }}>
-        <p style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#333330', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 7px' }}>Capital Deployment</p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 7 }}>
+          <p style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#333330', textTransform: 'uppercase', letterSpacing: '0.1em', margin: 0 }}>Capital Deployment</p>
+          {!transferOpen && (
+            <button
+              onClick={openTransfer}
+              style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#444440', background: 'none', border: '0.5px solid #222220', borderRadius: 3, padding: '2px 8px', cursor: 'pointer' }}
+            >
+              Adjust ↕
+            </button>
+          )}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: transferOpen ? 12 : 0 }}>
           <span style={{ fontFamily: 'var(--font-syne)', fontSize: 28, fontWeight: 800, color: '#F5F5F0', lineHeight: 1 }}>{asset.allocation}</span>
-          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#333330' }}>/ 100u</span>
+          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#333330' }}>/ {POOL}u</span>
           <div style={{ flex: 1, height: 3, background: '#1A1A1A', borderRadius: 1 }}>
-            <motion.div initial={{ width: 0 }} animate={{ width: `${asset.allocation}%` }} transition={{ duration: 0.7, ease: 'easeOut' }}
+            <motion.div initial={{ width: 0 }} animate={{ width: `${(asset.allocation / POOL) * 100}%` }} transition={{ duration: 0.7, ease: 'easeOut' }}
               style={{ height: '100%', background: color, borderRadius: 1 }} />
           </div>
         </div>
+
+        {/* Transfer prompt */}
+        <AnimatePresence>
+          {transferOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.18 }}
+              style={{ overflow: 'hidden' }}
+            >
+              <div style={{ borderTop: '0.5px solid #1A1A1A', paddingTop: 12 }}>
+                <p style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#333330', margin: '0 0 8px' }}>Transfer into {asset.name}</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 8 }}>
+                  <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#444440' }}>Move</span>
+                  <input
+                    type="number" min={0} max={transferSource?.allocation ?? 0}
+                    value={transferUnits}
+                    onChange={e => setTransferUnits(Math.max(0, Math.min(Number(e.target.value), transferSource?.allocation ?? 0)))}
+                    style={{ width: 52, background: '#111111', border: '0.5px solid #333330', borderRadius: 3, padding: '4px 6px', fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: '#F5F5F0', outline: 'none', textAlign: 'center' }}
+                  />
+                  <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#444440' }}>units from</span>
+                  <select
+                    value={transferFromId}
+                    onChange={e => { setTransferFromId(e.target.value); setTransferUnits(0) }}
+                    style={{ background: '#111111', border: '0.5px solid #333330', borderRadius: 3, padding: '4px 6px', fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#888884', outline: 'none', cursor: 'pointer' }}
+                  >
+                    {otherAssets.map(a => (
+                      <option key={a.id} value={a.id}>{a.name} ({a.allocation}u)</option>
+                    ))}
+                  </select>
+                </div>
+                {transferSource && transferUnits > 0 && (
+                  <p style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#333330', margin: '0 0 8px' }}>
+                    {transferSource.name}: {transferSource.allocation}u → {transferSource.allocation - transferUnits}u
+                    {' · '}{asset.name}: {asset.allocation}u → {asset.allocation + transferUnits}u
+                    {' · '} Pool: {totalDeployed}/{POOL}u
+                  </p>
+                )}
+                <div style={{ display: 'flex', gap: 6 }}>
+                  <button
+                    onClick={() => setTransferOpen(false)}
+                    style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#444440', background: 'none', border: '0.5px solid #222220', borderRadius: 3, padding: '5px 12px', cursor: 'pointer' }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmTransfer}
+                    disabled={!transferSource || transferUnits <= 0}
+                    style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: transferUnits > 0 ? '#E8FF47' : '#333330', background: 'none', border: `0.5px solid ${transferUnits > 0 ? 'rgba(232,255,71,0.35)' : '#222220'}`, borderRadius: 3, padding: '5px 12px', cursor: transferUnits > 0 ? 'pointer' : 'default' }}
+                  >
+                    Confirm Transfer
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Mandate */}
       <Section label="Mandate">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
           <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: color }}>{asset.mandateProgress}%</span>
-          <button onClick={() => { setMandateDraft(asset.mandateText); setEditingMandate(e => !e) }} style={pencilBtn}>
+          <button
+            onClick={() => { setMandateDraft(asset.mandateText); setEditingMandate(e => !e) }}
+            style={pencilBtn}
+          >
             {editingMandate ? 'done' : '✎'}
           </button>
         </div>
 
         {editingMandate ? (
-          <textarea
-            value={mandateDraft}
-            onChange={e => setMandateDraft(e.target.value)}
-            onBlur={() => { onUpdate(asset.id, { mandateText: mandateDraft }); setEditingMandate(false) }}
-            autoFocus
-            style={textareaStyle}
-          />
+          <div>
+            {/* Context panel */}
+            {(connectedVisions.length > 0 || asset.actions.length > 0) && (
+              <div style={{ background: '#080808', border: '0.5px solid #161616', borderRadius: 4, padding: '8px 10px', marginBottom: 8 }}>
+                <p style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 7, color: '#1E1E1C', textTransform: 'uppercase', letterSpacing: '0.15em', margin: '0 0 6px' }}>Context</p>
+                {connectedVisions.map(v => (
+                  <p key={v.id} style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#2A3830', margin: '0 0 2px' }}>↗ {v.title}</p>
+                ))}
+                {connectedVisions.length > 0 && asset.actions.length > 0 && (
+                  <div style={{ height: '0.5px', background: '#161616', margin: '5px 0' }} />
+                )}
+                {asset.actions.map((a, i) => (
+                  <p key={i} style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: a.done ? '#1A1A18' : '#2A3028', margin: '0 0 2px', textDecoration: a.done ? 'line-through' : 'none' }}>
+                    · {a.text}
+                  </p>
+                ))}
+              </div>
+            )}
+            <textarea
+              value={mandateDraft}
+              onChange={e => setMandateDraft(e.target.value)}
+              onBlur={() => { onUpdate(asset.id, { mandateText: mandateDraft }); setEditingMandate(false) }}
+              autoFocus
+              placeholder="Write the mandate informed by the context above..."
+              style={textareaStyle}
+            />
+            {asset.assetClass === 'A' && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
+                <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#333330' }}>Due by</span>
+                <input
+                  type="date"
+                  value={asset.mandateDue ?? ''}
+                  onChange={e => onUpdate(asset.id, { mandateDue: e.target.value || undefined })}
+                  style={{ background: '#111111', border: '0.5px solid #333330', borderRadius: 3, padding: '4px 8px', fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#888884', outline: 'none', cursor: 'pointer' }}
+                />
+              </div>
+            )}
+          </div>
         ) : (
-          <p onClick={() => { setMandateDraft(asset.mandateText); setEditingMandate(true) }}
-            style={{ fontFamily: 'var(--font-dm-sans)', fontSize: 12, color: '#888884', lineHeight: 1.6, margin: '0 0 10px', cursor: 'text' }}>
-            {asset.mandateText || <em style={{ color: '#333330' }}>No mandate. Click to add.</em>}
+          <p
+            onClick={() => { setMandateDraft(asset.mandateText); setEditingMandate(true) }}
+            style={{ fontFamily: 'var(--font-dm-sans)', fontSize: 12, color: '#888884', lineHeight: 1.6, margin: '0 0 10px', cursor: 'text' }}
+          >
+            {asset.mandateText || <em style={{ color: '#333330' }}>No mandate. Click ✎ to write one.</em>}
           </p>
         )}
 

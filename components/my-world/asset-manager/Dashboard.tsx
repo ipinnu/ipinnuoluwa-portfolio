@@ -265,6 +265,7 @@ export default function Dashboard({ onClose }: Props) {
                 <AssetDetail
                   key={selAsset.id}
                   asset={selAsset}
+                  assets={assets}
                   visions={visions}
                   onUpdate={updateAsset}
                   onBack={isMobile ? () => setMobilePanel('list') : undefined}
