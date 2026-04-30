@@ -36,11 +36,11 @@ export const rose: Theme = {
   },
 
   light: {
-    background:      '#FFF6F8',
-    surface:         '#FFECF2',
+    background:      '#FFFFFF',
+    surface:         '#F5F5F5',
     surfaceElevated: '#FFFFFF',
-    writingSurface:  '#FFFAFC',
-    textPrimary:     '#2D0415',
+    writingSurface:  '#FFFFFF',
+    textPrimary:     '#0A0A0A',
     textSecondary:   '#901040',
     textMuted:       '#C06080',
     border:          'rgba(180, 30, 80, 0.15)',

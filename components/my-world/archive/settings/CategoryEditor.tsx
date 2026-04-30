@@ -4,7 +4,7 @@ import { useState } from 'react'
 import type { ArchiveCategory } from '@/lib/types/archive'
 
 const PRESET_COLORS = [
-  '#7F77DD','#1D9E75','#EF9F27','#D4AF37','#4A6FA5','#A3C4B4',
+  '#7F77DD','var(--theme-primary)','#EF9F27','#D4AF37','#4A6FA5','#A3C4B4',
   '#D85A30','#534AB7','#E8FF47','#C4647A','#60C0D0','#E84393',
   '#5BC8E8','#C87941','#B0B0C0','#9B59B6','#FFB800','#888888',
   '#2D8A4E','#E84040','#40C080','#8080FF','#FF8040','#40FF80',
@@ -19,7 +19,7 @@ interface Props {
 export default function CategoryEditor({ categories, onAdd, onDelete }: Props) {
   const [adding,  setAdding]  = useState(false)
   const [name,    setName]    = useState('')
-  const [color,   setColor]   = useState('#1D9E75')
+  const [color,   setColor]   = useState('var(--theme-primary)')
   const [custom,  setCustom]  = useState('')
   const [saving,  setSaving]  = useState(false)
 
@@ -34,12 +34,12 @@ export default function CategoryEditor({ categories, onAdd, onDelete }: Props) {
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-        <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#1D9E75', textTransform: 'uppercase', letterSpacing: '0.18em' }}>
+        <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: 'var(--theme-primary)', textTransform: 'uppercase', letterSpacing: '0.18em' }}>
           Categories
         </span>
         <button
           onClick={() => setAdding(v => !v)}
-          style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#1D9E75', background: 'rgba(29,158,117,0.08)', border: '0.5px solid rgba(29,158,117,0.2)', borderRadius: 4, padding: '4px 10px', cursor: 'pointer' }}
+          style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: 'var(--theme-primary)', background: 'rgba(var(--theme-primary-rgb),0.08)', border: '0.5px solid rgba(var(--theme-primary-rgb),0.2)', borderRadius: 4, padding: '4px 10px', cursor: 'pointer' }}
         >
           + Add
         </button>
@@ -47,7 +47,7 @@ export default function CategoryEditor({ categories, onAdd, onDelete }: Props) {
 
       {/* Add form */}
       {adding && (
-        <div style={{ background: 'rgba(29,158,117,0.04)', border: '0.5px solid rgba(29,158,117,0.12)', borderRadius: 6, padding: 16, marginBottom: 16 }}>
+        <div style={{ background: 'rgba(var(--theme-primary-rgb),0.04)', border: '0.5px solid rgba(var(--theme-primary-rgb),0.12)', borderRadius: 6, padding: 16, marginBottom: 16 }}>
           <input
             value={name}
             onChange={e => setName(e.target.value)}
@@ -55,8 +55,8 @@ export default function CategoryEditor({ categories, onAdd, onDelete }: Props) {
             autoFocus
             style={{
               display: 'block', width: '100%', marginBottom: 12,
-              fontFamily: 'var(--font-dm-sans)', fontSize: 13, color: '#D0EDE0',
-              background: 'rgba(255,255,255,0.03)', border: '0.5px solid rgba(29,158,117,0.15)',
+              fontFamily: 'var(--font-dm-sans)', fontSize: 13, color: 'var(--theme-text-primary)',
+              background: 'rgba(255,255,255,0.03)', border: '0.5px solid rgba(var(--theme-primary-rgb),0.15)',
               borderRadius: 4, padding: '8px 10px', outline: 'none', boxSizing: 'border-box',
             }}
           />
@@ -87,8 +87,8 @@ export default function CategoryEditor({ categories, onAdd, onDelete }: Props) {
               onChange={e => { setCustom(e.target.value); if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) setColor(e.target.value) }}
               placeholder="#HEX"
               style={{
-                width: 80, fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: '#A0C0B0',
-                background: 'rgba(255,255,255,0.03)', border: '0.5px solid rgba(29,158,117,0.15)',
+                width: 80, fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: 'var(--theme-text-muted)',
+                background: 'rgba(255,255,255,0.03)', border: '0.5px solid rgba(var(--theme-primary-rgb),0.15)',
                 borderRadius: 4, padding: '5px 8px', outline: 'none',
               }}
             />
@@ -97,11 +97,11 @@ export default function CategoryEditor({ categories, onAdd, onDelete }: Props) {
 
           <div style={{ display: 'flex', gap: 8 }}>
             <button onClick={handleAdd} disabled={!name.trim() || saving}
-              style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#080810', background: '#1D9E75', border: 'none', borderRadius: 4, padding: '6px 14px', cursor: 'pointer', opacity: !name.trim() ? 0.4 : 1 }}>
+              style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: 'var(--theme-bg)', background: 'var(--theme-primary)', border: 'none', borderRadius: 4, padding: '6px 14px', cursor: 'pointer', opacity: !name.trim() ? 0.4 : 1 }}>
               {saving ? 'Saving…' : 'Save'}
             </button>
             <button onClick={() => setAdding(false)}
-              style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#2A4030', background: 'none', border: '0.5px solid rgba(29,158,117,0.15)', borderRadius: 4, padding: '6px 10px', cursor: 'pointer' }}>
+              style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: 'var(--theme-text-muted)', background: 'none', border: '0.5px solid rgba(var(--theme-primary-rgb),0.15)', borderRadius: 4, padding: '6px 10px', cursor: 'pointer' }}>
               Cancel
             </button>
           </div>
@@ -110,7 +110,7 @@ export default function CategoryEditor({ categories, onAdd, onDelete }: Props) {
 
       {/* List */}
       {categories.map(c => (
-        <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', borderBottom: '0.5px solid rgba(29,158,117,0.05)' }}>
+        <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', borderBottom: '0.5px solid rgba(var(--theme-primary-rgb),0.05)' }}>
           <div style={{ width: 10, height: 10, borderRadius: 2, background: c.colorHex, flexShrink: 0 }} />
           <span style={{
             fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, flexShrink: 0,
@@ -122,13 +122,13 @@ export default function CategoryEditor({ categories, onAdd, onDelete }: Props) {
           }}>
             {c.name}
           </span>
-          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#1A3028', flex: 1 }}>
+          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: 'var(--theme-text-muted)', flex: 1 }}>
             {c.colorHex}
           </span>
           {!c.isDefault && (
             <button
               onClick={() => onDelete(c.id)}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#2A3028', fontSize: 13, padding: '0 4px' }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--theme-text-muted)', fontSize: 13, padding: '0 4px' }}
             >
               ×
             </button>

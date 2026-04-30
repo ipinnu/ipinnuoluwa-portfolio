@@ -28,13 +28,13 @@ export default function TypeEditor({ categories, types, onAdd, onDelete }: Props
 
   return (
     <div>
-      <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#1D9E75', textTransform: 'uppercase', letterSpacing: '0.18em', display: 'block', marginBottom: 16 }}>
+      <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: 'var(--theme-primary)', textTransform: 'uppercase', letterSpacing: '0.18em', display: 'block', marginBottom: 16 }}>
         Types
       </span>
 
       {/* Category selector */}
       <div style={{ marginBottom: 16 }}>
-        <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#1A3028', display: 'block', marginBottom: 6 }}>Select category</span>
+        <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: 'var(--theme-text-muted)', display: 'block', marginBottom: 6 }}>Select category</span>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
           {categories.map(c => (
             <button
@@ -57,30 +57,30 @@ export default function TypeEditor({ categories, types, onAdd, onDelete }: Props
 
       {/* Types list */}
       {selectedCat && (
-        <div style={{ background: 'rgba(29,158,117,0.03)', border: '0.5px solid rgba(29,158,117,0.1)', borderRadius: 6, padding: '12px 14px' }}>
+        <div style={{ background: 'rgba(var(--theme-primary-rgb),0.03)', border: '0.5px solid rgba(var(--theme-primary-rgb),0.1)', borderRadius: 6, padding: '12px 14px' }}>
           {cat && (
-            <p style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#1A3028', margin: '0 0 10px', letterSpacing: '0.1em' }}>
+            <p style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: 'var(--theme-text-muted)', margin: '0 0 10px', letterSpacing: '0.1em' }}>
               Types under {cat.name}
             </p>
           )}
 
           {catTypes.length === 0 ? (
-            <p style={{ fontFamily: 'var(--font-dm-sans)', fontSize: 12, color: '#1A3028', fontStyle: 'italic', margin: '0 0 10px' }}>No types yet</p>
+            <p style={{ fontFamily: 'var(--font-dm-sans)', fontSize: 12, color: 'var(--theme-text-muted)', fontStyle: 'italic', margin: '0 0 10px' }}>No types yet</p>
           ) : (
             catTypes.map(t => (
-              <div key={t.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 0', borderBottom: '0.5px solid rgba(29,158,117,0.05)' }}>
+              <div key={t.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 0', borderBottom: '0.5px solid rgba(var(--theme-primary-rgb),0.05)' }}>
                 <span style={{
                   fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9,
-                  color: cat ? cat.colorHex : '#1D9E75',
-                  background: cat ? `rgba(${cat.colorRgb},0.06)` : 'rgba(29,158,117,0.06)',
-                  border: cat ? `0.5px solid rgba(${cat.colorRgb},0.15)` : '0.5px solid rgba(29,158,117,0.15)',
+                  color: cat ? cat.colorHex : 'var(--theme-primary)',
+                  background: cat ? `rgba(${cat.colorRgb},0.06)` : 'rgba(var(--theme-primary-rgb),0.06)',
+                  border: cat ? `0.5px solid rgba(${cat.colorRgb},0.15)` : '0.5px solid rgba(var(--theme-primary-rgb),0.15)',
                   borderRadius: 3, padding: '2px 6px',
                 }}>
                   {t.name}
                 </span>
                 <button
                   onClick={() => onDelete(t.id)}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#2A3028', fontSize: 13, padding: '0 4px' }}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--theme-text-muted)', fontSize: 13, padding: '0 4px' }}
                 >
                   ×
                 </button>
@@ -96,8 +96,8 @@ export default function TypeEditor({ categories, types, onAdd, onDelete }: Props
               onKeyDown={e => { if (e.key === 'Enter') handleAdd() }}
               placeholder="+ Add type..."
               style={{
-                flex: 1, fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: '#A0C0B0',
-                background: 'rgba(255,255,255,0.02)', border: '0.5px solid rgba(29,158,117,0.12)',
+                flex: 1, fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: 'var(--theme-text-muted)',
+                background: 'rgba(255,255,255,0.02)', border: '0.5px solid rgba(var(--theme-primary-rgb),0.12)',
                 borderRadius: 4, padding: '6px 8px', outline: 'none',
               }}
             />
@@ -106,7 +106,7 @@ export default function TypeEditor({ categories, types, onAdd, onDelete }: Props
               disabled={!newType.trim() || saving}
               style={{
                 fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9,
-                color: '#080810', background: '#1D9E75',
+                color: 'var(--theme-bg)', background: 'var(--theme-primary)',
                 border: 'none', borderRadius: 4, padding: '6px 12px', cursor: 'pointer',
                 opacity: !newType.trim() ? 0.4 : 1,
               }}

@@ -36,11 +36,11 @@ export const ocean: Theme = {
   },
 
   light: {
-    background:      '#F4F8FF',
-    surface:         '#EAF2FF',
+    background:      '#FFFFFF',
+    surface:         '#F5F5F5',
     surfaceElevated: '#FFFFFF',
-    writingSurface:  '#FAFCFF',
-    textPrimary:     '#03213A',
+    writingSurface:  '#FFFFFF',
+    textPrimary:     '#0A0A0A',
     textSecondary:   '#0A5A8A',
     textMuted:       '#3A8AB4',
     border:          'rgba(10, 80, 140, 0.15)',

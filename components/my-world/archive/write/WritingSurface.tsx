@@ -115,7 +115,7 @@ export default function WritingSurface({ note, allNotes, categories, types, onCh
   if (!note) {
     return (
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <p style={{ fontFamily: 'var(--font-dm-sans)', fontSize: 14, color: '#1A3028', fontStyle: 'italic' }}>
+        <p style={{ fontFamily: 'var(--font-dm-sans)', fontSize: 14, color: 'var(--theme-text-muted)', fontStyle: 'italic' }}>
           Select a note or create a new one
         </p>
       </div>
@@ -126,7 +126,7 @@ export default function WritingSurface({ note, allNotes, categories, types, onCh
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative', minWidth: 0 }}>
       {/* Toolbar */}
       <div style={{
-        padding: '10px 24px', borderBottom: '0.5px solid rgba(29,158,117,0.08)',
+        padding: '10px 24px', borderBottom: '0.5px solid rgba(var(--theme-primary-rgb),0.08)',
         display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, flexWrap: 'wrap',
       }}>
         {/* Category */}
@@ -136,8 +136,8 @@ export default function WritingSurface({ note, allNotes, categories, types, onCh
             style={{
               fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, cursor: 'pointer',
               color:      cat ? cat.colorHex : '#2A4030',
-              background: cat ? `rgba(${cat.colorRgb},0.08)` : 'rgba(29,158,117,0.04)',
-              border:     `0.5px solid ${cat ? `rgba(${cat.colorRgb},0.2)` : 'rgba(29,158,117,0.1)'}`,
+              background: cat ? `rgba(${cat.colorRgb},0.08)` : 'rgba(var(--theme-primary-rgb),0.04)',
+              border:     `0.5px solid ${cat ? `rgba(${cat.colorRgb},0.2)` : 'rgba(var(--theme-primary-rgb),0.1)'}`,
               borderRadius: 4, padding: '4px 8px',
               filter: 'url(#liquid-glass-soft)',
             }}
@@ -150,10 +150,10 @@ export default function WritingSurface({ note, allNotes, categories, types, onCh
                 initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                 style={{
                   position: 'absolute', top: '100%', left: 0, marginTop: 4, zIndex: 80,
-                  background: 'rgba(5,7,12,0.97)', border: '0.5px solid rgba(29,158,117,0.15)',
+                  background: 'var(--theme-surface)', border: '0.5px solid var(--theme-border)',
                   borderRadius: 6, padding: 6, minWidth: 160,
                   backdropFilter: 'blur(20px)', filter: 'url(#liquid-glass-soft)',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                  boxShadow: '0 8px 32px var(--theme-shadow)',
                 }}
               >
                 <CatBtn label="None" color="#444440" selected={!categoryId} onClick={() => {
@@ -178,8 +178,8 @@ export default function WritingSurface({ note, allNotes, categories, types, onCh
               onClick={() => { setShowTypePicker(v => !v); setShowCatPicker(false) }}
               style={{
                 fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, cursor: 'pointer',
-                color: '#1A4030', background: 'rgba(29,158,117,0.05)',
-                border: '0.5px solid rgba(29,158,117,0.1)',
+                color: 'var(--theme-text-muted)', background: 'rgba(var(--theme-primary-rgb),0.05)',
+                border: '0.5px solid rgba(var(--theme-primary-rgb),0.1)',
                 borderRadius: 4, padding: '4px 8px',
                 filter: 'url(#liquid-glass-soft)',
               }}
@@ -192,17 +192,17 @@ export default function WritingSurface({ note, allNotes, categories, types, onCh
                   initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                   style={{
                     position: 'absolute', top: '100%', left: 0, marginTop: 4, zIndex: 80,
-                    background: 'rgba(5,7,12,0.97)', border: '0.5px solid rgba(29,158,117,0.15)',
+                    background: 'var(--theme-surface)', border: '0.5px solid var(--theme-border)',
                     borderRadius: 6, padding: 6, minWidth: 140,
                     backdropFilter: 'blur(20px)', filter: 'url(#liquid-glass-soft)',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                    boxShadow: '0 8px 32px var(--theme-shadow)',
                   }}
                 >
                   <CatBtn label="None" color="#444440" selected={!typeId} onClick={() => {
                     setTypeId(null); setShowTypePicker(false); triggerSave({ typeId: null })
                   }} />
                   {availableTypes.map(t => (
-                    <CatBtn key={t.id} label={t.name} color="#1D9E75" selected={typeId === t.id} onClick={() => {
+                    <CatBtn key={t.id} label={t.name} color="var(--theme-primary)" selected={typeId === t.id} onClick={() => {
                       setTypeId(t.id); setShowTypePicker(false); triggerSave({ typeId: t.id })
                     }} />
                   ))}
@@ -219,22 +219,22 @@ export default function WritingSurface({ note, allNotes, categories, types, onCh
           placeholder="Topic..."
           style={{
             background: 'none', border: 'none',
-            borderBottom: '0.5px solid rgba(29,158,117,0.1)',
-            fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#1A4030',
+            borderBottom: '0.5px solid rgba(var(--theme-primary-rgb),0.1)',
+            fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: 'var(--theme-text-muted)',
             padding: '3px 0', outline: 'none', width: isMobile ? 70 : 110,
           }}
         />
 
         {/* Save state + word count */}
         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#1A3028' }}>
+          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: 'var(--theme-text-muted)' }}>
             {wordCount}w
           </span>
           {saveState === 'saving' && (
-            <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#1D9E75', opacity: 0.5 }}>saving…</span>
+            <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: 'var(--theme-primary)', opacity: 0.5 }}>saving…</span>
           )}
           {saveState === 'saved' && (
-            <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#1D9E75' }}>✓</span>
+            <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: 'var(--theme-primary)' }}>✓</span>
           )}
         </div>
       </div>
@@ -249,11 +249,11 @@ export default function WritingSurface({ note, allNotes, categories, types, onCh
           style={{
             display: 'block', width: '100%',
             fontFamily: 'var(--font-syne)', fontSize: isMobile ? 22 : 28, fontWeight: 700,
-            color: '#F5F5F0', background: 'transparent',
+            color: 'var(--theme-text-primary)', background: 'transparent',
             border: 'none', borderBottom: '1px solid transparent',
             outline: 'none', marginBottom: 28, padding: 0, boxSizing: 'border-box',
           }}
-          onFocus={e => { e.target.style.borderBottomColor = '#1A1A24' }}
+          onFocus={e => { e.target.style.borderBottomColor = 'var(--theme-border)' }}
           onBlur={e =>  { e.target.style.borderBottomColor = 'transparent' }}
         />
 
@@ -268,10 +268,10 @@ export default function WritingSurface({ note, allNotes, categories, types, onCh
             style={{
               display: 'block', width: '100%',
               fontFamily: 'var(--font-dm-sans)', fontSize: 16, fontWeight: 300,
-              color: '#F5F5F0', lineHeight: 1.85,
+              color: 'var(--theme-text-primary)', lineHeight: 1.85,
               background: 'transparent', border: 'none', resize: 'none', outline: 'none',
               minHeight: 'calc(100vh - 260px)',
-              caretColor: '#1D9E75',
+              caretColor: 'var(--theme-primary)',
               boxSizing: 'border-box',
             }}
           />
@@ -283,13 +283,13 @@ export default function WritingSurface({ note, allNotes, categories, types, onCh
                 initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                 style={{
                   position: 'absolute', left: 0, top: 40, zIndex: 60,
-                  background: 'rgba(5,7,12,0.97)', border: '0.5px solid rgba(29,158,117,0.25)',
+                  background: 'var(--theme-surface)', border: '0.5px solid var(--theme-border)',
                   borderRadius: 8, padding: 6, minWidth: 240, maxWidth: 340,
                   backdropFilter: 'blur(20px)', filter: 'url(#liquid-glass-soft)',
-                  boxShadow: '0 12px 40px rgba(0,0,0,0.5)',
+                  boxShadow: '0 12px 40px var(--theme-shadow)',
                 }}
               >
-                <p style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#1D9E75', margin: '0 0 6px 8px', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                <p style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: 'var(--theme-primary)', margin: '0 0 6px 8px', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
                   Link a note
                 </p>
                 {linkResults.map(n => {
@@ -303,7 +303,7 @@ export default function WritingSurface({ note, allNotes, categories, types, onCh
                         padding: '7px 10px', background: 'none', border: 'none', cursor: 'pointer',
                         borderRadius: 4,
                       }}
-                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(29,158,117,0.08)' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb),0.08)' }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'none' }}
                     >
                       <span style={{ fontFamily: 'var(--font-dm-sans)', fontSize: 13, color: '#D0EDE0', display: 'block' }}>

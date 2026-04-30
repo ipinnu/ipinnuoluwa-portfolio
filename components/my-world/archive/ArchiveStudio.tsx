@@ -153,8 +153,8 @@ function Inner({ onClose }: Props) {
 
   if (loading) {
     return (
-      <div style={{ position: 'fixed', inset: 0, background: '#06060E', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 60 }}>
-        <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: '#1D9E75', letterSpacing: '0.18em' }}>
+      <div style={{ position: 'fixed', inset: 0, background: 'var(--theme-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 60 }}>
+        <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: 'var(--theme-primary)', letterSpacing: '0.18em' }}>
           Loading archive…
         </span>
       </div>
@@ -162,39 +162,57 @@ function Inner({ onClose }: Props) {
   }
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: '#06060E', zIndex: 60, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+    <div style={{ position: 'fixed', inset: 0, background: 'var(--theme-bg)', zIndex: 60, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       <GlassFilter />
       <AmbientLayer />
 
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <div style={{
-        height: 44, flexShrink: 0, background: '#080810',
-        borderBottom: '0.5px solid rgba(29,158,117,0.1)',
+        height: 44, flexShrink: 0, background: 'var(--theme-surface)',
+        borderBottom: '0.5px solid rgba(var(--theme-primary-rgb),0.1)',
         display: 'flex', alignItems: 'center', padding: '0 16px', gap: 12,
       }}>
         {/* Close */}
-        <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#2A4030', padding: '4px 0' }}>
+        <button
+          onClick={onClose}
+          style={{
+            background: 'none',
+            border: '0.5px solid var(--theme-border)',
+            borderRadius: 5,
+            cursor: 'pointer',
+            fontFamily: 'var(--font-jetbrains-mono)',
+            fontSize: 9,
+            color: 'var(--theme-text-secondary)',
+            padding: '5px 10px',
+            display: 'flex', alignItems: 'center', gap: 5,
+            transition: 'border-color 0.15s, color 0.15s',
+            flexShrink: 0,
+          }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--theme-primary)'; e.currentTarget.style.color = 'var(--theme-primary)' }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--theme-border)'; e.currentTarget.style.color = 'var(--theme-text-secondary)' }}
+          title="Exit archive (Esc)"
+        >
           ← My World
         </button>
 
         {/* Divider */}
-        <span style={{ color: '#1A2820', fontSize: 10 }}>|</span>
+        <span style={{ color: 'var(--theme-border)', fontSize: 10 }}>|</span>
 
         {/* Archive label */}
-        <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#1D9E75', textTransform: 'uppercase', letterSpacing: '0.18em' }}>
+        <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: 'var(--theme-primary)', textTransform: 'uppercase', letterSpacing: '0.18em' }}>
           The Archive
         </span>
 
         {/* Mode toggle */}
-        <div style={{ display: 'flex', gap: 4, marginLeft: 12, background: 'rgba(29,158,117,0.05)', borderRadius: 5, padding: 3, border: '0.5px solid rgba(29,158,117,0.1)' }}>
+        <div style={{ display: 'flex', gap: 4, marginLeft: 12, background: 'rgba(var(--theme-primary-rgb),0.05)', borderRadius: 5, padding: 3, border: '0.5px solid rgba(var(--theme-primary-rgb),0.1)' }}>
           {(['write', 'brain'] as Mode[]).map(m => (
             <button
               key={m}
               onClick={() => setMode(m)}
               style={{
                 fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, cursor: 'pointer',
-                color: mode === m ? '#1D9E75' : '#1A3028',
-                background: mode === m ? 'rgba(29,158,117,0.12)' : 'none',
+                color: mode === m ? 'var(--theme-primary)' : 'var(--theme-text-muted)',
+                background: mode === m ? 'rgba(var(--theme-primary-rgb),0.12)' : 'none',
                 border: 'none', borderRadius: 3, padding: '3px 8px', letterSpacing: '0.1em',
                 textTransform: 'uppercase',
                 filter: mode === m ? 'url(#liquid-glass-soft)' : 'none',
@@ -266,11 +284,11 @@ function Inner({ onClose }: Props) {
                   animate={{ x: 0 }} exit={{ x: -280 }}
                   style={{
                     width: isMobile ? '100%' : 240, flexShrink: 0,
-                    borderRight: '0.5px solid rgba(29,158,117,0.1)',
+                    borderRight: '0.5px solid rgba(var(--theme-primary-rgb),0.1)',
                     position: isMobile ? 'absolute' : 'relative',
                     inset: isMobile ? 0 : undefined,
                     zIndex: isMobile ? 50 : 'auto',
-                    background: isMobile ? '#06060E' : 'transparent',
+                    background: isMobile ? 'var(--theme-bg)' : 'transparent',
                     height: '100%', overflow: 'hidden',
                   }}
                 >
@@ -292,9 +310,9 @@ function Inner({ onClose }: Props) {
                 onClick={() => setShowBrowser(true)}
                 style={{
                   position: 'absolute', top: 12, left: 12, zIndex: 40,
-                  background: 'rgba(29,158,117,0.1)', border: '0.5px solid rgba(29,158,117,0.2)',
+                  background: 'rgba(var(--theme-primary-rgb),0.1)', border: '0.5px solid rgba(var(--theme-primary-rgb),0.2)',
                   borderRadius: 4, padding: '6px 10px', cursor: 'pointer',
-                  fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#1D9E75',
+                  fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: 'var(--theme-primary)',
                 }}
               >
                 ☰ Notes
@@ -328,8 +346,8 @@ function Inner({ onClose }: Props) {
                     transition={{ type: 'spring', damping: 30 }}
                     style={{
                       position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 50,
-                      maxHeight: '50%', background: '#06060E',
-                      borderTop: '0.5px solid rgba(29,158,117,0.15)',
+                      maxHeight: '50%', background: 'var(--theme-bg)',
+                      borderTop: '0.5px solid rgba(var(--theme-primary-rgb),0.15)',
                     }}
                   >
                     <button
@@ -348,9 +366,9 @@ function Inner({ onClose }: Props) {
                 onClick={() => setShowRail(true)}
                 style={{
                   position: 'absolute', bottom: 16, right: 16, zIndex: 40,
-                  background: 'rgba(29,158,117,0.1)', border: '0.5px solid rgba(29,158,117,0.2)',
+                  background: 'rgba(var(--theme-primary-rgb),0.1)', border: '0.5px solid rgba(var(--theme-primary-rgb),0.2)',
                   borderRadius: 4, padding: '6px 10px', cursor: 'pointer',
-                  fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#1D9E75',
+                  fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: 'var(--theme-primary)',
                 }}
               >
                 {selected.aiFootnotes.length} connections

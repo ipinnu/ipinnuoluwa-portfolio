@@ -198,12 +198,12 @@ export default function BrainGraph({ notes, categories, connections, analyzing, 
       style={{ flex: 1, position: 'relative', overflow: 'hidden', cursor: 'grab', userSelect: 'none' }}
     >
       {analyzing && (
-        <p style={{ position: 'absolute', top: 14, left: '50%', transform: 'translateX(-50%)', fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: '#1A3028', letterSpacing: '0.1em', zIndex: 10, pointerEvents: 'none' }}>
+        <p style={{ position: 'absolute', top: 14, left: '50%', transform: 'translateX(-50%)', fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: 'var(--theme-text-muted)', letterSpacing: '0.1em', zIndex: 10, pointerEvents: 'none' }}>
           Analyzing connections…
         </p>
       )}
       {nodes.filter(n => n.connCount === 0).length > 0 && (
-        <p style={{ position: 'absolute', bottom: 14, left: 16, fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#1A3028', pointerEvents: 'none' }}>
+        <p style={{ position: 'absolute', bottom: 14, left: 16, fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: 'var(--theme-text-muted)', pointerEvents: 'none' }}>
           {nodes.filter(n => n.connCount === 0).length} note(s) with no connections yet
         </p>
       )}
@@ -269,8 +269,8 @@ export default function BrainGraph({ notes, categories, connections, analyzing, 
               style={{
                 position: 'absolute', left: n.x - radius, top: n.y - radius,
                 width: dim, height: dim, borderRadius: '50%', cursor: 'pointer',
-                background: cat ? `rgba(${cat.colorRgb},0.1)` : 'rgba(29,158,117,0.08)',
-                border:     `0.5px solid ${cat ? `rgba(${cat.colorRgb},0.3)` : 'rgba(29,158,117,0.2)'}`,
+                background: cat ? `rgba(${cat.colorRgb},0.1)` : 'rgba(var(--theme-primary-rgb),0.08)',
+                border:     `0.5px solid ${cat ? `rgba(${cat.colorRgb},0.3)` : 'rgba(var(--theme-primary-rgb),0.2)'}`,
                 boxShadow:  cat ? `inset 0 1px 0 rgba(${cat.colorRgb},0.2), 0 0 16px rgba(${cat.colorRgb},0.06)` : undefined,
                 filter:     hoveredIds?.has(n.id) ? 'url(#liquid-glass)' : 'url(#liquid-glass-soft)',
                 opacity:    alone ? 0.45 : (isH ? 1 : 0.12),
@@ -281,7 +281,7 @@ export default function BrainGraph({ notes, categories, connections, analyzing, 
               <span style={{
                 fontFamily: 'var(--font-dm-sans)',
                 fontSize: Math.max(8, Math.min(11, radius * 0.35)),
-                color: cat ? cat.colorHex : '#1D9E75', textAlign: 'center',
+                color: cat ? cat.colorHex : 'var(--theme-primary)', textAlign: 'center',
                 padding: '0 4px', lineHeight: 1.2, overflow: 'hidden',
                 display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
                 maxWidth: dim - 8,
@@ -297,7 +297,7 @@ export default function BrainGraph({ notes, categories, connections, analyzing, 
 }
 
 function linkStyle(l: SimLink): { stroke: string; width: number; opacity: number } {
-  if (l.type === 'explicit') return { stroke: '#1D9E75', width: 1.5, opacity: 0.6 }
-  if (l.type === 'keyword')  return { stroke: '#1D9E75', width: 1,   opacity: 0.35 }
+  if (l.type === 'explicit') return { stroke: 'var(--theme-primary)', width: 1.5, opacity: 0.6 }
+  if (l.type === 'keyword')  return { stroke: 'var(--theme-primary)', width: 1,   opacity: 0.35 }
   return { stroke: '#333330', width: 0.5, opacity: 0.2 }
 }

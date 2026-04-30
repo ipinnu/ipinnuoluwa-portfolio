@@ -36,11 +36,11 @@ export const forest: Theme = {
   },
 
   light: {
-    background:      '#F4FBF4',
-    surface:         '#EBF6EC',
+    background:      '#FFFFFF',
+    surface:         '#F5F5F5',
     surfaceElevated: '#FFFFFF',
-    writingSurface:  '#FAFFF8',
-    textPrimary:     '#0D2A12',
+    writingSurface:  '#FFFFFF',
+    textPrimary:     '#0A0A0A',
     textSecondary:   '#1E6030',
     textMuted:       '#4A8A58',
     border:          'rgba(30, 100, 50, 0.15)',

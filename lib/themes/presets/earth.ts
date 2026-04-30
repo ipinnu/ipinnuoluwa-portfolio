@@ -36,11 +36,11 @@ export const earth: Theme = {
   },
 
   light: {
-    background:      '#FFF8EE',
-    surface:         '#FFF0DC',
+    background:      '#FFFFFF',
+    surface:         '#F5F5F5',
     surfaceElevated: '#FFFFFF',
-    writingSurface:  '#FFFDF8',
-    textPrimary:     '#281200',
+    writingSurface:  '#FFFFFF',
+    textPrimary:     '#0A0A0A',
     textSecondary:   '#7A3800',
     textMuted:       '#B07040',
     border:          'rgba(160, 80, 20, 0.15)',

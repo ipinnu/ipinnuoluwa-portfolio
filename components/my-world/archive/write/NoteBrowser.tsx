@@ -47,14 +47,14 @@ export default function NoteBrowser({ notes, categories, types, selected, onSele
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
       {/* Header */}
-      <div style={{ padding: '14px 14px 10px', borderBottom: '0.5px solid rgba(29,158,117,0.12)', flexShrink: 0 }}>
+      <div style={{ padding: '14px 14px 10px', borderBottom: '0.5px solid rgba(var(--theme-primary-rgb),0.12)', flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#2A5040', textTransform: 'uppercase', letterSpacing: '0.18em' }}>Archive</span>
+          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: 'var(--theme-text-muted)', textTransform: 'uppercase', letterSpacing: '0.18em' }}>Archive</span>
           <div style={{ display: 'flex', gap: 8 }}>
             <button onClick={onSettings} style={iconBtn} title="Settings">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             </button>
-            <button onClick={onCreate} style={{ ...iconBtn, color: '#1D9E75' }} title="New note">
+            <button onClick={onCreate} style={{ ...iconBtn, color: 'var(--theme-primary)' }} title="New note">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </button>
             {isMobile && onClose && (
@@ -68,7 +68,7 @@ export default function NoteBrowser({ notes, categories, types, selected, onSele
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search notes..."
-          style={{ width: '100%', background: 'rgba(29,158,117,0.04)', border: '0.5px solid rgba(29,158,117,0.12)', borderRadius: 4, padding: '7px 10px', fontFamily: 'var(--font-dm-sans)', fontSize: 12, color: '#A0C0B0', outline: 'none', boxSizing: 'border-box' }}
+          style={{ width: '100%', background: 'rgba(var(--theme-primary-rgb),0.04)', border: '0.5px solid rgba(var(--theme-primary-rgb),0.12)', borderRadius: 4, padding: '7px 10px', fontFamily: 'var(--font-dm-sans)', fontSize: 12, color: 'var(--theme-text-muted)', outline: 'none', boxSizing: 'border-box' }}
         />
       </div>
 
@@ -168,13 +168,13 @@ function NoteItem({ note, selected, color, onSelect, onDelete, indent }: {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}
     >
-      <span style={{ fontFamily: 'var(--font-dm-sans)', fontSize: 12, color: selected ? '#D0EDE0' : '#4A7060', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
+      <span style={{ fontFamily: 'var(--font-dm-sans)', fontSize: 12, color: 'var(--theme-text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
         {note.title || 'Untitled'}
       </span>
       {hover && (
         <button
           onClick={e => { e.stopPropagation(); onDelete() }}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#2A3830', fontSize: 11, padding: '0 2px', flexShrink: 0, lineHeight: 1 }}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--theme-text-muted)', fontSize: 11, padding: '0 2px', flexShrink: 0, lineHeight: 1 }}
         >×</button>
       )}
     </button>
@@ -183,7 +183,7 @@ function NoteItem({ note, selected, color, onSelect, onDelete, indent }: {
 
 const iconBtn: React.CSSProperties = {
   background: 'none', border: 'none', cursor: 'pointer', padding: 4,
-  color: '#2A5040', display: 'flex', alignItems: 'center', justifyContent: 'center',
+  color: 'var(--theme-text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center',
 }
 
 function hexToRgb(hex: string): string {

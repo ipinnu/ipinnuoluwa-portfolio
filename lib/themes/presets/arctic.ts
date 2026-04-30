@@ -36,11 +36,11 @@ export const arctic: Theme = {
   },
 
   light: {
-    background:      '#F6FBFF',
-    surface:         '#EAF6FF',
+    background:      '#FFFFFF',
+    surface:         '#F5F5F5',
     surfaceElevated: '#FFFFFF',
-    writingSurface:  '#FAFEFF',
-    textPrimary:     '#021828',
+    writingSurface:  '#FFFFFF',
+    textPrimary:     '#0A0A0A',
     textSecondary:   '#0A5070',
     textMuted:       '#4090B0',
     border:          'rgba(10, 80, 130, 0.13)',

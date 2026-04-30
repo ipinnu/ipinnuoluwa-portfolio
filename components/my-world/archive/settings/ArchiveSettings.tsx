@@ -73,33 +73,33 @@ export default function ArchiveSettings({ categories, types, onClose, onCatAdded
         style={{
           position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 91,
           width: 'min(500px, calc(100vw - 32px))', maxHeight: '80vh',
-          background: 'rgba(5,7,12,0.98)', backdropFilter: 'blur(24px)',
-          border: '0.5px solid rgba(29,158,117,0.2)',
+          background: 'var(--theme-bg)', backdropFilter: 'blur(24px)',
+          border: '0.5px solid var(--theme-border)',
           borderRadius: 10, overflow: 'hidden', display: 'flex', flexDirection: 'column',
-          boxShadow: '0 24px 80px rgba(0,0,0,0.7)',
+          boxShadow: '0 24px 80px var(--theme-shadow)',
           filter: 'url(#liquid-glass-soft)',
         }}
       >
         {/* Header */}
-        <div style={{ padding: '16px 20px', borderBottom: '0.5px solid rgba(29,158,117,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#1D9E75', textTransform: 'uppercase', letterSpacing: '0.18em' }}>
+        <div style={{ padding: '16px 20px', borderBottom: '0.5px solid rgba(var(--theme-primary-rgb),0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: 'var(--theme-primary)', textTransform: 'uppercase', letterSpacing: '0.18em' }}>
             Archive Settings
           </span>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#2A4030', fontSize: 18, lineHeight: 1 }}>×</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--theme-text-muted)', fontSize: 18, lineHeight: 1 }}>×</button>
         </div>
 
         {/* Tabs */}
-        <div style={{ display: 'flex', borderBottom: '0.5px solid rgba(29,158,117,0.1)', flexShrink: 0 }}>
+        <div style={{ display: 'flex', borderBottom: '0.5px solid rgba(var(--theme-primary-rgb),0.1)', flexShrink: 0 }}>
           {(['categories', 'types'] as Tab[]).map(t => (
             <button
               key={t}
               onClick={() => setTab(t)}
               style={{
                 fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9,
-                color: tab === t ? '#1D9E75' : '#1A3028',
+                color: tab === t ? 'var(--theme-primary)' : '#1A3028',
                 background: 'none', border: 'none', cursor: 'pointer',
                 padding: '10px 16px', letterSpacing: '0.1em', textTransform: 'uppercase',
-                borderBottom: tab === t ? '1px solid #1D9E75' : '1px solid transparent',
+                borderBottom: tab === t ? '1px solid var(--theme-primary)' : '1px solid transparent',
               }}
             >
               {t}

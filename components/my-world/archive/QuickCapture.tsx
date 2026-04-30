@@ -64,19 +64,19 @@ export default function QuickCapture({ categories, types, onCapture, onClose }: 
         style={{
           position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 91,
           width: 'min(480px, calc(100vw - 32px))',
-          background: 'rgba(6,8,14,0.97)', backdropFilter: 'blur(24px)',
-          border: '0.5px solid rgba(29,158,117,0.25)',
+          background: 'var(--theme-bg)', backdropFilter: 'blur(24px)',
+          border: '0.5px solid var(--theme-border)',
           borderRadius: 10, padding: '24px',
-          boxShadow: '0 24px 64px rgba(0,0,0,0.6)',
+          boxShadow: '0 24px 64px var(--theme-shadow)',
           filter: 'url(#liquid-glass-soft)',
         }}
       >
         {/* Indicator */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#1D9E75', textTransform: 'uppercase', letterSpacing: '0.18em' }}>
+          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: 'var(--theme-primary)', textTransform: 'uppercase', letterSpacing: '0.18em' }}>
             Quick Capture
           </span>
-          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#1A3028', marginLeft: 'auto' }}>esc to close</span>
+          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: 'var(--theme-text-muted)', marginLeft: 'auto' }}>esc to close</span>
         </div>
 
         {/* Textarea */}
@@ -90,10 +90,10 @@ export default function QuickCapture({ categories, types, onCapture, onClose }: 
           style={{
             display: 'block', width: '100%',
             fontFamily: 'var(--font-dm-sans)', fontSize: 16, fontWeight: 300,
-            color: '#F5F5F0', lineHeight: 1.7,
-            background: 'rgba(255,255,255,0.02)', border: '0.5px solid rgba(29,158,117,0.1)',
+            color: 'var(--theme-text-primary)', lineHeight: 1.7,
+            background: 'var(--theme-surface)', border: '0.5px solid var(--theme-border)',
             borderRadius: 6, padding: '12px 14px', outline: 'none', resize: 'none',
-            caretColor: '#1D9E75', boxSizing: 'border-box',
+            caretColor: 'var(--theme-primary)', boxSizing: 'border-box',
           }}
         />
 
@@ -106,8 +106,8 @@ export default function QuickCapture({ categories, types, onCapture, onClose }: 
             style={{
               fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9,
               color: cat ? cat.colorHex : '#2A4030',
-              background: 'rgba(29,158,117,0.05)',
-              border: '0.5px solid rgba(29,158,117,0.1)',
+              background: 'rgba(var(--theme-primary-rgb),0.05)',
+              border: '0.5px solid rgba(var(--theme-primary-rgb),0.1)',
               borderRadius: 4, padding: '4px 8px', cursor: 'pointer', outline: 'none',
             }}
           >
@@ -122,8 +122,8 @@ export default function QuickCapture({ categories, types, onCapture, onClose }: 
               onChange={e => setTypeId(e.target.value || null)}
               style={{
                 fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#1A4030',
-                background: 'rgba(29,158,117,0.05)',
-                border: '0.5px solid rgba(29,158,117,0.1)',
+                background: 'rgba(var(--theme-primary-rgb),0.05)',
+                border: '0.5px solid rgba(var(--theme-primary-rgb),0.1)',
                 borderRadius: 4, padding: '4px 8px', cursor: 'pointer', outline: 'none',
               }}
             >
@@ -138,7 +138,7 @@ export default function QuickCapture({ categories, types, onCapture, onClose }: 
           {/* Close */}
           <button
             onClick={onClose}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#1A3028', padding: '4px 8px' }}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: 'var(--theme-text-muted)', padding: '4px 8px' }}
           >
             ×
           </button>
@@ -149,7 +149,7 @@ export default function QuickCapture({ categories, types, onCapture, onClose }: 
             disabled={!text.trim() || saving}
             style={{
               fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9,
-              color: '#080810', background: '#1D9E75',
+              color: '#080810', background: 'var(--theme-primary)',
               border: 'none', borderRadius: 4, padding: '6px 14px', cursor: 'pointer',
               opacity: (!text.trim() || saving) ? 0.4 : 1,
             }}
@@ -166,8 +166,8 @@ export default function QuickCapture({ categories, types, onCapture, onClose }: 
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
             style={{
               position: 'fixed', bottom: 24, right: 24, zIndex: 100,
-              fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: '#1D9E75',
-              background: 'rgba(6,8,14,0.95)', border: '0.5px solid rgba(29,158,117,0.2)',
+              fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: 'var(--theme-primary)',
+              background: 'var(--theme-surface)', border: '0.5px solid var(--theme-border)',
               borderRadius: 6, padding: '8px 14px',
             }}
           >

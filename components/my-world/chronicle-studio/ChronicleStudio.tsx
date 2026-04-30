@@ -162,7 +162,7 @@ function ChronicleGate({ onSuccess, onClose }: { onSuccess: () => void; onClose:
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95 }}
         onClick={e => e.stopPropagation()}
-        style={{ backgroundColor: '#080810', border: '0.5px solid #1A1A24', borderRadius: 10, padding: '36px 32px', width: 300, textAlign: 'center' }}
+        style={{ backgroundColor: 'var(--theme-bg)', border: '0.5px solid var(--theme-border)', borderRadius: 10, padding: '36px 32px', width: 300, textAlign: 'center' }}
       >
         <div style={{ marginBottom: 20 }}>
           <svg width="20" height="20" viewBox="0 0 14 14" fill="none" style={{ margin: '0 auto', opacity: 0.45 }}>
@@ -663,10 +663,10 @@ export default function ChronicleStudio({ onClose }: { onClose: () => void }) {
     <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}
       className="fixed inset-0 z-50"
-      style={{ backgroundColor: '#06060E', display: 'flex', flexDirection: 'column' }}
+      style={{ backgroundColor: 'var(--theme-bg)', display: 'flex', flexDirection: 'column' }}
     >
       {/* ── Header ── */}
-      <div style={{ height: 46, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 18px', borderBottom: '0.5px solid #0E0E18' }}>
+      <div style={{ height: 46, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 18px', borderBottom: '0.5px solid var(--theme-border)' }}>
         {/* Left: logo + mode tabs */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
@@ -720,7 +720,26 @@ export default function ChronicleStudio({ onClose }: { onClose: () => void }) {
               ≡
             </button>
           )}
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: '#2A2A28' }}>esc ×</button>
+          <button
+            onClick={onClose}
+            style={{
+              background: 'none',
+              border: '0.5px solid #222220',
+              borderRadius: 5,
+              cursor: 'pointer',
+              fontFamily: 'var(--font-jetbrains-mono)',
+              fontSize: 9,
+              color: '#555550',
+              padding: '5px 10px',
+              transition: 'border-color 0.15s, color 0.15s',
+              flexShrink: 0,
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = '#A3C4B4'; e.currentTarget.style.color = '#A3C4B4' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = '#222220'; e.currentTarget.style.color = '#555550' }}
+            title="Exit chronicle (Esc)"
+          >
+            ← My World
+          </button>
         </div>
       </div>
 
@@ -749,7 +768,7 @@ export default function ChronicleStudio({ onClose }: { onClose: () => void }) {
               bottom: 0,
               left: 0,
               zIndex: 20,
-              backgroundColor: '#06060E',
+              backgroundColor: 'var(--theme-bg)',
             } : {}),
           }}>
             <div style={{ padding: '10px 10px 6px' }}>

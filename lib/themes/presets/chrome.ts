@@ -36,11 +36,11 @@ export const chrome: Theme = {
   },
 
   light: {
-    background:      '#F8F8FC',
-    surface:         '#F0F0F6',
+    background:      '#FFFFFF',
+    surface:         '#F5F5F5',
     surfaceElevated: '#FFFFFF',
     writingSurface:  '#FFFFFF',
-    textPrimary:     '#101018',
+    textPrimary:     '#0A0A0A',
     textSecondary:   '#404060',
     textMuted:       '#9090A0',
     border:          'rgba(60, 60, 90, 0.12)',

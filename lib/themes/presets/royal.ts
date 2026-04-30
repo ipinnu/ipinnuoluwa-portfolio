@@ -36,11 +36,11 @@ export const royal: Theme = {
   },
 
   light: {
-    background:      '#F8F6FF',
-    surface:         '#F0ECFF',
+    background:      '#FFFFFF',
+    surface:         '#F5F5F5',
     surfaceElevated: '#FFFFFF',
     writingSurface:  '#FFFFFF',
-    textPrimary:     '#1A0A40',
+    textPrimary:     '#0A0A0A',
     textSecondary:   '#4A2AA0',
     textMuted:       '#8060C0',
     border:          'rgba(90, 60, 170, 0.15)',

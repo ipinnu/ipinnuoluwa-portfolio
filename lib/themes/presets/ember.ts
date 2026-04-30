@@ -36,11 +36,11 @@ export const ember: Theme = {
   },
 
   light: {
-    background:      '#FFF8F4',
-    surface:         '#FFF0E8',
+    background:      '#FFFFFF',
+    surface:         '#F5F5F5',
     surfaceElevated: '#FFFFFF',
     writingSurface:  '#FFFFFF',
-    textPrimary:     '#2D0F00',
+    textPrimary:     '#0A0A0A',
     textSecondary:   '#8B3010',
     textMuted:       '#C47040',
     border:          'rgba(180, 60, 0, 0.15)',

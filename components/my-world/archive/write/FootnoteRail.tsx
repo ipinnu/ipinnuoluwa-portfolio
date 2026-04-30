@@ -21,20 +21,20 @@ export default function FootnoteRail({ note, allNotes, categories, onOpen, isMob
     <div style={{
       width:           isMobile ? '100%' : 280,
       flexShrink:      0,
-      borderLeft:      '0.5px solid rgba(29,158,117,0.12)',
-      backgroundColor: 'rgba(29,158,117,0.03)',
+      borderLeft:      '0.5px solid rgba(var(--theme-primary-rgb),0.12)',
+      backgroundColor: 'rgba(var(--theme-primary-rgb),0.03)',
       display:         'flex',
       flexDirection:   'column',
       overflow:        'hidden',
     }}>
       {/* Header */}
-      <div style={{ padding: '14px 16px 10px', borderBottom: '0.5px solid rgba(29,158,117,0.08)', flexShrink: 0 }}>
+      <div style={{ padding: '14px 16px 10px', borderBottom: '0.5px solid rgba(var(--theme-primary-rgb),0.08)', flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#1D9E75', textTransform: 'uppercase', letterSpacing: '0.18em' }}>
+          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: 'var(--theme-primary)', textTransform: 'uppercase', letterSpacing: '0.18em' }}>
             Connections
           </span>
           {footnotes.length > 0 && (
-            <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#1A4030', background: 'rgba(29,158,117,0.1)', borderRadius: 3, padding: '1px 5px' }}>
+            <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: 'var(--theme-text-muted)', background: 'rgba(var(--theme-primary-rgb),0.1)', borderRadius: 3, padding: '1px 5px' }}>
               {footnotes.length}
             </span>
           )}
@@ -44,7 +44,7 @@ export default function FootnoteRail({ note, allNotes, categories, onOpen, isMob
       {/* Footnote cards */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '12px 12px' }}>
         {footnotes.length === 0 ? (
-          <p style={{ fontFamily: 'var(--font-dm-sans)', fontSize: 12, color: '#1A3028', fontStyle: 'italic', textAlign: 'center', marginTop: 40, lineHeight: 1.65 }}>
+          <p style={{ fontFamily: 'var(--font-dm-sans)', fontSize: 12, color: 'var(--theme-text-muted)', fontStyle: 'italic', textAlign: 'center', marginTop: 40, lineHeight: 1.65 }}>
             Write a few paragraphs and connections will appear here automatically.
           </p>
         ) : (
@@ -65,7 +65,7 @@ export default function FootnoteRail({ note, allNotes, categories, onOpen, isMob
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-                  <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: cat?.colorHex ?? '#1D9E75', fontWeight: 700 }}>
+                  <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: cat?.colorHex ?? 'var(--theme-primary)', fontWeight: 700 }}>
                     {fn.superscript}
                   </span>
                   {cat && (
@@ -73,19 +73,19 @@ export default function FootnoteRail({ note, allNotes, categories, onOpen, isMob
                       {cat.name}
                     </span>
                   )}
-                  <span style={{ fontFamily: 'var(--font-syne)', fontSize: 10, fontWeight: 600, color: '#8ABAA8', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <span style={{ fontFamily: 'var(--font-syne)', fontSize: 10, fontWeight: 600, color: 'var(--theme-text-secondary)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {refNote.title || 'Untitled'}
                   </span>
                 </div>
 
-                <p style={{ fontFamily: 'var(--font-dm-sans)', fontSize: 11, color: '#2A5040', lineHeight: 1.55, margin: '0 0 8px', fontStyle: 'italic' }}>
+                <p style={{ fontFamily: 'var(--font-dm-sans)', fontSize: 11, color: 'var(--theme-text-muted)', lineHeight: 1.55, margin: '0 0 8px', fontStyle: 'italic' }}>
                   &ldquo;{fn.excerpt}&rdquo;
                 </p>
 
                 <div style={{ display: 'flex', gap: 6 }}>
                   <button
                     onClick={() => onOpen(refNote)}
-                    style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: '#1D9E75', background: 'rgba(29,158,117,0.08)', border: '0.5px solid rgba(29,158,117,0.2)', borderRadius: 3, padding: '4px 8px', cursor: 'pointer' }}
+                    style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 8, color: 'var(--theme-primary)', background: 'rgba(var(--theme-primary-rgb),0.08)', border: '0.5px solid rgba(var(--theme-primary-rgb),0.2)', borderRadius: 3, padding: '4px 8px', cursor: 'pointer' }}
                   >
                     → Open note
                   </button>

@@ -99,11 +99,23 @@ export default function FloorBar({ state, onChange, onClose, isMobile }: Props) 
           </button>
           <button
             onClick={onClose}
-            style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 10, color: '#2A2A28', background: 'none', border: 'none', cursor: 'pointer', padding: isMobile ? '8px 4px' : '4px' }}
-            onMouseEnter={e => (e.currentTarget.style.color = '#888884')}
-            onMouseLeave={e => (e.currentTarget.style.color = '#2A2A28')}
+            style={{
+              fontFamily: 'var(--font-jetbrains-mono)',
+              fontSize: 9,
+              color: '#555550',
+              background: 'none',
+              border: '0.5px solid #222220',
+              borderRadius: 5,
+              cursor: 'pointer',
+              padding: '5px 10px',
+              transition: 'border-color 0.15s, color 0.15s',
+              flexShrink: 0,
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = '#E8FF47'; e.currentTarget.style.color = '#E8FF47' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = '#222220'; e.currentTarget.style.color = '#555550' }}
+            title="Exit (Esc)"
           >
-            {isMobile ? '×' : '× exit'}
+            ← My World
           </button>
         </div>
       </div>

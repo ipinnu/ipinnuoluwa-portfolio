@@ -36,11 +36,11 @@ export const dusk: Theme = {
   },
 
   light: {
-    background:      '#FBF6FF',
-    surface:         '#F4ECFF',
+    background:      '#FFFFFF',
+    surface:         '#F5F5F5',
     surfaceElevated: '#FFFFFF',
-    writingSurface:  '#FDFAFF',
-    textPrimary:     '#220A38',
+    writingSurface:  '#FFFFFF',
+    textPrimary:     '#0A0A0A',
     textSecondary:   '#5A2080',
     textMuted:       '#9060B0',
     border:          'rgba(100, 50, 150, 0.15)',

@@ -36,11 +36,11 @@ export const solar: Theme = {
   },
 
   light: {
-    background:      '#FFFDF0',
-    surface:         '#FFFAE0',
+    background:      '#FFFFFF',
+    surface:         '#F5F5F5',
     surfaceElevated: '#FFFFFF',
-    writingSurface:  '#FFFFF8',
-    textPrimary:     '#2A1E00',
+    writingSurface:  '#FFFFFF',
+    textPrimary:     '#0A0A0A',
     textSecondary:   '#806000',
     textMuted:       '#B08840',
     border:          'rgba(180, 130, 0, 0.15)',
