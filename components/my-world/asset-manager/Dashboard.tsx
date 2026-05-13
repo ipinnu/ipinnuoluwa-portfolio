@@ -13,6 +13,7 @@ import VisionLayer from './VisionLayer'
 import AssetLedger from './AssetLedger'
 import AssetDetail from './AssetDetail'
 import RebalanceView from './RebalanceView'
+import FinancesOverlay from './FinancesOverlay'
 import { ThemeProvider } from '@/components/theme/ThemeProvider'
 import { GlassFilter } from '@/components/theme/GlassFilter'
 import { AmbientLayer } from '@/components/theme/AmbientLayer'
@@ -40,6 +41,7 @@ export default function Dashboard({ onClose }: Props) {
   const [newName, setNewName]       = useState('')
   const [newClass, setNewClass]     = useState<AssetClass>('B')
   const [creating, setCreating]     = useState(false)
+  const [showFinances, setShowFinances] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -158,7 +160,24 @@ export default function Dashboard({ onClose }: Props) {
       style={{ background: 'rgba(6,6,14,0.97)', display: 'flex', flexDirection: 'column', fontFamily: 'var(--font-jetbrains-mono)' }}
     >
       {/* ── Floor Bar (always top) ── */}
-      <FloorBar state={floor} onChange={setFloor} onClose={onClose} isMobile={isMobile} />
+      <FloorBar state={floor} onChange={setFloor} onClose={onClose} isMobile={isMobile}>
+        <button
+          onClick={() => setShowFinances(true)}
+          style={{
+            fontFamily: 'var(--font-jetbrains-mono)',
+            fontSize: 9,
+            color: '#888884',
+            background: 'none',
+            border: '0.5px solid #222220',
+            borderRadius: 3,
+            padding: '4px 10px',
+            cursor: 'pointer',
+            marginLeft: 12,
+          }}
+        >
+          ₦ Finances
+        </button>
+      </FloorBar>
 
       {/* ── Portfolio lock overlay when shaking ── */}
       <AnimatePresence>
@@ -347,6 +366,16 @@ export default function Dashboard({ onClose }: Props) {
         )}
       </AnimatePresence>
     </motion.div>
+      {/* ── Finances Overlay ── */}
+      <AnimatePresence>
+        {showFinances && (
+          <FinancesOverlay
+            assets={assets}
+            onClose={() => setShowFinances(false)}
+            isMobile={isMobile}
+          />
+        )}
+      </AnimatePresence>
     </ThemeProvider>
   )
 }

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Asset, Vision } from '@/lib/types/forge'
+import ATIOperations from './ATIOperations'
 
 const CLASS_COLOR: Record<string, string>  = { A: '#E8FF47', B: '#EF9F27', C: '#444440' }
 const CLASS_LABEL: Record<string, string>  = { A: 'Core / Deployed', B: 'Forming', C: 'Monitor Only' }
@@ -547,6 +548,49 @@ export default function AssetDetail({ asset, assets, visions, onUpdate, onBack, 
             </div>
           ))}
         </Section>
+      )}
+
+      {/* ATI Operations — Brainbox only */}
+      {asset.id === 'brainbox' && (
+        <div style={{ marginBottom: 12 }}>
+          <ATIOperations asset={asset} onUpdate={onUpdate} isMobile={isMobile} />
+        </div>
+      )}
+
+      {/* Finances — Other assets */}
+      {asset.id !== 'brainbox' && (
+        asset.finances ? (
+          <Section label="Finances">
+            <div style={{ padding: '8px 0' }}>
+              <p style={{ fontFamily: 'var(--font-dm-sans)', fontSize: 12, color: '#888884', margin: 0 }}>
+                {asset.finances.transactions.length} transactions recorded
+              </p>
+            </div>
+          </Section>
+        ) : (
+          <Section label="Finances">
+            <div style={{ textAlign: 'center', padding: '16px 0' }}>
+              <p style={{ fontFamily: 'var(--font-dm-sans)', fontSize: 12, color: '#444440', margin: '0 0 12px', fontStyle: 'italic' }}>
+                Financial tracking not enabled for this asset.
+              </p>
+              <button
+                onClick={() => onUpdate(asset.id, { finances: { transactions: [] } })}
+                style={{
+                  fontFamily: 'var(--font-jetbrains-mono)',
+                  fontSize: 9,
+                  color: '#E8FF47',
+                  background: 'rgba(232,255,71,0.1)',
+                  border: '0.5px solid rgba(232,255,71,0.3)',
+                  borderRadius: 4,
+                  padding: '6px 14px',
+                  cursor: 'pointer',
+                }}
+              >
+                + Enable Finances
+              </button>
+            </div>
+          </Section>
+        )
       )}
 
       {/* Quick links */}

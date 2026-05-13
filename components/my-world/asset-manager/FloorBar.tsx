@@ -26,9 +26,10 @@ interface Props {
   onChange: (next: FloorState) => void
   onClose: () => void
   isMobile: boolean
+  children?: React.ReactNode
 }
 
-export default function FloorBar({ state, onChange, onClose, isMobile }: Props) {
+export default function FloorBar({ state, onChange, onClose, isMobile, children }: Props) {
   const [modalOpen, setModalOpen] = useState(false)
   const [draft, setDraft] = useState<FloorState>(state)
   const stale = floorIsStale(state)
@@ -91,6 +92,7 @@ export default function FloorBar({ state, onChange, onClose, isMobile }: Props) 
 
         {/* Right controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+          {children}
           <button
             onClick={openModal}
             style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: 9, color: '#444440', background: 'none', border: '0.5px solid #222220', borderRadius: 3, padding: isMobile ? '6px 12px' : '3px 9px', cursor: 'pointer' }}

@@ -60,3 +60,13 @@ function partialToDb(patch: Partial<Asset>): Record<string, unknown> {
   }
   return out
 }
+
+// Force seed data for development (remove in production)
+export async function resetToSeed(): Promise<void> {
+  const { error: deleteError } = await supabase.from('assets').delete().neq('id', '')
+  if (deleteError) console.warn('resetToSeed delete:', deleteError.message)
+  
+  const rows = SEED_FORGE_ASSETS.map(assetToDb)
+  const { error: insertError } = await supabase.from('assets').insert(rows)
+  if (insertError) console.warn('resetToSeed insert:', insertError.message)
+}

@@ -4,6 +4,44 @@ export type ReturnType  = 'revenue' | 'impact' | 'brand' | 'strategic'
 export type VisionStatus = 'active' | 'forming' | 'realized' | 'paused'
 export type FloorSignal  = 'stable' | 'pressured' | 'shaking'
 
+export interface Transaction {
+  id: string
+  date: string
+  type: 'revenue' | 'expense'
+  amount: number
+  description: string
+  category?: string
+}
+
+export interface Finances {
+  transactions: Transaction[]
+}
+
+// ATI — Applied Technology Integration (Brainbox-specific)
+export interface ATIClient {
+  id: string
+  name: string
+  priority: 'high' | 'medium' | 'low'
+  requirements: string
+  status: 'active' | 'negotiating' | 'completed' | 'paused'
+  projects: ATIProject[]
+  notes?: string
+  createdAt: string
+}
+
+export interface ATIProject {
+  id: string
+  name: string
+  description?: string
+  projectedIncome: number
+  actualIncome: number
+  status: 'negotiating' | 'in-progress' | 'delivered' | 'completed' | 'cancelled'
+  type: 'one-time' | 'retainer'
+  startDate?: string
+  endDate?: string
+  transactionIds?: string[] // Links to finance transactions
+}
+
 export interface Asset {
   id: string
   name: string
@@ -21,6 +59,10 @@ export interface Asset {
   exitCondition?: string
   visionIds: string[]
   links?: { playStore?: string; github?: string; caseStudy?: string }
+  finances?: Finances
+  ati?: {
+    clients: ATIClient[]
+  }
 }
 
 export interface Vision {
@@ -68,6 +110,8 @@ export function assetFromDb(row: Record<string, unknown>): Asset {
     exitCondition:   row.exit_condition as string | undefined,
     visionIds:       (row.vision_ids as string[]) ?? [],
     links:           row.links as Asset['links'],
+    finances:        row.finances as Asset['finances'] | undefined,
+    ati:             row.ati as Asset['ati'] | undefined,
   }
 }
 
@@ -89,6 +133,8 @@ export function assetToDb(a: Asset): Record<string, unknown> {
     exit_condition:   a.exitCondition ?? null,
     vision_ids:       a.visionIds,
     links:            a.links ?? null,
+    finances:         a.finances ?? null,
+    ati:              a.ati ?? null,
     updated_at:       new Date().toISOString(),
   }
 }
@@ -144,7 +190,7 @@ export const SEED_VISIONS: Vision[] = [
 export const SEED_FORGE_ASSETS: Asset[] = [
   { id: 'nysc-saed',       name: 'NYSC SAED',            assetClass: 'A', allocation: 35, returnTypes: ['revenue','impact','brand'],    status: 'active',  mandateText: 'Complete current training cohort. Document outcomes. Explore state expansion.',       mandateProgress: 80, scores: { revenue:4, impact:5, strategic:4, momentum:5 }, actions: [{ text:'Deliver current training cohort', done:true },{ text:'Document outcomes with data', done:false },{ text:'Pitch state expansion to 1 partner', done:false }], lastReviewed: '2025-04-01', visionIds: ['income-independence','the-living-room'],   exitCondition: 'Program ends OR income threshold reached OR state expansion secured', links: { caseStudy:'/work/nysc-saed' } },
   { id: 'autodrive',       name: 'AutoDrive',             assetClass: 'A', allocation: 30, returnTypes: ['revenue','strategic'],         status: 'active',  mandateText: 'Ship v2 feature set. Improve driver onboarding flow. Reach 500 active drivers.',          mandateProgress: 65, scores: { revenue:4, impact:3, strategic:5, momentum:4 }, actions: [{ text:'Ship v2 feature set', done:false },{ text:'Improve driver onboarding', done:true },{ text:'Reach 500 active drivers', done:false }],              lastReviewed: '2025-04-01', visionIds: ['income-independence','sovereign-ground'],  exitCondition: '10,000 active users OR ₦500k/month revenue OR acquisition offer received',    links: { caseStudy:'/work/autodrive' } },
-  { id: 'brainbox',        name: 'Freelance / BrainBox',  assetClass: 'A', allocation: 20, returnTypes: ['revenue','brand'],            status: 'active',  mandateText: 'Maintain 2 active client retainers. Build public brand through portfolio.',                mandateProgress: 70, scores: { revenue:5, impact:2, strategic:3, momentum:4 }, actions: [{ text:'Close Q2 retainer client', done:false },{ text:'Ship portfolio site', done:true }],                                                                         lastReviewed: '2025-04-01', visionIds: ['income-independence','sovereign-ground'],  exitCondition: 'Replaced by product revenue exceeding freelance income 3 months running' },
+  { id: 'brainbox',        name: 'BrainBox / Freelance',  assetClass: 'A', allocation: 20, returnTypes: ['revenue','brand'],            status: 'active',  mandateText: 'Maintain 2 active client retainers. Build public brand through portfolio.',                mandateProgress: 70, scores: { revenue:5, impact:2, strategic:3, momentum:4 }, actions: [{ text:'Close Q2 retainer client', done:false },{ text:'Ship portfolio site', done:true }],                                                                         lastReviewed: '2025-04-01', visionIds: ['income-independence','sovereign-ground'],  exitCondition: 'Replaced by product revenue exceeding freelance income 3 months running', finances: { transactions: [] }, ati: { clients: [] } },
   { id: 'diaspora-app',    name: 'Diaspora App',          assetClass: 'B', allocation:  8, returnTypes: ['strategic','impact'],         status: 'forming', mandateText: 'Define MVP scope. Identify 3 early pilot users. Build waitlist landing page.',               mandateProgress: 20, scores: { revenue:2, impact:5, strategic:4, momentum:2 }, actions: [{ text:'Define MVP scope', done:false },{ text:'Identify 3 early pilot users', done:false },{ text:'Build waitlist landing page', done:false }],          lastReviewed: '2025-03-15', visionIds: ['the-living-room','income-independence'],   exitCondition: 'MVP live with 100 users OR co-founder found and funded' },
   { id: 'security-co',     name: 'Security Company',      assetClass: 'B', allocation:  7, returnTypes: ['strategic'],                 status: 'forming', mandateText: 'Research regulatory requirements. Find 1 co-founder with ops background.',                   mandateProgress: 10, scores: { revenue:3, impact:3, strategic:5, momentum:1 }, actions: [{ text:'Research regulatory requirements', done:false },{ text:'Find co-founder with ops background', done:false }],                                   lastReviewed: '2025-03-01', visionIds: ['sovereign-ground','income-independence'],  exitCondition: 'Whitepaper complete + co-founder identified OR concept pivoted' },
   { id: 'proden',          name: 'Proden',                assetClass: 'C', allocation:  0, returnTypes: ['strategic'],                 status: 'monitor', mandateText: 'Thesis only.',                                                                                mandateProgress:  0, scores: { revenue:3, impact:4, strategic:4, momentum:0 }, actions: [],                                                                                                                                                                    lastReviewed: '2025-01-01', visionIds: ['the-living-room'],                         exitCondition: 'Enters active development OR archived after 12 months idle' },

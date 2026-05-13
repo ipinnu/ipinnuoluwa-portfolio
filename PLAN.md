@@ -499,6 +499,29 @@ Go to Supabase dashboard → SQL Editor → paste and run `supabase/forge_migrat
 This creates the `assets` and `visions` tables and seeds all data.
 Without this, the app falls back to in-memory seed data (works but changes don't persist).
 
+### 📝 Session Log (2026-05-13)
+
+**Asset Manager — Finances Feature:**
+- Added "Enable Finances" button for assets without financial tracking
+- Brainbox keeps specialized "ATI — Applied Technology Integration" branding
+- Other assets show generic "Finances" label when enabled
+- Finances stored in asset.finances (not yet in Supabase schema — pending migration update)
+- ATIOperations component handles both revenue/expense tracking
+
+**ATI — Applied Technology Integration (Brainbox-Specific):**
+- Full client & project management system layered on top of finances
+- Rich, colorful UI distinct from monochrome Forge aesthetic (royal blue `#0038a8` to deep blue `#002a7f` gradients, vibrant priority colors)
+- Client cards with priority levels (High/Medium/Low) with gradient badges
+- Project tracking per client: projected income, actual income, status
+- Three tabs: Clients (management), Pipeline (income forecasting), Transactions (history)
+- Smart workflow: marking project "completed" prompts for payment amount → auto-creates transaction
+- Income pipeline dashboard showing projected vs collected vs outstanding
+- Project types: one-time vs retainer
+- Status flow: negotiating → in-progress → delivered → completed
+- Types added: `ATIClient`, `ATIProject`, `Transaction` in `lib/types/forge.ts`
+- ATI data stored in `asset.ati` (not yet in Supabase — needs migration)
+- Files modified: `ATIOperations.tsx` (complete rewrite), `AssetDetail.tsx`, `lib/types/forge.ts`
+
 ### 🔲 Backlog
 - More blog posts (content)
 - Case study pages for all projects (currently only some have full case study content)
