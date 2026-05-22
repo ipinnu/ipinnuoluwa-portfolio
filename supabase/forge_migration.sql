@@ -23,6 +23,8 @@ create table if not exists assets (
   exit_condition    text,
   vision_ids        text[] default '{}',
   links             jsonb,
+  finances          jsonb,
+  ati               jsonb,
   updated_at        timestamptz default now()
 );
 

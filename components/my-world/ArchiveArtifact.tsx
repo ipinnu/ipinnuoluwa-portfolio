@@ -32,31 +32,35 @@ export default function ArchiveArtifact({ onTriggered }: ArchiveArtifactProps) {
   return (
     <motion.button
       onClick={handleClick}
-      animate={{ opacity: 0.18 + taps * 0.2 }}
-      transition={{ duration: 0.2 }}
       style={{
-        position: 'absolute',
-        bottom: -16,
-        left: -14,
         width: 14,
         height: 14,
         background: 'none',
         border: 'none',
         cursor: 'default',
-        padding: '12px',
-        margin: '-12px',
+        padding: '14px',
+        margin: '-14px',
         zIndex: 13,
+        display: 'block',
       }}
       aria-hidden
       tabIndex={-1}
     >
-      {/* Small scroll / archive icon in teal */}
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-        <rect x="2" y="2" width="10" height="10" rx="1.5" fill="none" stroke="#1D9E75" strokeWidth="1.2" opacity="0.8"/>
-        <line x1="4.5" y1="5" x2="9.5" y2="5" stroke="#1D9E75" strokeWidth="0.9" opacity="0.7"/>
-        <line x1="4.5" y1="7" x2="9.5" y2="7" stroke="#1D9E75" strokeWidth="0.9" opacity="0.6"/>
-        <line x1="4.5" y1="9" x2="7.5" y2="9" stroke="#1D9E75" strokeWidth="0.9" opacity="0.5"/>
-      </svg>
+      <motion.span
+        animate={{ opacity: taps > 0 ? 0.8 + taps * 0.1 : [0.6, 1, 0.6] }}
+        transition={taps > 0
+          ? { duration: 0.15 }
+          : { duration: 3, repeat: Infinity, ease: 'easeInOut' }
+        }
+        style={{ display: 'block', filter: 'drop-shadow(0 0 4px rgba(29,158,117,0.95))' }}
+      >
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <rect x="2" y="2" width="10" height="10" rx="1.5" fill="none" stroke="#1D9E75" strokeWidth="1.2"/>
+          <line x1="4.5" y1="5" x2="9.5" y2="5" stroke="#1D9E75" strokeWidth="0.9" opacity="0.9"/>
+          <line x1="4.5" y1="7" x2="9.5" y2="7" stroke="#1D9E75" strokeWidth="0.9" opacity="0.75"/>
+          <line x1="4.5" y1="9" x2="7.5" y2="9" stroke="#1D9E75" strokeWidth="0.9" opacity="0.6"/>
+        </svg>
+      </motion.span>
     </motion.button>
   )
 }

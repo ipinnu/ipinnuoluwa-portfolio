@@ -303,7 +303,7 @@ export default function Planet({ type, nodes, onOpenNode, onLockClick, onInkClic
           opacity: isDream ? 0.8 : 1,
           filter: isDream ? 'blur(0.3px)' : 'none',
           zIndex: 10,
-          overflow: (isSaturn || (isDream && !!onArchiveClick)) ? 'visible' : 'hidden',
+          overflow: 'visible',
         }}
         animate={isDream
           ? { scale: [1, 1.02, 1], opacity: [0.75, 0.85, 0.75] }
@@ -316,10 +316,24 @@ export default function Planet({ type, nodes, onOpenNode, onLockClick, onInkClic
         {type === 'dream'     && <JupiterBody size={size} />}
         {type === 'archive'   && <SaturnBody  size={size} />}
 
-        {/* Archive artifact — inside sphere wrapper (overflow:visible) so it sits on the planet */}
+        {/* Archive artifact */}
         {type === 'dream' && onArchiveClick && (
           <div style={{ position: 'absolute', bottom: -18, left: -18 }} onClick={e => e.stopPropagation()}>
             <ArchiveArtifact onTriggered={onArchiveClick} />
+          </div>
+        )}
+
+        {/* Lock artifact — top-right of sphere */}
+        {type === 'forge' && onLockClick && (
+          <div style={{ position: 'absolute', top: -10, right: -10 }} onClick={e => e.stopPropagation()}>
+            <LockArtifact onTriggered={onLockClick} />
+          </div>
+        )}
+
+        {/* Ink artifact — bottom-left of sphere */}
+        {type === 'chronicle' && onInkClick && (
+          <div style={{ position: 'absolute', bottom: -10, left: -10 }} onClick={e => e.stopPropagation()}>
+            <InkArtifact onTriggered={onInkClick} />
           </div>
         )}
       </motion.div>
@@ -347,16 +361,6 @@ export default function Planet({ type, nodes, onOpenNode, onLockClick, onInkClic
           onOpen={onOpenNode}
         />
       ))}
-
-      {/* Lock artifact (Forge only) */}
-      {type === 'forge' && onLockClick && (
-        <LockArtifact onTriggered={onLockClick} />
-      )}
-
-      {/* Ink artifact (Chronicle only) */}
-      {type === 'chronicle' && onInkClick && (
-        <InkArtifact onTriggered={onInkClick} />
-      )}
 
     </div>
   )
