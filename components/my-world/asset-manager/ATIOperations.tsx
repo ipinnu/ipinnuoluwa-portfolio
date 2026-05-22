@@ -43,6 +43,7 @@ const ATI_COLORS = {
 
 const PRIORITY_LABELS = { high: 'High Priority', medium: 'Medium Priority', low: 'Low Priority' }
 const STATUS_LABELS = { negotiating: 'Negotiating', 'in-progress': 'In Progress', delivered: 'Delivered', completed: 'Completed', cancelled: 'Cancelled' }
+const CLIENT_STATUS_LABELS: Record<ATIClient['status'], string> = { negotiating: 'Negotiating', active: 'Active', paused: 'Paused', completed: 'Completed' }
 const TYPE_LABELS = { 'one-time': 'One-Time', retainer: 'Retainer' }
 
 export default function ATIOperations({ asset, onUpdate, isMobile }: Props) {
@@ -193,10 +194,17 @@ export default function ATIOperations({ asset, onUpdate, isMobile }: Props) {
   }
 
   const deleteProject = (clientId: string, projectId: string) => {
-    const updatedClients = ati.clients.map(c => 
-      c.id === clientId 
+    const updatedClients = ati.clients.map(c =>
+      c.id === clientId
         ? { ...c, projects: c.projects.filter(p => p.id !== projectId) }
         : c
+    )
+    onUpdate(asset.id, { ati: { clients: updatedClients } })
+  }
+
+  const updateClientStatus = (clientId: string, newStatus: ATIClient['status']) => {
+    const updatedClients = ati.clients.map(c =>
+      c.id === clientId ? { ...c, status: newStatus } : c
     )
     onUpdate(asset.id, { ati: { clients: updatedClients } })
   }
@@ -367,17 +375,29 @@ export default function ATIOperations({ asset, onUpdate, isMobile }: Props) {
                         {client.projects.length} projects · {PRIORITY_LABELS[client.priority]}
                       </p>
                     </div>
-                    <span style={{
-                      fontFamily: 'var(--font-jetbrains-mono)',
-                      fontSize: 8,
-                      padding: '4px 10px',
-                      borderRadius: 4,
-                      background: ATI_COLORS[client.status],
-                      color: '#fff',
-                      textTransform: 'uppercase',
-                    }}>
-                      {client.status}
-                    </span>
+                    <select
+                      value={client.status}
+                      onChange={e => {
+                        e.stopPropagation()
+                        updateClientStatus(client.id, e.target.value as ATIClient['status'])
+                      }}
+                      onClick={e => e.stopPropagation()}
+                      style={{
+                        fontFamily: 'var(--font-jetbrains-mono)',
+                        fontSize: 8,
+                        padding: '4px 8px',
+                        borderRadius: 4,
+                        border: 'none',
+                        background: ATI_COLORS[client.status],
+                        color: '#fff',
+                        cursor: 'pointer',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      {(Object.keys(CLIENT_STATUS_LABELS) as ATIClient['status'][]).map(s => (
+                        <option key={s} value={s}>{CLIENT_STATUS_LABELS[s]}</option>
+                      ))}
+                    </select>
                     <span style={{
                       fontFamily: 'var(--font-jetbrains-mono)',
                       fontSize: 10,
