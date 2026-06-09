@@ -1,4 +1,9 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCallback, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const footerLinks = {
   Work: [
@@ -8,6 +13,7 @@ const footerLinks = {
   ],
   Explore: [
     { href: "/blog", label: "Blog" },
+    { href: "/resources", label: "Resources" },
     { href: "/about", label: "About" },
   ],
 };
@@ -18,19 +24,148 @@ const socialLinks = [
   { href: "https://github.com/ipinnu", label: "GitHub" },
 ];
 
+interface Particle {
+  id: number;
+  x: number;
+  y: number;
+  angle: number;
+  distance: number;
+}
+
 export default function Footer() {
+  const router = useRouter();
+  const tapCount = useRef(0);
+  const tapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const logoRef = useRef<HTMLAnchorElement>(null);
+  const [burst, setBurst] = useState(false);
+  const [particles, setParticles] = useState<Particle[]>([]);
+  const [glowStage, setGlowStage] = useState(0); // 0=none 1=dim 2=mid 3=full
+
+  const handleLogoTap = useCallback(() => {
+    tapCount.current += 1;
+
+    setGlowStage(tapCount.current);
+
+    if (tapTimer.current) clearTimeout(tapTimer.current);
+
+    if (tapCount.current >= 3) {
+      tapCount.current = 0;
+      if (tapTimer.current) clearTimeout(tapTimer.current);
+
+      const generated: Particle[] = Array.from({ length: 16 }, (_, i) => ({
+        id: i,
+        x: 0,
+        y: 0,
+        angle: (i / 16) * 360,
+        distance: 40 + Math.random() * 30,
+      }));
+      setParticles(generated);
+      setBurst(true);
+      setGlowStage(3);
+
+      setTimeout(() => {
+        setBurst(false);
+        setParticles([]);
+        setGlowStage(0);
+        router.push("/my-world");
+      }, 700);
+    } else {
+      tapTimer.current = setTimeout(() => {
+        tapCount.current = 0;
+        setGlowStage(0);
+      }, 800);
+    }
+  }, [router]);
+
+  const glowColor =
+    glowStage === 0
+      ? "#A3C4B4"
+      : glowStage === 1
+        ? "#b8d4c8"
+        : glowStage === 2
+          ? "#E8FF47"
+          : "#E8FF47";
+
+  const glowShadow =
+    glowStage === 0
+      ? "none"
+      : glowStage === 1
+        ? "0 0 8px #A3C4B440"
+        : glowStage === 2
+          ? "0 0 16px #E8FF4780"
+          : "0 0 28px #E8FF47, 0 0 60px #E8FF4740";
+
   return (
     <footer className="border-t border-border mt-32">
       <div className="max-w-content mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           {/* Brand */}
           <div className="md:col-span-2">
-            <Link
-              href="/"
-              className="font-syne font-bold text-2xl text-accent block mb-4"
-            >
-              ipi.
-            </Link>
+            <div className="relative inline-block mb-4">
+              <motion.a
+                ref={logoRef}
+                href="/"
+                onClick={(e) => e.preventDefault()}
+                onTap={handleLogoTap}
+                className="font-syne font-bold text-2xl block select-none cursor-pointer"
+                style={{
+                  color: glowColor,
+                  textShadow: glowShadow,
+                  transition: "color 0.2s, text-shadow 0.2s",
+                }}
+              >
+                ipi.
+              </motion.a>
+
+              {/* Particles */}
+              <AnimatePresence>
+                {burst &&
+                  particles.map((p) => {
+                    const rad = (p.angle * Math.PI) / 180;
+                    const tx = Math.cos(rad) * p.distance;
+                    const ty = Math.sin(rad) * p.distance;
+                    return (
+                      <motion.span
+                        key={p.id}
+                        initial={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+                        animate={{ opacity: 0, x: tx, y: ty, scale: 0 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                      >
+                        <span
+                          className="block rounded-full"
+                          style={{
+                            width: p.id % 3 === 0 ? 3 : 2,
+                            height: p.id % 3 === 0 ? 3 : 2,
+                            backgroundColor:
+                              p.id % 2 === 0 ? "#E8FF47" : "#A3C4B4",
+                            boxShadow:
+                              p.id % 2 === 0
+                                ? "0 0 4px #E8FF47"
+                                : "0 0 4px #A3C4B4",
+                          }}
+                        />
+                      </motion.span>
+                    );
+                  })}
+              </AnimatePresence>
+
+              {/* Ripple ring on burst */}
+              <AnimatePresence>
+                {burst && (
+                  <motion.span
+                    initial={{ scale: 0.5, opacity: 0.8 }}
+                    animate={{ scale: 3, opacity: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full border pointer-events-none"
+                    style={{ borderColor: "#E8FF47" }}
+                  />
+                )}
+              </AnimatePresence>
+            </div>
+
             <p className="text-text-secondary text-sm leading-relaxed max-w-xs">
               Flutter & product engineer based in Lagos, Nigeria. Building
               mobile apps and web products for startups and businesses

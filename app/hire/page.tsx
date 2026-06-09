@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import FadeUp from "@/components/ui/FadeUp";
 import SectionLabel from "@/components/ui/SectionLabel";
-import HireForm from "@/components/sections/HireForm";
+import DiscoveryWizard from "@/components/sections/DiscoveryWizard";
 
 export const metadata: Metadata = {
   title: "Hire Me",
@@ -43,8 +43,9 @@ export default function HirePage() {
               Start a project
             </h1>
             <p className="text-text-secondary text-lg max-w-xl leading-relaxed">
-              Tell me what you&apos;re building. I&apos;ll tell you if I can
-              help, how long it&apos;ll take, and what it&apos;ll cost.
+              Answer 15 quick questions about what you&apos;re building. Takes
+              about 3 minutes — and gives me everything I need to give you a
+              real answer.
             </p>
           </FadeUp>
         </div>
@@ -57,9 +58,9 @@ export default function HirePage() {
             {/* Form */}
             <FadeUp>
               <h2 className="font-syne font-bold text-2xl text-text-primary mb-8">
-                Project details
+                Project brief
               </h2>
-              <HireForm />
+              <DiscoveryWizard />
             </FadeUp>
 
             {/* Info panel */}
