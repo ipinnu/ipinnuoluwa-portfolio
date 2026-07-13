@@ -30,7 +30,7 @@ const experience = [
     company: "HermexTravels",
     period: "2024",
     description:
-      "Built responsive Flutter UI components and REST API integrations for a travel booking platform.",
+      "Built the Flutter front end for a travel platform spanning trip planning, flight and hotel booking, visa support, and booking management. Developed reusable responsive components, integrated REST APIs, handled asynchronous UI states, and optimised data-heavy search results for a smoother production mobile experience.",
   },
 ];
 
