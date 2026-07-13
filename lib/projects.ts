@@ -165,22 +165,26 @@ export const projects: Project[] = [
   {
     slug: "hermex-travels",
     title: "HermexTravels",
-    summary: "Mobile-first UI for a travel booking platform with REST API integration.",
+    summary:
+      "A mobile travel platform that brings trip planning, flight and hotel booking, visa support, travel management, and AI-assisted guidance into one streamlined experience.",
     role: "Frontend Engineer",
     stack: ["Flutter", "REST APIs", "Dart"],
-    tags: ["Mobile", "Flutter", "Travel"],
-    outcome: "Responsive UI components · API integration · Mobile-first",
+    tags: ["Mobile", "Flutter", "Travel", "API Integration"],
+    outcome:
+      "Live on Google Play · Production Flutter experience · REST API integration · Responsive booking flows",
     featured: false,
     order_index: 4,
     category: "mobile",
     problem:
-      "HermexTravels needed a clean, fast mobile interface for their travel booking backend. The web UI did not translate well to mobile and users were dropping off.",
+      "HermexTravels needed to turn a broad set of travel services into a mobile experience that felt simple and dependable. Users needed to move from discovery to action without navigating a web interface that did not translate well to smaller screens. The challenge was to present trip planning, flight and hotel search, visa assistance, booking management, and travel support as one coherent journey while keeping the interface responsive around live travel data.",
     build:
-      "Built responsive Flutter UI components with REST API integration. Focused on performance throughout: lazy loading, optimistic UI updates and efficient list rendering for search results.",
+      "Built the customer-facing mobile interface in Flutter and connected it to the existing travel backend through REST APIs. I translated the platform's core services into reusable, responsive components so search results, booking details, forms, and account states remained consistent across different screen sizes.\n\nStructured the data and UI layers to handle loading, success, empty, and failure states without breaking the booking journey. Performance work included lazy loading, optimistic UI updates, and efficient list rendering for data-heavy search results, reducing unnecessary rebuilds and keeping navigation responsive.\n\nThe result was a production mobile experience that made HermexTravels' wider offering easier to access from one place and established a component foundation that could grow with new travel products and backend capabilities.",
     lessons:
-      "In travel apps, speed is the UX. A one-second delay on a search result costs a booking. I started profiling Flutter apps properly and cutting every unnecessary rebuild.",
+      "Travel products make performance and feedback inseparable from trust. Search, pricing, and availability depend on remote systems, so every loading state and API failure has to reassure the user that the app is still working. This project sharpened how I profile Flutter rebuilds, structure asynchronous UI states, and design resilient flows around network-dependent data.",
     timeline: "2024",
-    status: "Ongoing",
+    status: "Live",
+    playStoreUrl:
+      "https://play.google.com/store/apps/details?id=com.hermex.hermex_travels&pcampaignid=web_share",
     image: "/images/projects/hermex-travels/unnamed%20(1).webp",
     images: [
       "/images/projects/hermex-travels/unnamed%20(1).webp",
