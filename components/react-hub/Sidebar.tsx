@@ -1,29 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { CURRICULUM } from "@/lib/react-hub/curriculum";
-import { getProgress, HubProgress } from "@/lib/react-hub/progress";
-import { getEarnedXP, TOTAL_XP } from "@/lib/react-hub/xp";
-import ProgressBar from "./ProgressBar";
-
-const HUB_NAV = [
-  { label: "Learning Path", href: "/resources/react" },
-  { label: "Resources", href: "/resources/react/resources" },
-];
-
-const FOUNDATION_NAV = [
-  { label: "The Web Before React", href: "/resources/react/intro" },
-];
-
-const COMING_SOON = [
-  "Concept Library",
-  "Challenges",
-  "Build Real Websites",
-  "AI Mentor",
-];
+import { AnimatePresence, motion } from "framer-motion";
+import { LAB_MODULES } from "@/lib/react-hub/module-map";
+import { useLearnerAuth } from "./LearnerAuth";
 
 interface SidebarProps {
   onClose?: () => void;
@@ -31,157 +13,126 @@ interface SidebarProps {
 
 export default function Sidebar({ onClose }: SidebarProps) {
   const pathname = usePathname();
-  const [progress, setProgress] = useState<HubProgress>({
-    completedLessons: [],
-    lastVisited: null,
-  });
+  const { session, learnerName, openAuth, signOut } = useLearnerAuth();
+  const [moduleProgress, setModuleProgress] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    setProgress(getProgress());
-    const handler = () => setProgress(getProgress());
-    window.addEventListener("hub-progress-update", handler);
-    return () => window.removeEventListener("hub-progress-update", handler);
-  }, []);
+    const updateExplored = () => {
+      const next: Record<string, number> = {};
+      LAB_MODULES.forEach((module) => {
+        try {
+          const saved = JSON.parse(
+            localStorage.getItem(`react-hub-${module.id}-explored`) ?? "[]",
+          ) as string[];
+          next[module.id] = saved.length;
+        } catch {
+          next[module.id] = 0;
+        }
+      });
+      setModuleProgress(next);
+    };
 
-  const isLessonActive = (slug: string) =>
-    pathname === `/resources/react/${slug}`;
-
-  const isNavActive = (href: string) =>
-    href === "/resources/react"
-      ? pathname === href || pathname === "/resources/react/"
-      : pathname.startsWith(href);
-
-  const earnedXP = getEarnedXP(progress.completedLessons);
+    updateExplored();
+    window.addEventListener("hub-module-progress-update", updateExplored);
+    return () =>
+      window.removeEventListener("hub-module-progress-update", updateExplored);
+  }, [pathname]);
 
   return (
-    <aside className="flex flex-col h-full bg-bg-primary border-r border-border overflow-y-auto">
-      {/* Hub nav */}
-      <div className="p-4 border-b border-border">
-        <p className="font-mono text-[9px] text-text-tertiary tracking-widest uppercase mb-3">
-          // React Hub
+    <aside className="flex h-full flex-col overflow-y-auto border-r border-border bg-bg-primary">
+      <div className="border-b border-border p-4">
+        <p className="font-mono text-[9px] uppercase tracking-widest text-text-tertiary">
+          // React Hub · Web Laboratory
         </p>
-        <nav className="space-y-0.5">
-          {HUB_NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={onClose}
-              className={[
-                "block px-3 py-2 font-mono text-xs transition-colors",
-                isNavActive(item.href)
-                  ? "text-neon"
-                  : "text-text-secondary hover:text-text-primary hover:bg-bg-secondary",
-              ].join(" ")}
-              style={isNavActive(item.href) ? { backgroundColor: "rgba(232,255,71,0.05)" } : {}}
+        {session ? (
+          <div className="mt-4 flex items-center justify-between gap-3 border border-border bg-bg-secondary p-3">
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-text-primary">{learnerName}</p>
+              <p className="mt-0.5 truncate font-mono text-[9px] text-text-tertiary">{session.user.email}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => signOut()}
+              className="min-h-11 cursor-pointer px-2 font-mono text-[9px] text-text-tertiary hover:text-text-primary"
             >
-              {item.label}
-            </Link>
-          ))}
-          {COMING_SOON.map((label) => (
-            <span
-              key={label}
-              className="flex items-center justify-between px-3 py-2 font-mono text-xs cursor-not-allowed select-none"
-              style={{ color: "rgba(68,68,64,0.5)" }}
-            >
-              {label}
-              <span className="text-[9px] tracking-widest">SOON</span>
-            </span>
-          ))}
-        </nav>
-      </div>
-
-      {/* Foundation — pre-lesson context */}
-      <div className="p-4 border-b border-border">
-        <p className="font-mono text-[9px] text-text-tertiary tracking-widest uppercase mb-3">
-          // Foundation
-        </p>
-        <nav className="space-y-0.5">
-          {FOUNDATION_NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={onClose}
-              className={[
-                "flex items-center gap-2 px-3 py-2 font-mono text-xs transition-colors",
-                isNavActive(item.href)
-                  ? "text-neon"
-                  : "text-text-secondary hover:text-text-primary hover:bg-bg-secondary",
-              ].join(" ")}
-              style={isNavActive(item.href) ? { backgroundColor: "rgba(232,255,71,0.05)" } : {}}
-            >
-              <span style={{ color: "#A3C4B4", fontSize: 9 }}>◈</span>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-      </div>
-
-      {/* Progress */}
-      <ProgressBar completed={progress.completedLessons.length} />
-
-      {/* XP summary */}
-      {earnedXP > 0 && (
-        <div className="px-4 py-2 border-b border-border flex items-center justify-between">
-          <span className="font-mono text-[9px] text-text-tertiary tracking-widest uppercase">
-            XP Earned
-          </span>
-          <span
-            className="font-mono text-[10px] font-medium text-neon"
-            style={{ textShadow: earnedXP > 0 ? "0 0 8px #E8FF4760" : "none" }}
+              SIGN OUT
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => openAuth()}
+            className="mt-4 min-h-11 w-full cursor-pointer border border-neon/40 px-3 font-mono text-[10px] text-neon hover:bg-neon/5"
           >
-            {earnedXP.toLocaleString()} / {TOTAL_XP.toLocaleString()}
-          </span>
-        </div>
-      )}
+            Create account / Sign in
+          </button>
+        )}
+      </div>
 
-      {/* Lesson list */}
-      <nav className="flex-1 p-2 overflow-y-auto">
-        {CURRICULUM.map((lesson) => {
-          const done = progress.completedLessons.includes(lesson.id);
-          const active = isLessonActive(lesson.slug);
+      <nav className="border-b border-border p-2">
+        <Link
+          href="/resources/react/intro"
+          onClick={onClose}
+          className={[
+            "flex min-h-11 items-center px-3 text-xs transition-colors",
+            pathname === "/resources/react/intro"
+              ? "bg-neon/5 text-neon"
+              : "text-text-secondary hover:bg-bg-secondary hover:text-text-primary",
+          ].join(" ")}
+        >
+          Start Here
+        </Link>
+        <Link
+          href="/resources/react/resources"
+          onClick={onClose}
+          className="flex min-h-11 items-center px-3 text-xs text-text-secondary hover:bg-bg-secondary hover:text-text-primary"
+        >
+          Resources
+        </Link>
+      </nav>
+
+      <nav className="flex-1 p-2" aria-label="Course modules">
+        {LAB_MODULES.map((module) => {
+          const available = module.status === "available";
+          const active = pathname === `/resources/react/${module.id}`;
+
+          if (!available) {
+            return (
+              <div key={module.id} className="flex min-h-16 items-center gap-3 px-3 opacity-45">
+                <span className="flex h-7 w-7 flex-none items-center justify-center border border-border font-mono text-[9px] text-text-tertiary">
+                  {String(module.order).padStart(2, "0")}
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-xs font-semibold text-text-secondary">{module.title}</span>
+                  <span className="mt-1 block font-mono text-[8px] uppercase tracking-widest text-text-tertiary">
+                    {module.status === "next" ? "Built next" : "Planned"}
+                  </span>
+                </span>
+              </div>
+            );
+          }
 
           return (
             <Link
-              key={lesson.id}
-              href={`/resources/react/${lesson.slug}`}
+              key={module.id}
+              href={`/resources/react/${module.id}`}
               onClick={onClose}
+              aria-current={active ? "page" : undefined}
               className={[
-                "flex items-center gap-3 px-3 py-2.5 group transition-all duration-200 relative",
-                active ? "text-neon" : "text-text-secondary hover:text-text-primary hover:bg-bg-secondary",
+                "relative flex min-h-16 items-center gap-3 px-3 transition-colors",
+                active ? "bg-neon/5 text-neon" : "text-text-secondary hover:bg-bg-secondary hover:text-text-primary",
               ].join(" ")}
-              style={active ? { backgroundColor: "rgba(232,255,71,0.05)" } : {}}
             >
-              {/* Active left bar */}
-              {active && (
-                <motion.span
-                  layoutId="sidebar-active-bar"
-                  className="absolute left-0 top-1 bottom-1 w-0.5 bg-neon"
-                  style={{ boxShadow: "0 0 6px #E8FF47" }}
-                />
-              )}
-
-              {/* Lesson number / checkmark */}
-              <span
-                className={[
-                  "flex-shrink-0 w-5 h-5 flex items-center justify-center font-mono text-[10px] border transition-all duration-200",
-                  done
-                    ? "border-neon/50 text-neon"
-                    : active
-                      ? "border-neon/30 text-neon"
-                      : "border-border text-text-tertiary",
-                ].join(" ")}
-                style={done ? { backgroundColor: "rgba(232,255,71,0.1)", boxShadow: "0 0 6px #E8FF4730" } : {}}
-              >
-                {done ? "✓" : String(lesson.id).padStart(2, "0")}
+              {active && <span className="absolute inset-y-1 left-0 w-0.5 bg-neon" />}
+              <span className="flex h-7 w-7 flex-none items-center justify-center border border-neon/40 font-mono text-[9px] text-neon">
+                {String(module.order).padStart(2, "0")}
               </span>
-
-              <span className="text-xs leading-snug line-clamp-1 flex-1">
-                {lesson.title}
+              <span className="min-w-0">
+                <span className="block text-xs font-semibold">{module.title}</span>
+                <span className="mt-1 block font-mono text-[8px] uppercase tracking-widest text-accent">
+                  {moduleProgress[module.id] ?? 0}/4 laboratories explored
+                </span>
               </span>
-
-              {done && !active && (
-                <span className="flex-shrink-0 w-1 h-1 rounded-full bg-neon/40" />
-              )}
             </Link>
           );
         })}
@@ -190,46 +141,32 @@ export default function Sidebar({ onClose }: SidebarProps) {
   );
 }
 
-export function MobileSidebarToggle({
-  isOpen,
-  onToggle,
-}: {
-  isOpen: boolean;
-  onToggle: () => void;
-}) {
+export function MobileSidebarToggle({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => void }) {
   return (
     <button
+      type="button"
       onClick={onToggle}
-      className="md:hidden flex items-center justify-between px-4 py-3 border-b border-border w-full text-left bg-bg-secondary"
-      aria-label={isOpen ? "Close menu" : "Open lesson menu"}
+      className="flex min-h-11 w-full cursor-pointer items-center justify-between border-b border-border bg-bg-secondary px-4 text-left md:hidden"
+      aria-label={isOpen ? "Close course navigation" : "Open course navigation"}
+      aria-expanded={isOpen}
     >
-      <span className="font-mono text-[10px] text-text-secondary tracking-widest uppercase">
-        {isOpen ? "↑ Close" : "☰ Lessons"}
+      <span className="font-mono text-[10px] uppercase tracking-widest text-text-secondary">
+        {isOpen ? "Close" : "Course path"}
       </span>
-      <span className="font-mono text-[10px] text-text-tertiary">
-        React Hub
-      </span>
+      <span aria-hidden className="font-mono text-sm text-neon">{isOpen ? "×" : "☰"}</span>
     </button>
   );
 }
 
-export function MobileSidebar({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) {
+export function MobileSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
           initial={{ height: 0, opacity: 0 }}
-          animate={{ height: "auto", opacity: 1 }}
+          animate={{ height: "min(72vh, 720px)", opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
-          transition={{ duration: 0.25 }}
-          className="md:hidden overflow-hidden border-b border-border"
-          style={{ maxHeight: "60vh" }}
+          className="overflow-hidden border-b border-border md:hidden"
         >
           <Sidebar onClose={onClose} />
         </motion.div>

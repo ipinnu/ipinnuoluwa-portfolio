@@ -9,6 +9,55 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      course_learners: {
+        Row: {
+          id: string;
+          email: string;
+          full_name: string;
+          course_version: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          email: string;
+          full_name?: string;
+          course_version?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          email?: string;
+          full_name?: string;
+          course_version?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      course_progress: {
+        Row: {
+          learner_id: string;
+          module_id: string;
+          activity_id: string;
+          explored: boolean;
+          payload: Json;
+          updated_at: string;
+        };
+        Insert: {
+          learner_id: string;
+          module_id: string;
+          activity_id: string;
+          explored?: boolean;
+          payload?: Json;
+          updated_at?: string;
+        };
+        Update: {
+          explored?: boolean;
+          payload?: Json;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       contact_submissions: {
         Row: {
           id: string;
