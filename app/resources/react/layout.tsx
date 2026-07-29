@@ -7,6 +7,10 @@ import Sidebar, {
 } from "@/components/react-hub/Sidebar";
 import { GlossaryProvider } from "@/components/react-hub/GlossaryContext";
 import GlossaryPanel from "@/components/react-hub/GlossaryPanel";
+import {
+  LearnerAuthProvider,
+  RequireLearner,
+} from "@/components/react-hub/LearnerAuth";
 
 export default function ReactHubLayout({
   children,
@@ -16,6 +20,7 @@ export default function ReactHubLayout({
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
+    <LearnerAuthProvider>
     <GlossaryProvider>
       <div className="min-h-screen pt-16">
         {/* Mobile toggle */}
@@ -38,7 +43,7 @@ export default function ReactHubLayout({
 
           {/* Main content */}
           <main className="flex-1 min-w-0 border-l border-border">
-            {children}
+            <RequireLearner>{children}</RequireLearner>
           </main>
         </div>
       </div>
@@ -46,5 +51,6 @@ export default function ReactHubLayout({
       {/* Glossary panel — rendered outside layout flow so it overlays freely */}
       <GlossaryPanel />
     </GlossaryProvider>
+    </LearnerAuthProvider>
   );
 }

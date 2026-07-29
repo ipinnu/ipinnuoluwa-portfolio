@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { TOTAL_LESSONS } from "@/lib/react-hub/curriculum";
+import { TOTAL_LESSONS } from "@/lib/react-hub/course";
 
 interface ProgressBarProps {
   completed: number;
