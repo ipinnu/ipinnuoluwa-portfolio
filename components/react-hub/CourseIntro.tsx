@@ -105,6 +105,19 @@ export default function CourseIntro() {
               </article>
             ))}
           </div>
+          <div className="mt-6 flex flex-col gap-3 border-l-2 border-accent bg-accent/5 p-5 sm:flex-row sm:items-center sm:justify-between">
+            <p className="max-w-[68ch] text-sm leading-6 text-text-secondary">
+              Want to understand a React idea without the project around it?
+              The Field Guide offers focused concepts, examples, and small
+              exercises in a recommended sequence.
+            </p>
+            <Link
+              href="/resources/react/field-guide"
+              className="inline-flex min-h-11 flex-none items-center font-mono text-xs font-bold text-accent transition-colors hover:text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-neon"
+            >
+              Open the Field Guide →
+            </Link>
+          </div>
         </div>
       </section>
 

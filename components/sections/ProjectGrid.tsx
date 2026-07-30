@@ -22,8 +22,10 @@ export default function ProjectGrid() {
 
   const filtered =
     active === "all"
-      ? projects
-      : projects.filter((p) => p.category === active);
+      ? [...projects].sort((a, b) => a.order_index - b.order_index)
+      : projects
+          .filter((p) => p.category === active)
+          .sort((a, b) => a.order_index - b.order_index);
 
   return (
     <section className="py-16 md:py-24">
@@ -31,11 +33,12 @@ export default function ProjectGrid() {
         {/* Filter tabs */}
         <div className="flex gap-2 mb-12 overflow-x-auto no-scrollbar">
           {filters.map((f) => (
-            <button
-              key={f.value}
-              onClick={() => setActive(f.value)}
-              className={cn(
-                "font-mono text-xs px-4 py-2 rounded-sm border transition-colors whitespace-nowrap",
+              <button
+                key={f.value}
+                onClick={() => setActive(f.value)}
+                aria-pressed={active === f.value}
+                className={cn(
+                "min-h-11 cursor-pointer font-mono text-xs px-4 py-2 rounded-sm border transition-colors whitespace-nowrap focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
                 active === f.value
                   ? "bg-accent text-bg-primary border-accent"
                   : "border-border text-text-secondary hover:text-text-primary hover:border-text-tertiary"
@@ -60,19 +63,35 @@ export default function ProjectGrid() {
               >
                 <Link
                   href={`/work/${project.slug}`}
-                  className="group block bg-bg-secondary hover:bg-bg-tertiary transition-colors h-full"
+                  className="group block bg-bg-secondary hover:bg-bg-tertiary transition-colors h-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent"
                 >
                   {/* Cover image */}
                   {project.image && (
                     <div className="relative w-full aspect-[16/9] overflow-hidden bg-bg-tertiary">
                       <Image
                         src={project.image}
-                        alt={project.title}
+                        alt={`${project.title} project preview`}
                         fill
                         className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, 50vw"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-bg-secondary/60 to-transparent" />
+                    </div>
+                  )}
+                  {!project.image && (
+                    <div className="relative flex aspect-[16/9] w-full items-end overflow-hidden bg-[radial-gradient(circle_at_75%_20%,rgba(163,196,180,0.18),transparent_35%),linear-gradient(135deg,#1a1a1a,#0a0a0a)] p-6">
+                      <div
+                        className="absolute inset-0 opacity-30"
+                        aria-hidden="true"
+                        style={{
+                          backgroundImage:
+                            "linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)",
+                          backgroundSize: "32px 32px",
+                        }}
+                      />
+                      <span className="relative font-syne text-2xl font-black tracking-tight text-text-primary md:text-3xl">
+                        {project.title}
+                      </span>
                     </div>
                   )}
 

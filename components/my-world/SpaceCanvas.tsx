@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import type { CelestialNode, CometData } from '@/lib/types/celestial'
 import { PLANET_CONFIG } from '@/lib/types/celestial'
 import { useIsMobile } from '@/hooks/useIsMobile'
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock'
 import StarField from './StarField'
 import TheSun from './TheSun'
 import Planet from './Planet'
@@ -60,6 +61,14 @@ export default function SpaceCanvas({ nodes, comet }: SpaceCanvasProps) {
     setOpenNode(null)
     setOpenPlanet(null)
   }, [])
+
+  const isOverlayOpen =
+    openPlanet !== null ||
+    assetManagerState !== 'closed' ||
+    chronicleStudioOpen ||
+    archiveState !== 'closed'
+
+  useBodyScrollLock(isOverlayOpen)
 
   // Escape key
   useEffect(() => {
@@ -202,7 +211,7 @@ export default function SpaceCanvas({ nodes, comet }: SpaceCanvasProps) {
             </p>
           </motion.div>
           <Planet type="dream" nodes={dreamNodes} onOpenNode={handleOpenNode} onArchiveClick={() => setArchiveState('password')} onPlanetClick={() => setOpenPlanet('dream')} />
-          <p className="font-syne text-[11px] text-text-tertiary mt-4 italic opacity-50">
+          <p className="font-syne text-[11px] text-text-tertiary mt-4 italic">
             Not yet. But soon.
           </p>
         </motion.div>
@@ -217,7 +226,7 @@ export default function SpaceCanvas({ nodes, comet }: SpaceCanvasProps) {
           className="absolute bottom-0 left-0 right-0 flex flex-col items-center justify-end pb-20"
           style={{ height: '15vh', zIndex: 10 }}
         >
-          <p className="font-syne text-[13px] text-text-tertiary opacity-30 mb-6">
+          <p className="font-syne text-[13px] text-text-tertiary mb-6">
             The universe is still expanding.
           </p>
           <a

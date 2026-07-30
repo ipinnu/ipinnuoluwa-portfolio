@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
 import { useGlossary } from "./GlossaryContext";
 import { CURRICULUM } from "@/lib/react-hub/curriculum";
 
@@ -19,7 +20,10 @@ export default function GlossaryPanel() {
 
   const learnMoreLesson =
     activeTerm?.learnMoreLesson != null
-      ? CURRICULUM.find((l) => l.id === activeTerm.learnMoreLesson)
+      ? CURRICULUM.find(
+          (lesson) =>
+            lesson.id === activeTerm.learnMoreLesson && lesson.id <= 11,
+        )
       : null;
 
   return (
@@ -143,13 +147,13 @@ export default function GlossaryPanel() {
                   >
                     Covered in depth
                   </p>
-                  <a
-                    href={`/resources/react/${learnMoreLesson.slug}`}
+                  <Link
+                    href={`/resources/react/field-guide/${learnMoreLesson.slug}`}
                     onClick={closeTerm}
                     className="text-sm text-text-secondary hover:text-text-primary transition-colors"
                   >
-                    Lesson {learnMoreLesson.id}: {learnMoreLesson.title} →
-                  </a>
+                    Concept {learnMoreLesson.id}: {learnMoreLesson.title} →
+                  </Link>
                 </div>
               )}
             </div>

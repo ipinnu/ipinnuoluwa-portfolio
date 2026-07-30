@@ -5,6 +5,7 @@ import Image from "next/image";
 import { getProjectBySlug, projects } from "@/lib/projects";
 import Tag from "@/components/ui/Tag";
 import FadeUp from "@/components/ui/FadeUp";
+import ProjectMediaGallery from "@/components/sections/ProjectMediaGallery";
 
 interface Props {
   params: { slug: string };
@@ -106,14 +107,52 @@ export default function CaseStudyPage({ params }: Props) {
       {project.image && (
         <div className="border-b border-border bg-bg-secondary">
           <div className="max-w-content mx-auto">
-            <Image
-              src={project.image}
-              alt={`${project.title} — overview`}
-              width={6672}
-              height={5896}
-              style={{ width: "100%", height: "auto" }}
-              priority
-            />
+            {project.media ? (
+              <div className="relative aspect-video overflow-hidden">
+                <Image
+                  src={project.image}
+                  alt={`${project.title} — product overview`}
+                  fill
+                  className="object-cover object-top"
+                  sizes="100vw"
+                  priority
+                />
+              </div>
+            ) : (
+              <Image
+                src={project.image}
+                alt={`${project.title} — overview`}
+                width={6672}
+                height={5896}
+                style={{ width: "100%", height: "auto" }}
+                priority
+              />
+            )}
+          </div>
+        </div>
+      )}
+      {!project.image && (
+        <div className="border-b border-border bg-bg-secondary">
+          <div className="max-w-content mx-auto px-6 py-8">
+            <div className="relative flex min-h-64 items-end overflow-hidden border border-border bg-[radial-gradient(circle_at_75%_20%,rgba(163,196,180,0.18),transparent_35%),linear-gradient(135deg,#1a1a1a,#0a0a0a)] p-8 md:min-h-96 md:p-12">
+              <div
+                className="absolute inset-0 opacity-30"
+                aria-hidden="true"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)",
+                  backgroundSize: "48px 48px",
+                }}
+              />
+              <div className="relative">
+                <p className="mb-3 font-mono text-xs uppercase tracking-[0.18em] text-accent">
+                  Live client work
+                </p>
+                <p className="font-syne text-4xl font-black tracking-tight text-text-primary md:text-6xl">
+                  {project.title}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -135,19 +174,49 @@ export default function CaseStudyPage({ params }: Props) {
                 </div>
               </FadeUp>
 
+              {project.proofPoints && project.proofPoints.length > 0 && (
+                <FadeUp delay={0.04}>
+                  <div
+                    className="grid grid-cols-2 border-l border-t border-border"
+                    aria-label={`${project.title} engineering footprint`}
+                  >
+                    {project.proofPoints.map((point) => (
+                      <div
+                        key={point.label}
+                        className="min-h-32 border-b border-r border-border bg-bg-secondary p-5 md:p-6"
+                      >
+                        <p className="font-syne text-2xl font-black text-accent md:text-3xl">
+                          {point.value}
+                        </p>
+                        <p className="mt-2 text-xs leading-relaxed text-text-tertiary">
+                          {point.label}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </FadeUp>
+              )}
+
               {project.images && project.images.length >= 1 && (
                 <FadeUp delay={0.05}>
                   {project.imageLayout === "stack" ? (
-                    <div className="rounded-xl overflow-hidden border border-border bg-bg-secondary">
-                      <Image
-                        src={project.images[0]}
-                        alt={`${project.title} screen 1`}
-                        width={0}
-                        height={0}
-                        sizes="(max-width: 768px) 100vw, 66vw"
-                        style={{ width: "100%", height: "auto" }}
-                      />
-                    </div>
+                    <figure>
+                      <div className="rounded-xl overflow-hidden border border-border bg-bg-secondary">
+                        <Image
+                          src={project.images[0]}
+                          alt={`${project.title} screen 1`}
+                          width={0}
+                          height={0}
+                          sizes="(max-width: 768px) 100vw, 66vw"
+                          style={{ width: "100%", height: "auto" }}
+                        />
+                      </div>
+                      {project.imageCaptions?.[0] && (
+                        <figcaption className="border-x border-b border-border bg-bg-secondary p-4 text-sm leading-relaxed text-text-tertiary">
+                          {project.imageCaptions[0]}
+                        </figcaption>
+                      )}
+                    </figure>
                   ) : (
                     <div className="grid grid-cols-2 gap-4 items-start">
                       {[project.images[0], project.images[1]].map((src, i) => (
@@ -195,6 +264,49 @@ export default function CaseStudyPage({ params }: Props) {
                   </div>
                 </div>
               </FadeUp>
+
+              {project.highlights && project.highlights.length > 0 && (
+                <FadeUp delay={0.11}>
+                  <div>
+                    <p className="font-mono text-xs text-accent uppercase tracking-widest mb-4">
+                      Engineering Highlights
+                    </p>
+                    <ul className="grid gap-px bg-border sm:grid-cols-2">
+                      {project.highlights.map((highlight) => (
+                        <li
+                          key={highlight}
+                          className="flex min-h-24 gap-3 bg-bg-secondary p-5 text-sm leading-relaxed text-text-secondary"
+                        >
+                          <svg
+                            className="mt-0.5 h-4 w-4 shrink-0 text-accent"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            aria-hidden="true"
+                          >
+                            <path
+                              d="m4 10 3.5 3.5L16 5"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                          <span>{highlight}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </FadeUp>
+              )}
+
+              {project.media && project.media.length > 0 && (
+                <FadeUp delay={0.12}>
+                  <ProjectMediaGallery
+                    projectTitle={project.title}
+                    media={project.media}
+                  />
+                </FadeUp>
+              )}
 
               {project.imageLayout === "stack" && project.images && project.images.length >= 2 && (
                 <FadeUp delay={0.12}>
@@ -309,6 +421,19 @@ export default function CaseStudyPage({ params }: Props) {
                     </svg>
                     View on Play Store ↗
                   </a>
+                </FadeUp>
+              )}
+
+              {project.note && (
+                <FadeUp delay={0.23}>
+                  <div className="border border-border bg-bg-secondary p-6">
+                    <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.16em] text-text-tertiary">
+                      Implementation note
+                    </p>
+                    <p className="text-sm leading-relaxed text-text-secondary">
+                      {project.note}
+                    </p>
+                  </div>
                 </FadeUp>
               )}
 

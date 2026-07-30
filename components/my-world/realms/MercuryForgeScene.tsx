@@ -390,6 +390,7 @@ export default function MercuryForgeScene({ nodes, initialNode, onClose }: Mercu
               position: 'fixed', inset: 0, zIndex: 60,
               backgroundColor: '#050302',
               overflowY: 'auto',
+              overscrollBehavior: 'contain',
               padding: '72px 24px 48px',
             }}
           >

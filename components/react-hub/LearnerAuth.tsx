@@ -278,9 +278,13 @@ function LearnerAuthModal({
 export function RequireLearner({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const { session, loading, openAuth } = useLearnerAuth();
+  const publicRoute =
+    pathname === "/resources/react/intro" ||
+    pathname === "/resources/react/resources" ||
+    pathname === "/resources/react/field-guide" ||
+    pathname.startsWith("/resources/react/field-guide/");
   const protectedRoute =
-    pathname === "/resources/react/module-1" ||
-    /^\/resources\/react\/(?!intro$|resources$)[^/]+$/.test(pathname);
+    !publicRoute && /^\/resources\/react\/[^/]+$/.test(pathname);
 
   useEffect(() => {
     if (protectedRoute && !loading && !session) openAuth(pathname);

@@ -900,7 +900,7 @@ function NavRow({
           "flex-1 py-3 font-syne font-semibold text-sm transition-all duration-200 cursor-pointer",
           canNext
             ? "bg-accent text-bg-primary hover:bg-accent/90"
-            : "bg-bg-tertiary text-text-tertiary border border-border cursor-not-allowed opacity-50"
+            : "bg-bg-tertiary text-text-tertiary border border-border cursor-not-allowed"
         )}
       >
         {nextLabel}

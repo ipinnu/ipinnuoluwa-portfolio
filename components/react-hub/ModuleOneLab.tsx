@@ -276,7 +276,9 @@ function BrowserLab({
               key={title}
               className={[
                 "border p-4 transition-colors",
-                index <= step ? "border-neon/30 bg-neon/5" : "border-border opacity-45",
+                index <= step
+                  ? "border-neon/30 bg-neon/5"
+                  : "border-border bg-bg-secondary",
               ].join(" ")}
             >
               <p className="font-mono text-[10px] text-neon">{String(index + 1).padStart(2, "0")} · {title}</p>
