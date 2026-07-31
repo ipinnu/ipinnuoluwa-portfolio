@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import FadeUp from "@/components/ui/FadeUp";
 import SectionLabel from "@/components/ui/SectionLabel";
@@ -128,6 +129,67 @@ export default function AboutPage() {
               >
                 Start a Project →
               </a>
+            </FadeUp>
+          </div>
+        </div>
+      </section>
+
+      {/* Recognition */}
+      <section
+        className="py-20 md:py-28 border-b border-border"
+        aria-labelledby="recognition-title"
+      >
+        <div className="max-w-content mx-auto px-6">
+          <FadeUp>
+            <SectionLabel label="External validation" className="mb-10" />
+          </FadeUp>
+
+          <div className="grid grid-cols-1 lg:grid-cols-[1.35fr_0.65fr] gap-10 lg:gap-16 items-start">
+            <FadeUp>
+              <figure>
+                <div className="relative aspect-[3/2] overflow-hidden border border-border bg-bg-secondary">
+                  <Image
+                    src="/images/recognition/tech-advantage-support-grant-2026.jpg"
+                    alt="Top-five finalists at the 2026 Tech Advantage Support Grant at The Roundtable Lekki"
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1024px) 62vw, 100vw"
+                  />
+                </div>
+                <figcaption className="mt-4 max-w-3xl font-mono text-[11px] leading-relaxed text-text-tertiary">
+                  Top-five finalists at The Roundtable Lekki · May 2026. The
+                  session opened with Iyinoluwa Aboyeji, co-founder of Andela
+                  and Flutterwave.
+                </figcaption>
+              </figure>
+            </FadeUp>
+
+            <FadeUp delay={0.1}>
+              <div className="lg:pt-2">
+                <p className="font-mono text-sm tracking-[0.18em] text-accent mb-6">
+                  03 / 70
+                </p>
+                <h2
+                  id="recognition-title"
+                  className="font-syne font-bold text-3xl md:text-4xl text-text-primary leading-tight mb-6"
+                >
+                  Third place in a field of 70.
+                </h2>
+                <div className="space-y-4 text-text-secondary leading-relaxed">
+                  <p>
+                    At the 2026 Tech Advantage Support Grant, I represented the
+                    only technology-led solution among the five finalists.
+                  </p>
+                  <p>
+                    The competition tested the idea beyond the product itself:
+                    its relevance, commercial potential, and ability to
+                    communicate clearly under scrutiny.
+                  </p>
+                </div>
+                <p className="mt-8 border-l-2 border-accent pl-4 font-mono text-xs uppercase tracking-[0.12em] leading-relaxed text-text-primary">
+                  Only technology-led top-five solution
+                </p>
+              </div>
             </FadeUp>
           </div>
         </div>
