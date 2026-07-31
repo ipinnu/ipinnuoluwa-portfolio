@@ -178,7 +178,8 @@ export default function AboutPage() {
                 <div className="space-y-4 text-text-secondary leading-relaxed">
                   <p>
                     At the 2026 Tech Advantage Support Grant, I represented the
-                    only technology-led solution among the five finalists.
+                    only mobile technology-led solution among the five
+                    finalists.
                   </p>
                   <p>
                     The competition tested the idea beyond the product itself:
@@ -187,7 +188,7 @@ export default function AboutPage() {
                   </p>
                 </div>
                 <p className="mt-8 border-l-2 border-accent pl-4 font-mono text-xs uppercase tracking-[0.12em] leading-relaxed text-text-primary">
-                  Only technology-led top-five solution
+                  Only mobile technology-led top-five solution
                 </p>
               </div>
             </FadeUp>
