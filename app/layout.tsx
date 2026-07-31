@@ -23,7 +23,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://ipinnuoluwa.dev"),
+  metadataBase: new URL("https://ipinnuoluwa.com.ng"),
   title: {
     default: "Ipinnuoluwa Oladipo — Flutter & Product Engineer",
     template: "%s | Ipinnuoluwa Oladipo",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://ipinnuoluwa.dev",
+    url: "https://ipinnuoluwa.com.ng",
     siteName: "Ipinnuoluwa Oladipo",
     title: "Ipinnuoluwa Oladipo — Flutter & Product Engineer",
     description:

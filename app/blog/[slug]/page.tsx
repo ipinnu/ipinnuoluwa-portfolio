@@ -44,7 +44,7 @@ export default function BlogPostPage({ params }: Props) {
   const post = getPostBySlug(params.slug);
   if (!post) notFound();
 
-  const shareUrl = `https://ipinnuoluwa.dev/blog/${params.slug}`;
+  const shareUrl = `https://ipinnuoluwa.com.ng/blog/${params.slug}`;
 
   return (
     <>

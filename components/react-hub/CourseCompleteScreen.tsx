@@ -267,7 +267,7 @@ export default function CourseCompleteScreen({ earnedXP }: CourseCompleteScreenP
             Back to Resources →
           </Link>
           <a
-            href={`https://twitter.com/intent/tweet?text=Just%20finished%20the%20React%20Fundamentals%20course%20on%20ipinnuoluwa.dev%20%E2%80%94%20${TOTAL_LESSONS}%20lessons%2C%20${earnedXP}%20XP%20earned.%20%F0%9F%9F%A1`}
+            href={`https://twitter.com/intent/tweet?text=Just%20finished%20the%20React%20Fundamentals%20course%20on%20ipinnuoluwa.com.ng%20%E2%80%94%20${TOTAL_LESSONS}%20lessons%2C%20${earnedXP}%20XP%20earned.%20%F0%9F%9F%A1`}
             target="_blank"
             rel="noopener noreferrer"
             className="font-mono text-sm border border-border text-text-secondary px-6 py-3 hover:border-accent/40 hover:text-text-primary transition-colors"
