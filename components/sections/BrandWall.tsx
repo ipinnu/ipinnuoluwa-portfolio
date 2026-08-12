@@ -53,7 +53,7 @@ export default function BrandWall() {
                     href={brand.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`Visit ${brand.name} website`}
+                    aria-label={`Open ${brand.name}`}
                     className="group flex min-h-36 cursor-pointer flex-col border-b border-r border-border p-5 transition-colors duration-200 hover:bg-bg-tertiary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent md:min-h-40 md:p-6"
                   >
                     {content}

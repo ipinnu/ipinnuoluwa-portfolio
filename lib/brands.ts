@@ -44,5 +44,6 @@ export const brands: Brand[] = [
     name: "HermexTravels",
     shortName: "HERMEX",
     sector: "Travel",
+    href: "https://play.google.com/store/apps/details?id=com.hermex.hermex_travels",
   },
 ];

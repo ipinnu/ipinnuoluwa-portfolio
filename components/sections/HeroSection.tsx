@@ -246,13 +246,21 @@ export default function HeroSection() {
             {/* Accent bar */}
             <div style={{ height: 3, backgroundColor: "#A3C4B4" }} />
 
-            {/* Profile image — full frame, no crop */}
+            {/* Profile image — consistent editorial crop across breakpoints */}
             <Image
-              src="/images/Profile picture.jpeg"
-              alt="Ipinnuoluwa Oladipo"
+              src="/images/Ipinnuoluwa-header.jpg"
+              alt="Portrait of Ipinnuoluwa Oladipo"
               width={340}
-              height={0}
-              style={{ width: "100%", height: "auto", display: "block" }}
+              height={425}
+              sizes="(max-width: 768px) 320px, 340px"
+              style={{
+                width: "100%",
+                aspectRatio: "4 / 5",
+                height: "auto",
+                objectFit: "cover",
+                objectPosition: "center center",
+                display: "block",
+              }}
               priority
             />
 
