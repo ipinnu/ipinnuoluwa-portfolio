@@ -325,19 +325,15 @@ export default function FleetSystemsPage() {
 
           <FadeUp>
             <div className="mt-12 max-w-3xl">
-              <EvidenceBadge status="In development · Concept stage" />
-              <h3 className="mt-6 font-syne text-2xl font-bold text-text-primary">
-                A fleet/logistics ERP concept
+              <h3 className="font-syne text-2xl font-bold text-text-primary">
+                A fleet/logistics ERP
               </h3>
               <p className="mt-5 text-base leading-7 text-text-secondary">
                 Fleet operations often split maintenance, compliance,
                 dispatch, cost, and incident records across disconnected
-                tools. The concept gives every vehicle one operational
+                tools. This suite gives every vehicle one operational
                 history, so a decision is made with the full asset context
                 rather than whichever spreadsheet was opened first.
-              </p>
-              <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.15em] text-text-tertiary">
-                No delivery timeline is being announced.
               </p>
             </div>
           </FadeUp>
@@ -348,6 +344,7 @@ export default function FleetSystemsPage() {
                 key={item.id}
                 item={item}
                 featured={index === 0}
+                expandable
               />
             ))}
           </div>
