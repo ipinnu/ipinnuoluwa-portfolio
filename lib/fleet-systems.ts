@@ -9,7 +9,7 @@ export interface FleetMediaSlot {
   kind: "screenshot" | "video";
   title: string;
   description: string;
-  status: EvidenceStatus;
+  status?: EvidenceStatus;
   src?: string;
   poster?: string;
   alt?: string;
@@ -154,7 +154,6 @@ export const erpMedia: FleetMediaSlot[] = [
     title: "ERP suite with fleet module",
     description:
       "Business suite overview with fleet management surfaced as a first-class module.",
-    status: "In development · Concept stage",
     src: "/images/fleet-systems/erp-1.png",
     alt: "Business suite dashboard featuring a new fleet management module",
   },
@@ -164,7 +163,6 @@ export const erpMedia: FleetMediaSlot[] = [
     title: "Finance and ledger workspace",
     description:
       "Accounting, journals, and trial balance sitting in the same suite as fleet.",
-    status: "In development · Concept stage",
     src: "/images/fleet-systems/erp-2.png",
     alt: "ERP accounting workspace with journal entries and trial balance",
   },
@@ -174,7 +172,6 @@ export const erpMedia: FleetMediaSlot[] = [
     title: "Fleet module inside the suite",
     description:
       "Live tracking, assets, drivers, reports, and geofencing as one operational surface.",
-    status: "In development · Concept stage",
     src: "/images/fleet-systems/erp-3.png",
     alt: "Fleet management module with live tracking and operational tools",
   },
