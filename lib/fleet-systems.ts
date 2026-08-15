@@ -44,24 +44,24 @@ export const systemProof = [
 export const architectureDecisions = [
   {
     index: "01",
-    title: "Isolation before convenience",
+    title: "Isolated multi-tenant dashboards",
     description:
-      "Tenant context is carried through the request and data-access path so one operator's vehicles, reports, and risk events cannot leak into another environment. Shared product foundations stay reusable without flattening operational boundaries.",
-    impact: "Safer multi-client reuse",
+      "I ran four enterprise dashboards on one droplet, but each tenant got its own data path. Vehicle rows, reports, and alerts were scoped by tenant ID on every query so one fleet could not read another. Same codebase, separate stores—no shared tables, no cross-tenant joins.",
+    impact: "Four isolated dashboards, one deploy",
   },
   {
     index: "02",
-    title: "Treat provider limits as a system constraint",
+    title: "Rate-limited provider sync",
     description:
-      "A rate-limited telemetry source cannot be queried like an internal database. The integration paces collection, normalizes provider responses, retries transient failures with restraint, and preserves the last trustworthy state when the upstream service slows down.",
-    impact: "Stable visibility under API pressure",
+      "I ingested inconsistent JSON from multiple telemetry providers. I could not poll them like a local DB—quotas and stale payloads would fail the job. I batched pulls, normalized each dump before write, and kept the last good record when a provider timed out so the dashboards stayed up.",
+    impact: "Sync held under provider limits",
   },
   {
     index: "03",
-    title: "Let the data layer mature with the product",
+    title: "JSON → SQLite → Postgres",
     description:
-      "I started on JSON dumps, moved to SQLite for queryable local state, then migrated to Postgres when concurrent dashboard reads locked the file store. The droplet followed the same path: 1 GB / $6 until it thrashed, then 4 GB / $24 to hold four enterprise tenants without oversizing.",
-    impact: "JSON → SQLite → Postgres, cost-held",
+      "I started on JSON dumps. File queries stalled, so I moved to SQLite. Concurrent dashboard reads then write-locked the file store, so I migrated to Postgres. The box followed: 1 vCPU / 1 GB / 25 GB at ~$6 until memory and I/O thrashed, then 2 vCPU / 4 GB / 80 GB / 4 TB at $24.",
+    impact: "Four tenants on a $24 droplet",
   },
 ] as const;
 

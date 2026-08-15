@@ -183,19 +183,18 @@ export default function FleetSystemsPage() {
                   The operational problem
                 </p>
                 <p className="mt-5 text-xl leading-8 text-text-primary">
-                  I inherited fragmented telemetry—inconsistent JSON payloads
-                  across providers, no shared operational view, and reporting
-                  that ate the time meant for exceptions.
+                  I make telematics and logistics operators use their data.
                 </p>
                 <p className="mt-6 text-base leading-7 text-text-secondary">
-                  I ingested those dumps first, moved the store to SQLite when
-                  file queries stalled, then hit write locks under concurrent
-                  dashboard reads and migrated to Postgres. Four enterprise
-                  tenants ran on a DigitalOcean Basic droplet—1 vCPU, 1 GB RAM,
-                  25 GB disk, ~$6/mo—until memory and I/O became the
-                  bottleneck. I right-sized to 2 vCPU / 4 GB / 80 GB / 4 TB
-                  transfer at $24/mo, keeping tenant isolation and
-                  rate-limited provider sync without overspending.
+                  Most telematics and logistics teams already pay for
+                  telemetry. The gap is that the data sits outside the
+                  workday. I show operators how to put it into exception
+                  queues, operational reports, an AI chat that queries the
+                  live store, trend views, and Power BI decks their
+                  leadership already uses. I start with a working demo so
+                  the value is visible before anyone commits budget. Once
+                  that lands, I help stand up the team and we ship the
+                  dashboard versions they actually run.
                 </p>
               </div>
             </FadeUp>
@@ -231,7 +230,7 @@ export default function FleetSystemsPage() {
           <div className="mt-16">
             <FadeUp>
               <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
-                The decisions that made it dependable
+                What I implemented
               </p>
             </FadeUp>
             <div className="mt-6 grid gap-px bg-border lg:grid-cols-3">
