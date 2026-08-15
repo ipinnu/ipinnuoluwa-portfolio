@@ -248,7 +248,7 @@ export default function HeroSection() {
 
             {/* Profile image — consistent editorial crop across breakpoints */}
             <Image
-              src="/images/Ipinnuoluwa-header.jpg"
+              src="/images/Profile picture.jpeg"
               alt="Portrait of Ipinnuoluwa Oladipo"
               width={340}
               height={425}

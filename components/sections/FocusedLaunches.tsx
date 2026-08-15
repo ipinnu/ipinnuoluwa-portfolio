@@ -17,7 +17,7 @@ export default function FocusedLaunches() {
                   id="focused-launches-title"
                   className="font-syne text-2xl font-bold text-text-primary md:text-3xl"
                 >
-                  Not every brief needs a platform.
+                  Focused pages for focused outcomes.
                 </h2>
                 <p className="mt-4 max-w-md text-sm leading-relaxed text-text-secondary">
                   I also design focused, conversion-led landing pages for
