@@ -16,12 +16,168 @@ export interface Project {
   status: "Live" | "Shipped" | "Ongoing";
   image?: string;
   images?: string[];
+  imageCaptions?: string[];
   imageLayout?: "grid" | "stack";
+  proofPoints?: { value: string; label: string }[];
+  highlights?: string[];
+  media?: {
+    src: string;
+    poster: string;
+    title: string;
+    caption: string;
+    duration: string;
+  }[];
+  note?: string;
   liveUrl?: string;
   playStoreUrl?: string;
 }
 
 export const projects: Project[] = [
+  {
+    slug: "fixora-global-hub",
+    title: "Fixora Global Hub",
+    summary:
+      "An end-to-end, two-sided services marketplace connecting Nigerian customers with skilled artisans through job posting, bidding, real-time communication, identity verification, payments, reviews, and marketplace operations.",
+    role: "Product Designer & Full-Stack Engineer",
+    stack: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS 4",
+      "Supabase",
+      "PostgreSQL",
+      "Paystack",
+      "Resend",
+    ],
+    tags: ["Full Stack", "Marketplace", "Payments", "Realtime", "Nigeria"],
+    outcome:
+      "Production-ready marketplace · 3 role-specific products · Secure payment state machine · Verification and proof-of-work operations",
+    featured: true,
+    order_index: 0,
+    category: "web",
+    problem:
+      "Nigeria's artisan economy is still driven by fragmented referrals. Customers struggle to verify skill and accountability, while capable professionals struggle to reach qualified demand and prove their credibility. FIXORA needed to coordinate discovery, trust, communication, work approval, and payment across customers, artisans, and marketplace administrators without exposing private or financial data between roles.",
+    build:
+      "Architected three interconnected product experiences for customers, artisans, and administrators. Built authentication, protected dashboards, editable profiles, marketplace discovery, public artisan profiles, category and state filtering, and a multi-step job-posting workflow covering service taxonomy, budgets, timelines, Nigerian location data, and image uploads.\n\nDesigned a PostgreSQL model for profiles, jobs, bids, messages, notifications, reviews, transactions, verification applications, job photos, and proof-of-work submissions. Supabase Realtime powers private messaging and unread state; database triggers match new jobs by trade and location and notify customers when bids arrive. Row-Level Security policies protect user-owned data, marketplace transactions, verification records, private messages, and storage objects.\n\nEngineered the bidding and payment lifecycle from bid submission and comparison through acceptance, job-state transitions, Paystack transaction initialization, HMAC webhook validation, server-side verification, escrow state, proof submission, and controlled payment release or refund. Administrators can review identity applications, proof of work, transactions, and manual release decisions. Safe demo modes expose all three dashboards to stakeholders without revealing production user data.",
+    lessons:
+      "Marketplace engineering is state-machine and trust engineering. Payments, verification, proof of work, permissions, and messaging only feel simple when the underlying transitions and access rules are explicit, secure, and recoverable.",
+    timeline: "2026",
+    status: "Live",
+    liveUrl: "https://www.fixoraglobalhub.com/",
+    image: "/images/projects/fixora/marketplace-poster.jpg",
+    proofPoints: [
+      { value: "3", label: "Interconnected user roles" },
+      { value: "23", label: "Application pages" },
+      { value: "10", label: "Core database entities" },
+      { value: "≈12k", label: "Lines of TypeScript, SQL & CSS" },
+    ],
+    highlights: [
+      "Role-specific customer, artisan, and administrator dashboards",
+      "Supabase Auth, protected routes, session handling, and editable profiles",
+      "PostgreSQL triggers for trade-and-location job matching and bid notifications",
+      "Row-Level Security across marketplace data, private messages, and storage",
+      "Bid submission, comparison, acceptance, rejection, and job-state transitions",
+      "Paystack initialization, signed webhook validation, and server-side verification",
+      "NIN verification, document upload, browser camera capture, and admin review",
+      "Proof-of-work submission, approval, rejection, and controlled payment release",
+      "Realtime messaging, notifications, unread counters, ratings, and reviews",
+      "Production-aware demo modes, empty states, SEO foundations, and Vercel validation",
+    ],
+    media: [
+      {
+        src: "/Videos/Fixora%20Intro.mp4",
+        poster: "/images/projects/fixora/marketplace-poster.jpg",
+        title: "Marketplace experience",
+        caption:
+          "The public marketplace communicates the trust model, introduces verified professionals, and creates clear paths into task posting and artisan discovery.",
+        duration: "0:41",
+      },
+      {
+        src: "/Videos/Fixora%20Post%20a%20Task.mp4",
+        poster: "/images/projects/fixora/post-task-poster.jpg",
+        title: "Multi-step task creation",
+        caption:
+          "A structured job-posting workflow captures trade, location, problem context, urgency, budget, timing, and supporting media before matching can begin.",
+        duration: "2:12",
+      },
+      {
+        src: "/Videos/Fixora%20Sign%20up.mp4",
+        poster: "/images/projects/fixora/signup-poster.jpg",
+        title: "Role-aware onboarding",
+        caption:
+          "Account creation branches cleanly between customers seeking help and artisans offering services, while preserving a consistent trust-led experience.",
+        duration: "1:29",
+      },
+    ],
+  },
+  {
+    slug: "epraise-welding",
+    title: "Epraise Welding",
+    summary:
+      "A full-stack digital commerce and client operations platform combining a conversion-focused industrial website with authenticated communication, quotations, approvals, and administrator-managed portfolio content.",
+    role: "Product Designer & Full-Stack Engineer",
+    stack: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS 4",
+      "Supabase",
+      "PostgreSQL",
+      "Canvas API",
+      "Resend",
+    ],
+    tags: ["Full Stack", "Client Portal", "CMS", "Realtime", "Industrial"],
+    outcome:
+      "Live · Authenticated client operations · Realtime messaging · Quote approval workflow · Self-managed gallery CMS",
+    featured: true,
+    order_index: 4,
+    category: "web",
+    problem:
+      "EPraise Welding needed more than an online brochure. The business needed to acquire customers with a credible industrial presence, move serious inquiries into a private workspace, formalize project scope and pricing, and keep its portfolio current without depending on a developer for every image change.",
+    build:
+      "Designed and engineered a responsive, multi-page acquisition website with an industrial visual system, video-led storytelling, service discovery, animated counters, scroll reveals, parallax, asymmetric project galleries, contextual inquiries, and persistent pre-filled WhatsApp conversion paths.\n\nBuilt a Supabase-powered client operations portal with account registration, email/password authentication, protected routes, role-based client and administrator experiences, Realtime messaging, unread tracking, contextual inquiries, file attachments, and an admin inbox. Administrators can create line-item quotations, calculate totals, and send quote or contract cards directly into the client conversation. A cross-device HTML Canvas signature component supports mouse and touch approval.\n\nCreated a lightweight gallery CMS backed by Supabase Storage and PostgreSQL so administrators can upload, replace, edit, categorize, orient, and delete portfolio images themselves. Added Resend notifications, Row-Level Security, role-aware access policies, Nigeria-focused structured SEO, optimized image delivery, compressed video, deferred analytics, and render-performance improvements.",
+    lessons:
+      "The most valuable handoff is operational independence. A polished acquisition site wins attention, but the client portal and gallery CMS turn the platform into infrastructure the business can operate without ongoing developer intervention.",
+    timeline: "2026",
+    status: "Live",
+    liveUrl: "https://www.epraisewelding.com/",
+    image: "/images/projects/epraise/gallery-cms-poster.jpg",
+    images: ["/images/Epraise.png"],
+    imageCaptions: [
+      "Administrator conversation workspace with contextual portfolio references, a structured line-item quote composer, attachments, and quote lifecycle controls.",
+    ],
+    imageLayout: "stack",
+    proofPoints: [
+      { value: "2", label: "Role-aware portal experiences" },
+      { value: "Realtime", label: "Client and admin messaging" },
+      { value: "RLS", label: "Database-level access control" },
+      { value: "CMS", label: "Client-managed portfolio content" },
+    ],
+    highlights: [
+      "Responsive industrial marketing system with video-led storytelling",
+      "Supabase Auth, protected routes, and client/admin role separation",
+      "Realtime messaging, unread state, contextual inquiries, and attachments",
+      "Admin inbox with recent-thread prioritization and inquiry context",
+      "Line-item quotation and contract cards delivered inside conversations",
+      "Mouse- and touch-enabled HTML Canvas signature approvals",
+      "Supabase Storage for attachments, signatures, and gallery assets",
+      "Gallery CMS for upload, replacement, editing, orientation, and categorization",
+      "Resend notifications, WhatsApp deep links, and Nigeria-focused technical SEO",
+      "Media compression, deferred scripts, and reduced scroll-driven re-renders",
+    ],
+    media: [
+      {
+        src: "/Videos/Epraise.mp4",
+        poster: "/images/projects/epraise/gallery-cms-poster.jpg",
+        title: "Administrator-managed gallery CMS",
+        caption:
+          "The business can edit titles and descriptions, categorize work, replace imagery, adjust orientation, and remove portfolio items without developer support.",
+        duration: "0:40",
+      },
+    ],
+    note:
+      "Scope note: the public contact form currently presents a designed success-state prototype but does not transmit or persist submissions. The implemented lead channels are the authenticated client portal and pre-filled WhatsApp journeys.",
+  },
   {
     slug: "autodrive",
     title: "Autodrive",

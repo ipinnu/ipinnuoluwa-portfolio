@@ -83,6 +83,23 @@ export default function Sidebar({ onClose }: SidebarProps) {
           Start Here
         </Link>
         <Link
+          href="/resources/react/field-guide"
+          onClick={onClose}
+          aria-current={
+            pathname.startsWith("/resources/react/field-guide")
+              ? "page"
+              : undefined
+          }
+          className={[
+            "flex min-h-11 items-center px-3 text-xs transition-colors",
+            pathname.startsWith("/resources/react/field-guide")
+              ? "bg-accent/5 text-accent"
+              : "text-text-secondary hover:bg-bg-secondary hover:text-text-primary",
+          ].join(" ")}
+        >
+          Field Guide
+        </Link>
+        <Link
           href="/resources/react/resources"
           onClick={onClose}
           className="flex min-h-11 items-center px-3 text-xs text-text-secondary hover:bg-bg-secondary hover:text-text-primary"
@@ -98,13 +115,13 @@ export default function Sidebar({ onClose }: SidebarProps) {
 
           if (!available) {
             return (
-              <div key={module.id} className="flex min-h-16 items-center gap-3 px-3 opacity-45">
+              <div key={module.id} className="flex min-h-16 items-center gap-3 px-3">
                 <span className="flex h-7 w-7 flex-none items-center justify-center border border-border font-mono text-[9px] text-text-tertiary">
                   {String(module.order).padStart(2, "0")}
                 </span>
                 <span className="min-w-0">
                   <span className="block text-xs font-semibold text-text-secondary">{module.title}</span>
-                  <span className="mt-1 block font-mono text-[8px] uppercase tracking-widest text-text-tertiary">
+                  <span className="mt-1 block font-mono text-[10px] uppercase tracking-wide text-text-tertiary">
                     {module.status === "next" ? "Built next" : "Planned"}
                   </span>
                 </span>
@@ -129,7 +146,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
               </span>
               <span className="min-w-0">
                 <span className="block text-xs font-semibold">{module.title}</span>
-                <span className="mt-1 block font-mono text-[8px] uppercase tracking-widest text-accent">
+                <span className="mt-1 block font-mono text-[10px] uppercase tracking-wide text-accent">
                   {moduleProgress[module.id] ?? 0}/4 laboratories explored
                 </span>
               </span>

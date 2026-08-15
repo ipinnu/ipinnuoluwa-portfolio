@@ -32,6 +32,55 @@ interface Particle {
   distance: number;
 }
 
+function LogoTwinkleStar({ hidden }: { hidden: boolean }) {
+  if (hidden) return null;
+
+  return (
+    <>
+      <motion.span
+        aria-hidden
+        className="absolute pointer-events-none"
+        style={{ top: -4, right: -16, zIndex: 1 }}
+        animate={{
+          opacity: [0.12, 0.35, 0.9, 0.4, 0.12],
+          scale: [0.65, 0.85, 1.15, 0.9, 0.65],
+          x: [10, 6, 2, 0, 10],
+          y: [8, 4, 1, -1, 8],
+        }}
+        transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+          <path
+            d="M5.5 0L6.6 4.1L10.5 5.5L6.6 6.9L5.5 11L4.4 6.9L0.5 5.5L4.4 4.1Z"
+            fill="#E8FF47"
+            style={{ filter: "drop-shadow(0 0 4px rgba(232,255,71,0.9))" }}
+          />
+        </svg>
+      </motion.span>
+
+      <motion.span
+        aria-hidden
+        className="absolute pointer-events-none rounded-full"
+        style={{
+          top: 6,
+          right: -8,
+          width: 2,
+          height: 2,
+          backgroundColor: "#A3C4B4",
+          boxShadow: "0 0 3px rgba(163,196,180,0.8)",
+          zIndex: 1,
+        }}
+        animate={{
+          opacity: [0, 0.2, 0.7, 0.15, 0],
+          x: [14, 9, 4, 1, 14],
+          y: [10, 6, 3, 1, 10],
+        }}
+        transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut", delay: 0.35 }}
+      />
+    </>
+  );
+}
+
 export default function Footer() {
   const router = useRouter();
   const tapCount = useRef(0);
@@ -102,12 +151,14 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="relative inline-block mb-4">
+              <LogoTwinkleStar hidden={burst || glowStage > 0} />
+
               <motion.a
                 ref={logoRef}
                 href="/"
                 onClick={(e) => e.preventDefault()}
                 onTap={handleLogoTap}
-                className="font-syne font-bold text-2xl block select-none cursor-pointer"
+                className="font-syne font-bold text-2xl block select-none cursor-pointer relative z-[2]"
                 style={{
                   color: glowColor,
                   textShadow: glowShadow,

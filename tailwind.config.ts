@@ -17,7 +17,7 @@ const config: Config = {
         neon: "#E8FF47",
         "text-primary": "#F5F5F0",
         "text-secondary": "#888884",
-        "text-tertiary": "#444440",
+        "text-tertiary": "#82827D",
         border: "#222220",
       },
       fontFamily: {

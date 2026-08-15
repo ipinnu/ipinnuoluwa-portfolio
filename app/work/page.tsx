@@ -3,6 +3,8 @@ import FadeUp from "@/components/ui/FadeUp";
 import SectionLabel from "@/components/ui/SectionLabel";
 import ProjectGrid from "@/components/sections/ProjectGrid";
 import BottomCTA from "@/components/sections/BottomCTA";
+import FocusedLaunches from "@/components/sections/FocusedLaunches";
+import EnterpriseFleetFeature from "@/components/sections/EnterpriseFleetFeature";
 
 export const metadata: Metadata = {
   title: "Work",
@@ -29,6 +31,8 @@ export default function WorkPage() {
       </section>
 
       <ProjectGrid />
+      <EnterpriseFleetFeature />
+      <FocusedLaunches />
       <BottomCTA />
     </>
   );

@@ -86,7 +86,7 @@ export async function GET(req: NextRequest) {
               fontFamily: "monospace",
             }}
           >
-            ipinnuoluwa.dev
+            ipinnuoluwa.com.ng
           </span>
         </div>
       </div>

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { fetchAssets, updateAsset as persistAsset, createAsset as persistCreate, seedIfEmpty } from '@/lib/assets'
-import { fetchVisions } from '@/lib/visions'
+import { fetchVisions, updateVision as persistVision } from '@/lib/visions'
 import { getFloorState, worstSignal } from '@/lib/floor'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import type { Asset, Vision, FloorState, AssetClass } from '@/lib/types/forge'
@@ -14,6 +14,7 @@ import AssetLedger from './AssetLedger'
 import AssetDetail from './AssetDetail'
 import RebalanceView from './RebalanceView'
 import FinancesOverlay from './FinancesOverlay'
+import ForgeMentorPanel, { ForgeMentorFab } from './ForgeMentorPanel'
 import { ThemeProvider } from '@/components/theme/ThemeProvider'
 import { GlassFilter } from '@/components/theme/GlassFilter'
 import { AmbientLayer } from '@/components/theme/AmbientLayer'
@@ -42,6 +43,7 @@ export default function Dashboard({ onClose }: Props) {
   const [newClass, setNewClass]     = useState<AssetClass>('B')
   const [creating, setCreating]     = useState(false)
   const [showFinances, setShowFinances] = useState(false)
+  const [mentorOpen, setMentorOpen] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -111,11 +113,50 @@ export default function Dashboard({ onClose }: Props) {
     setCreating(false)
   }, [newName, newClass, isMobile])
 
+  const createAssetFromAI = useCallback(async (input: {
+    name: string
+    assetClass?: AssetClass
+    mandateText?: string
+    visionIds?: string[]
+  }): Promise<Asset> => {
+    const cls = input.assetClass ?? 'B'
+    const now = new Date().toISOString().split('T')[0]
+    const asset: Asset = {
+      id:              `asset-${Date.now()}`,
+      name:            input.name.trim(),
+      assetClass:      cls,
+      allocation:      0,
+      returnTypes:     [],
+      status:          cls === 'A' ? 'active' : cls === 'B' ? 'forming' : 'monitor',
+      mandateText:     input.mandateText ?? '',
+      mandateProgress: 0,
+      scores:          { revenue: 0, impact: 0, strategic: 0, momentum: 0 },
+      actions:         [],
+      lastReviewed:    now,
+      visionIds:       input.visionIds ?? [],
+    }
+    setAssets(prev => [asset, ...prev])
+    setSelected(asset)
+    setView('detail')
+    if (isMobile) setMobilePanel('detail')
+    try { await persistCreate(asset) } catch (err) { console.warn('AI create failed:', err) }
+    return asset
+  }, [isMobile])
+
   const handleSelectAsset = useCallback((asset: Asset) => {
     setSelected(asset)
     setView('detail')
     if (isMobile) setMobilePanel('detail')
   }, [isMobile])
+
+  const updateVision = useCallback(async (id: string, patch: Partial<Vision>) => {
+    setVisions(prev => prev.map(v => v.id === id ? { ...v, ...patch } : v))
+    try {
+      await persistVision(id, patch)
+    } catch (err) {
+      console.warn('updateVision failed:', err)
+    }
+  }, [])
 
   const handleRebalance = () => {
     setView('rebalance')
@@ -161,6 +202,22 @@ export default function Dashboard({ onClose }: Props) {
     >
       {/* ── Floor Bar (always top) ── */}
       <FloorBar state={floor} onChange={setFloor} onClose={onClose} isMobile={isMobile}>
+        <button
+          onClick={() => setMentorOpen(true)}
+          style={{
+            fontFamily: 'var(--font-jetbrains-mono)',
+            fontSize: 9,
+            color: '#E8FF47',
+            background: 'rgba(232,255,71,0.06)',
+            border: '0.5px solid rgba(232,255,71,0.25)',
+            borderRadius: 3,
+            padding: '4px 10px',
+            cursor: 'pointer',
+            marginLeft: 8,
+          }}
+        >
+          AI Mentor
+        </button>
         <button
           onClick={() => setShowFinances(true)}
           style={{
@@ -365,6 +422,26 @@ export default function Dashboard({ onClose }: Props) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <ForgeMentorPanel
+        isOpen={mentorOpen}
+        onClose={() => setMentorOpen(false)}
+        isMobile={isMobile}
+        assets={assets}
+        visions={visions}
+        floor={floor}
+        selectedAssetId={selAsset?.id ?? null}
+        onUpdateAsset={updateAsset}
+        onCreateAsset={createAssetFromAI}
+        onSelectAsset={handleSelectAsset}
+        onUpdateFloor={setFloor}
+        onUpdateVision={updateVision}
+      />
+      <ForgeMentorFab
+        isOpen={mentorOpen}
+        onToggle={() => setMentorOpen(v => !v)}
+        isMobile={isMobile}
+      />
     </motion.div>
       {/* ── Finances Overlay ── */}
       <AnimatePresence>
