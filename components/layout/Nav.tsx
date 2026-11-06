@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { conversationUrl } from "@/lib/contact";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -86,18 +87,20 @@ export default function Nav() {
           {/* CTA + Mobile Toggle */}
           <div className="flex items-center gap-4">
             <a
-              href="https://wa.me/2348133754181?text=Hi%20Ipinnuoluwa%2C%20I%20found%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project.%20Brief%20overview%3A%20"
+              href={conversationUrl()}
               target="_blank"
               rel="noopener noreferrer"
               className="hidden md:inline-flex items-center gap-1.5 bg-accent text-bg-primary text-sm font-semibold px-4 py-2 rounded-[3px] hover:bg-accent-dim transition-colors"
             >
-              Start a Project →
+              Let&apos;s talk ↗
             </a>
 
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden flex flex-col gap-1.5 w-6 h-5 justify-center"
+              className="md:hidden flex flex-col gap-1.5 min-w-11 min-h-11 items-center justify-center cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
               aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              aria-controls={menuOpen ? "mobile-navigation" : undefined}
             >
               <motion.span
                 animate={menuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
@@ -127,6 +130,7 @@ export default function Nav() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-40 bg-bg-primary flex flex-col"
+            id="mobile-navigation"
           >
             <div className="flex flex-col justify-center items-start px-8 h-full gap-2">
               {navLinks.map((link, i) => (
@@ -159,12 +163,12 @@ export default function Nav() {
                 className="mt-8"
               >
                 <a
-                  href="https://wa.me/2348133754181?text=Hi%20Ipinnuoluwa%2C%20I%20found%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project.%20Brief%20overview%3A%20"
+                  href={conversationUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-accent text-bg-primary font-semibold px-6 py-3 rounded-sm"
                 >
-                  Start a Project →
+                  Let&apos;s talk ↗
                 </a>
               </motion.div>
             </div>

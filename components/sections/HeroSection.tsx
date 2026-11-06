@@ -291,7 +291,7 @@ export default function HeroSection() {
             {/* Social icons */}
             <div style={{ display: "flex", justifyContent: "center", gap: 8, padding: "16px 24px 0" }}>
               {[
-                { href: "https://linkedin.com/in/YOUR_LINKEDIN", icon: <LinkedInIcon />, label: "LinkedIn" },
+                { href: "https://www.linkedin.com/in/ipinnuoluwa-oladipo-876360235/", icon: <LinkedInIcon />, label: "LinkedIn" },
                 { href: "https://github.com/YOUR_GITHUB", icon: <GitHubIcon />, label: "GitHub" },
                 { href: "https://YOUR_ORG_URL", icon: <BriefcaseIcon />, label: "Freelance Org" },
               ].map(({ href, icon, label }) => (

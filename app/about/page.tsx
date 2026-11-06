@@ -93,9 +93,9 @@ export default function AboutPage() {
             <FadeUp>
               <SectionLabel label="About" className="mb-6" />
               <h1 className="font-syne font-black text-5xl md:text-7xl text-text-primary leading-tight mb-8">
-                Built on
+                A little more
                 <br />
-                <span className="text-accent">systems thinking</span>
+                <span className="text-accent">about me.</span>
               </h1>
             </FadeUp>
 
@@ -109,16 +109,15 @@ export default function AboutPage() {
                   That was the shift.
                 </p>
                 <p>
-                  I operate at the intersection of architecture and
-                  execution. I do not just write code — I design the
-                  structure that makes it work under real conditions. Based
-                  in Lagos, working with clients across Nigeria and
-                  internationally.
+                  I&apos;m based in Lagos, working with people across Nigeria
+                  and internationally. I enjoy the whole journey: making sense
+                  of an idea, figuring out the structure, and building something
+                  that works for the people who need it.
                 </p>
                 <p>
-                  Every engagement I take is documented, structured, and
-                  delivered with full ownership transfer. I do not build
-                  dependencies.
+                  You don&apos;t need to arrive with all the answers. I like
+                  asking questions, explaining the options, and helping you
+                  feel confident about what we&apos;re building together.
                 </p>
               </div>
               <a
@@ -127,10 +126,23 @@ export default function AboutPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 mt-8 bg-accent text-bg-primary font-syne font-semibold text-sm px-6 py-3 rounded-sm hover:bg-accent-dim transition-colors"
               >
-                Start a Project →
+                Say hello ↗
               </a>
             </FadeUp>
           </div>
+        </div>
+      </section>
+
+      <section className="max-w-content mx-auto px-6 py-16" aria-label="A few sides of me">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
+          <figure className="bg-[#eee9df] p-3 pb-5 text-[#283326] sm:-rotate-2">
+            <div className="relative aspect-[4/5] overflow-hidden"><Image src="/images/Profile picture.jpeg" alt="Ipinnuoluwa in a black shirt" fill sizes="(max-width: 640px) 90vw, 360px" className="object-cover object-top" /></div>
+            <figcaption className="pt-4 text-sm">The face behind the work.</figcaption>
+          </figure>
+          <figure className="bg-[#eee9df] p-3 pb-5 text-[#283326] sm:rotate-2">
+            <div className="relative aspect-[4/5] overflow-hidden"><Image src="/images/Ipinnuoluwa-header.jpg" alt="Ipinnuoluwa wearing a hoodie, headphones and sunglasses" fill sizes="(max-width: 640px) 90vw, 360px" className="object-cover object-[center_35%]" /></div>
+            <figcaption className="pt-4 text-sm">And a little less formal.</figcaption>
+          </figure>
         </div>
       </section>
 
@@ -141,7 +153,7 @@ export default function AboutPage() {
       >
         <div className="max-w-content mx-auto px-6">
           <FadeUp>
-            <SectionLabel label="External validation" className="mb-10" />
+            <SectionLabel label="Milestones worth celebrating" className="mb-10" />
           </FadeUp>
 
           <div className="grid grid-cols-1 lg:grid-cols-[1.35fr_0.65fr] gap-10 lg:gap-16 items-start">
@@ -192,6 +204,24 @@ export default function AboutPage() {
                 </p>
               </div>
             </FadeUp>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 md:py-24 border-b border-border" aria-labelledby="launchpad-title">
+        <div className="max-w-content mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1.35fr_0.65fr] gap-10 lg:gap-16 items-center">
+          <figure>
+            <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-bg-secondary">
+              <Image src="/images/recognition/launchpad-africa-cohort-2-2026.jpg" alt="Ipinnuoluwa celebrating a first-place Launchpad Africa Cohort 2 award with the team and a 500-dollar cheque" fill sizes="(min-width: 1024px) 700px, 100vw" className="object-cover" />
+            </div>
+            <figcaption className="mt-4 text-xs text-text-tertiary leading-relaxed">Launchpad Africa, Cohort 2 · First place · 2026.</figcaption>
+          </figure>
+          <div>
+            <SectionLabel label="Another reason to celebrate" className="mb-5" />
+            <h2 id="launchpad-title" className="font-syne font-bold text-3xl md:text-4xl text-text-primary leading-tight">First place.<br />Second grant.<br /><span className="text-accent">Still building.</span></h2>
+            <p className="mt-6 text-text-secondary leading-relaxed">I took first place in Launchpad Africa&apos;s second cohort in 2026, receiving a $500 grant. This became my second grant win, and I&apos;m genuinely grateful for the encouragement and belief in what I&apos;m building.</p>
+            <p className="mt-4 text-text-secondary leading-relaxed">The photo says it better than a badge could: a big smile, good people, and another reason to keep going.</p>
+            <a href="https://lnkd.in/p/emJXzr3F" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center mt-5 text-sm text-accent underline underline-offset-4 hover:text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">See the announcement ↗</a>
           </div>
         </div>
       </section>

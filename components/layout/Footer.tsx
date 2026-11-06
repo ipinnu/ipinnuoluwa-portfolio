@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -20,7 +20,7 @@ const footerLinks = {
 
 const socialLinks = [
   { href: "https://twitter.com/ipinnuoluwa", label: "Twitter" },
-  { href: "https://www.linkedin.com/in/ipinnu-oladipo-876360235/", label: "LinkedIn" },
+  { href: "https://www.linkedin.com/in/ipinnuoluwa-oladipo-876360235/", label: "LinkedIn" },
   { href: "https://github.com/ipinnu", label: "GitHub" },
 ];
 
@@ -83,6 +83,7 @@ function LogoTwinkleStar({ hidden }: { hidden: boolean }) {
 
 export default function Footer() {
   const router = useRouter();
+  const pathname = usePathname();
   const tapCount = useRef(0);
   const tapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const logoRef = useRef<HTMLAnchorElement>(null);
@@ -145,7 +146,7 @@ export default function Footer() {
           : "0 0 28px #E8FF47, 0 0 60px #E8FF4740";
 
   return (
-    <footer className="border-t border-border mt-32">
+    <footer className={`border-t border-border ${pathname === "/" ? "" : "mt-32"}`}>
       <div className="max-w-content mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           {/* Brand */}
