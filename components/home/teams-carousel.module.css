@@ -1,0 +1,24 @@
+.carousel { display: grid; grid-template-columns: 180px minmax(0, 1fr); align-items: center; gap: 32px; width: min(1200px, 100%); margin-inline: auto; padding: 24px 32px; border-block: 1px solid #272b25; }
+.heading { display: flex; flex-direction: column; align-items: start; gap: 14px; }
+.heading p { font-size: 13px; line-height: 1.7; color: #b8beb3; }
+.track:focus-visible { outline: 2px solid #a3c4b4; outline-offset: 4px; }
+.track { display: flex; align-items: stretch; gap: 12px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; padding-block: 8px; list-style: none; }
+.track::-webkit-scrollbar { display: none; }
+.team { display: flex; justify-content: center; align-items: center; text-align: center; flex: 0 0 calc((100% - 36px) / 4); min-height: 92px; padding: 16px; border: 1px solid #dce1d7; border-radius: 6px; color: #253024; background: #fafaf7; font: 700 17px/1.4 var(--font-syne), sans-serif; letter-spacing: -.03em; }
+.logo { display: block; width: 140px; max-width: 100%; height: 64px; object-fit: contain; }
+.largeLogo { width: 160px; height: 128px; }
+.orange { color: #c25408; }
+.yellow { color: #9a6d00; }
+.blue { color: #0466c8; }
+.airplane { flex: 0 0 28px; color: #0466c8; }
+.brandIdentity { display: flex; align-items: center; justify-content: center; gap: 10px; max-width: 100%; text-align: left; }
+.brandIcon { position: relative; display: block; flex: 0 0 40px; width: 40px; height: 48px; overflow: hidden; }
+.brandIcon img { position: absolute; width: 40px; max-width: none; height: 40px; object-fit: contain; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.paddedIcon img { width: 128px; height: 128px; }
+.affiliatedTeam { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; min-width: 0; }
+.affiliationLabel { color: #596250; font: 400 10px/1.5 var(--font-dm-sans), sans-serif; letter-spacing: 0; }
+.affiliationLogo { display: block; width: 100px; max-width: 100%; height: 28px; object-fit: contain; }
+@media (max-width: 1000px) { .team { flex-basis: calc((100% - 24px) / 3); font-size: 15px; } }
+@media (max-width: 760px) { .carousel { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 24px; } .heading { flex-direction: row; align-items: center; justify-content: space-between; gap: 12px; } .heading br { display: none; } .team { flex-basis: calc((100% - 12px) / 2); min-height: 88px; } }
+/* Hide the seamless-loop copy when automatic motion is disabled. */
+@media (prefers-reduced-motion: reduce) { .copy { display: none; } }

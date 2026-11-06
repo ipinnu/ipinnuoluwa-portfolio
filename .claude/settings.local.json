@@ -70,7 +70,10 @@
       "Bash(pnpm run:*)",
       "Bash(git rm *)",
       "Bash(xargs grep *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(python skills/ui-ux-pro-max/scripts/search.py \"freelance portfolio wizard gamified onboarding discovery form\" --design-system -p \"DiscoveryWizard\")",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"freelance portfolio wizard gamified onboarding discovery form\" --design-system -p \"DiscoveryWizard\")",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"multi-step form wizard progress gamification\" --domain ux -n 6)"
     ]
   }
 }
