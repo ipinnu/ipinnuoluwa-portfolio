@@ -403,7 +403,7 @@ export default function CaseStudyPage({ params }: Props) {
                     rel="noopener noreferrer"
                     className="block bg-bg-secondary border border-accent text-accent text-center font-syne font-semibold text-sm px-6 py-4 rounded-sm hover:bg-accent hover:text-bg-primary transition-colors"
                   >
-                    Visit live site →
+                    {project.liveLabel ?? "Visit live site →"}
                   </a>
                 </FadeUp>
               )}

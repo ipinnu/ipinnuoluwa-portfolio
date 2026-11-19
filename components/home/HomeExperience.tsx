@@ -11,7 +11,7 @@ const selectedWork = [
   { slug: "autodrive", type: "Mobile application · Mobility", description: "Making vehicle document renewals easier, from the first reminder to payment and delivery tracking.", contribution: "Product design, Flutter development & payment integration", tone: "blue" },
   { slug: "hermex-travels", type: "Mobile application · Travel", description: "Bringing flights, hotels, trip planning, and travel support into one mobile experience.", contribution: "Flutter frontend, REST API integration & responsive booking flows", tone: "sky" },
   { slug: "epraise-welding", type: "Business website · Client portal", description: "Giving a welding business a place to showcase its work, talk to clients, and manage quotations.", contribution: "Product design, full-stack engineering & a client-managed gallery", tone: "sand" },
-  { slug: "my-health-padi", type: "Mobile application · Healthcare", description: "Helping patients connect with healthcare professionals and navigate care from their phones.", contribution: "Flutter development, role-based experiences & AI integration", tone: "rose" },
+  { slug: "digital-nurse", type: "Mobile application · Maternal health", description: "Helping women access trusted pregnancy guidance, reminders, and support between clinic visits.", contribution: "Product leadership, Flutter development & AI-supported guidance", tone: "rose" },
   { slug: "brainbox-studios", type: "Business website · Technology", description: "Helping a technology firm explain what it does and make the right first impression with potential clients.", contribution: "Website design, development & product storytelling", tone: "lavender" },
 ];
 
@@ -52,8 +52,8 @@ export default function HomeExperience() {
             const isHermex = project.slug === "hermex-travels";
             const phoneScreens = project.slug === "autodrive"
               ? ["/images/projects/autodrive/Frame%20536.png", "/images/projects/autodrive/Frame%20526.png"]
-              : project.slug === "my-health-padi"
-                ? ["/images/projects/my-health-padi/Home%20page.avif", "/images/projects/my-health-padi/Screenshot%202026-03-31%20142740.png"]
+              : project.slug === "digital-nurse"
+                ? ["/images/projects/digital-nurse/app-home.jpeg", "/images/projects/digital-nurse/app-folu.jpeg"]
                 : null;
             return (
               <article key={project.slug} className={styles.project}>

@@ -29,6 +29,7 @@ export interface Project {
   }[];
   note?: string;
   liveUrl?: string;
+  liveLabel?: string;
   playStoreUrl?: string;
 }
 
@@ -205,6 +206,50 @@ export const projects: Project[] = [
       "/images/projects/autodrive/Your%20Profile%20-%20Personal%20Info%20-%20Address%20details.png",
     ],
     playStoreUrl: "https://play.google.com/store/apps/details?id=com.ipinnu.AutodriveNew",
+  },
+  {
+    slug: "digital-nurse",
+    title: "Digital Nurse",
+    summary:
+      "A maternal-health platform that supports women between antenatal visits with pregnancy-stage guidance, health tracking, reminders, nutrition education, and the Nurse Folu digital companion.",
+    role: "Product Lead & Flutter Engineer",
+    stack: ["Flutter", "Firebase", "Dart", "AI/RAG", "Web Dashboard"],
+    tags: ["Mobile", "Maternal Health", "AI", "Social Impact", "Femtech"],
+    outcome:
+      "First place, Launchpad Africa Cohort 2 · $500 grant · Mobile and web maternal-health platform",
+    featured: true,
+    order_index: 2,
+    category: "mobile",
+    problem:
+      "Pregnancy support often drops away between clinic appointments. Women still need clear, timely information about body changes, nutrition, symptoms, medication, appointments, and when to seek professional care—especially where access to trusted guidance is limited by cost, distance, or availability.",
+    build:
+      "Led the product development of a mobile and web platform designed around the pregnancy journey. The application combines pregnancy-week updates, health logs, appointment and medication reminders, nutrition guidance, and a conversational Nurse Folu experience in one accessible interface.\n\nBuilt the Flutter experience and connected personalised pregnancy context to the platform's guidance flows so information can reflect the user's stage and recorded activity. The wider platform includes a web dashboard for programme visibility and care coordination.\n\nThe product is intentionally positioned as support between clinic visits—not a replacement for clinicians, diagnosis, or emergency care. The team combined product research, clinical feedback, mobile and web engineering, testing, and community engagement to shape the platform.",
+    lessons:
+      "In maternal health, accessibility and safety have to be designed together. Helpful technology must explain its limits clearly while making trusted information easier to reach at the moment it is needed.",
+    timeline: "2025 – Present",
+    status: "Ongoing",
+    image: "/images/projects/digital-nurse/app-home.jpeg",
+    images: [
+      "/images/projects/digital-nurse/app-folu.jpeg",
+      "/images/projects/digital-nurse/app-health.jpeg",
+      "/images/projects/digital-nurse/app-nutrition.jpeg",
+    ],
+    proofPoints: [
+      { value: "1st", label: "Launchpad Africa Cohort 2" },
+      { value: "$500", label: "Grant awarded in 2026" },
+      { value: "2", label: "Mobile and web experiences" },
+      { value: "24/7", label: "Between-visit access to guidance" },
+    ],
+    highlights: [
+      "Pregnancy-stage updates and personalised educational content",
+      "Nurse Folu conversational guidance experience",
+      "Health logging for symptoms and maternal wellbeing",
+      "Appointment and medication reminder workflows",
+      "Nutrition education designed for everyday decisions",
+      "Clear safety boundaries and care-escalation messaging",
+    ],
+    liveUrl: "https://digital-nurse-info.vercel.app",
+    liveLabel: "Check more on this →",
   },
   {
     slug: "my-health-padi",
